@@ -1,0 +1,93 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+}
+
+.root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.environments {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.environments li {
+    flex-grow: 1;
+    border: 1px solid;
+    text-align: center;
+    cursor: pointer;
+}
+
+#data {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.site-list-container {
+    min-width: 300px;
+    flex-grow: 1;
+    flex-basis: 300px;
+    overflow-y: auto;
+}
+
+.site-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.site-list-item.active {
+    background-color: #dfdfdf;
+}
+
+.site-content {
+    display: none;
+}
+
+.site-content.active {
+    display: block;
+}
+
+.site-list-item {
+    cursor: pointer;
+}
+
+.environment.active {
+    background-color: #dfdfdf;
+}
+
+.environment-content {
+    display: none;
+}
+
+.environment-content.active {
+    display: block;
+    flex-grow: 1000;
+    flex-basis: 450px;
+    height: inherit;
+    overflow-y: auto;
+}
+
+.autoscroll {
+    overflow-x: auto;
+}
+
+@media only screen and (max-width: 780px) {
+    body {
+        overflow-y: auto;
+    }
+    .environment-content.active {
+        overflow-y: hidden;
+    }
+}

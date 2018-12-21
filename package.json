@@ -1,0 +1,51 @@
+{
+  "name": "metadata-diff",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "precommit": "lint-staged",
+    "prettier": "prettier --write",
+    "stylelint": "stylelint './**/*.scss' --syntax scss",
+    "test": "npm run lint && npm run stylelint"
+  },
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "npm run prettier",
+      "git add"
+    ],
+    "*.scss": [
+      "stylelint --syntax=scss --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "cssnano": "^4.1.7",
+    "html-minifier": "^3.5.21",
+    "htmlparser2": "^3.10.0",
+    "jsondiffpatch": "^0.3.11",
+    "microdata-node": "^1.0.0",
+    "node-fetch": "^2.3.0",
+    "puppeteer": "^1.11.0",
+    "uglify-es": "^3.3.9"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3"
+  }
+}
