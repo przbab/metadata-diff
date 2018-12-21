@@ -8,7 +8,7 @@
 - [ ] remove microdata from metadata
 - [ ] make current and candidate addresses match each other
 - [ ] add option to hide identical fields
-- [ ] add config file support (e.g. .metadiffrc)
+- [x] add config file support (e.g. .metadiffrc)
 - [ ] add option for multiple environments
 - [ ] add date of the test
 - [ ] show redirects

@@ -50,4 +50,4 @@ async function main() {
     process.exit(0);
 }
 
-main();
+module.exports = main;
