@@ -5,6 +5,7 @@ const generateReport = require('./report');
 const diff = require('./diff');
 const parse = require('./parser');
 const getConfig = require('./config');
+const prepareHtml = require('./html');
 
 async function full() {
     const config = getConfig();
@@ -18,10 +19,12 @@ async function full() {
         const current = config.currentBaseUrl + pathname;
         const candidate = config.candidateBaseUrl + pathname;
 
-        const currentServerHtml = await fetchSSR(current, requestOptions);
-        const currentClientHtml = await fetchClient(current, requestOptions);
-        const candidateServerHtml = await fetchSSR(candidate, requestOptions);
-        const candidateClientHtml = await fetchClient(candidate, requestOptions);
+        const [currentServerHtml, currentClientHtml, candidateServerHtml, candidateClientHtml] = await Promise.all([
+            fetchSSR(current, requestOptions),
+            fetchClient(current, requestOptions),
+            fetchSSR(candidate, requestOptions),
+            fetchClient(candidate, requestOptions),
+        ]);
 
         const [
             currentServerMetadata,
@@ -29,10 +32,10 @@ async function full() {
             candidateServerMetadata,
             candidateClientMetadata,
         ] = await Promise.all([
-            parse(currentServerHtml),
-            parse(currentClientHtml),
-            parse(candidateServerHtml),
-            parse(candidateClientHtml),
+            parse(prepareHtml(currentServerHtml, config)),
+            parse(prepareHtml(currentClientHtml, config)),
+            parse(prepareHtml(candidateServerHtml, config)),
+            parse(prepareHtml(candidateClientHtml, config)),
         ]);
 
         diffs.push({
@@ -59,5 +62,10 @@ function getRequestOptions(config) {
 }
 
 module.exports = {
+    diff,
+    fetchClient,
+    fetchSSR,
     full,
+    parse,
+    prepareHtml,
 };

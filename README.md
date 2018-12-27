@@ -6,9 +6,10 @@
 - [ ] usage manual
 - [x] add timeout to puppeteer to let js finish the job
 - [ ] remove microdata from metadata
-- [ ] make current and candidate addresses match each other
+- [x] make current and candidate addresses match each other
 - [ ] add option to hide identical fields
 - [x] add config file support (e.g. .metadiffrc)
+- [ ] add config validation
 - [ ] add option for multiple environments
 - [ ] add date of the test
 - [ ] show redirects
