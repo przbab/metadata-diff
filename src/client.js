@@ -20,14 +20,34 @@ async function preparePage(options = {}) {
     if (options.userAgent) {
         page.setUserAgent(options.userAgent);
     }
+    if (options.blockRequests && options.blockRequests.length > 0) {
+        await blockRequests(page, options.blockRequests);
+    }
 
     return page;
 }
 
+async function blockRequests(page, urls) {
+    const blockedRequests = new RegExp(`(${urls.join('|')})`, 'i');
+
+    await page.setRequestInterception(true);
+    page.on('request', interceptedRequest => {
+        const url = interceptedRequest.url();
+
+        if (blockedRequests.test(url)) {
+            interceptedRequest.abort();
+        } else {
+            interceptedRequest.continue();
+        }
+    });
+}
+
 async function getHTML(url, options) {
     const page = await preparePage(options);
-    await page.goto(url);
-    await page.waitFor(200);
+    await page.goto(url, options.goto);
+    if (options.additionalWait) {
+        await page.waitFor(options.additionalWait);
+    }
     const HTML = await page.content();
     await page.close();
 

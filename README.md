@@ -4,7 +4,7 @@
 
 - [ ] proper readme
 - [ ] usage manual
-- [ ] add timeout to puppeteer to let js finish the job
+- [x] add timeout to puppeteer to let js finish the job
 - [ ] remove microdata from metadata
 - [ ] make current and candidate addresses match each other
 - [ ] add option to hide identical fields

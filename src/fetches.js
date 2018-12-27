@@ -14,8 +14,8 @@ async function fetchSSR(url, options = {}) {
     return text;
 }
 
-function fetchClient(url) {
-    return renderHTML(url);
+function fetchClient(url, options) {
+    return renderHTML(url, options);
 }
 
 module.exports = {
