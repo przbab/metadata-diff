@@ -10,6 +10,7 @@
     "lint-fix": "eslint . --fix",
     "precommit": "lint-staged",
     "prettier": "prettier --write",
+    "start": "node index",
     "stylelint": "stylelint './**/*.scss' --syntax scss",
     "test": "npm run lint && npm run stylelint"
   },
