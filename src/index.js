@@ -2,7 +2,6 @@
 
 const { fetchSSR, fetchClient } = require('./fetches');
 const generateReport = require('./report');
-const diff = require('./diff');
 const parse = require('./parser');
 const getConfig = require('./config');
 const prepareHtml = require('./html');
@@ -40,16 +39,16 @@ async function full() {
 
         diffs.push({
             pathname,
-            candidate: diff(candidateServerMetadata, candidateClientMetadata),
-            client: diff(currentClientMetadata, candidateClientMetadata),
-            server: diff(currentServerMetadata, candidateServerMetadata),
+            candidate: { server: candidateServerMetadata, client: candidateClientMetadata },
+            client: { current: currentClientMetadata, candidate: candidateClientMetadata },
+            server: { current: currentServerMetadata, candidate: candidateServerMetadata },
         });
         /* eslint-enable */
     }
 
     console.info(`Saved report`);
 
-    await generateReport(diffs, config.output);
+    await generateReport({ date: new Date(), diffs }, config);
 
     process.exit(0);
 }
@@ -62,7 +61,6 @@ function getRequestOptions(config) {
 }
 
 module.exports = {
-    diff,
     fetchClient,
     fetchSSR,
     full,

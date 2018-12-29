@@ -67,12 +67,7 @@ body {
     background-color: #dfdfdf;
 }
 
-.environment-content {
-    display: none;
-}
-
-.environment-content.active {
-    display: block;
+#diffs {
     flex-grow: 1000;
     flex-basis: 450px;
     height: inherit;
@@ -87,7 +82,7 @@ body {
     body {
         overflow-y: auto;
     }
-    .environment-content.active {
+    #diffs {
         overflow-y: hidden;
     }
 }

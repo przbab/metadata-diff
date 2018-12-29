@@ -9,7 +9,9 @@
         "plugin:jest/recommended",
         "prettier"
     ],
-    "globals": {},
+    "globals": {
+        "jsondiffpatch": true
+    },
     "parser": "babel-eslint",
     "parserOptions": {
         "sourceType": "script",
