@@ -23,17 +23,25 @@ async function getStyles(config) {
     return styles;
 }
 
-function fillHtml(html, { data, scripts, styles, pathnames }) {
+function formatDate(date) {
+    const d = new Date(date);
+    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+}
+
+function fillHtml(html, { data, scripts, styles, pathnames }, config) {
     return html
         .replace(/{styles}/, styles)
         .replace(/{pathnames}/, pathnames)
         .replace(/{scripts}/, scripts)
-        .replace(/{data}/, JSON.stringify(data));
+        .replace(/{data}/, JSON.stringify(data))
+        .replace(/{date}/, formatDate(data.date))
+        .replace(/{currentUrl}/, config.currentBaseUrl)
+        .replace(/{candidateUrl}/, data.candidateBaseUrl);
 }
 
 async function getHtml(data, scripts, styles, config) {
     const html = await readFile(config.html, 'utf8');
-    const filledHtml = fillHtml(html, { data, scripts, styles, pathnames: renderDiffList(data) });
+    const filledHtml = fillHtml(html, { data, scripts, styles, pathnames: renderDiffList(data) }, config);
     if (config.minify) {
         const minifyHtml = require('html-minifier').minify;
         return minifyHtml(filledHtml, {

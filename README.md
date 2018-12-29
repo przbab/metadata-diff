@@ -7,14 +7,14 @@
 - [x] add timeout to puppeteer to let js finish the job
 - [x] remove microdata from metadata
 - [x] make current and candidate addresses match each other
-- [ ] add option to hide identical fields
+- [x] add option to hide identical fields
 - [x] add config file support (e.g. .metadiffrc)
 - [ ] add option to override config file location
 - [ ] add config validation
 - [ ] add option for multiple environments
-- [ ] add date of the test
+- [x] add date of the test
 - [ ] show redirects
-- [ ] display current and candidate addresses
+- [x] display current and candidate addresses
 - [ ] add error handling
 - [ ] indicate if there is no data
 - [ ] indicate if all data is identical

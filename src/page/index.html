@@ -6,9 +6,7 @@
             <title>Metadata diff</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/dist/formatters-styles/html.css" type="text/css" />
-            <style>
-                {styles}
-            </style>
+            <style>{styles}</style>
         </head>
         <body>
             <div class="root">
@@ -18,6 +16,12 @@
                         <li id="client" class="environment" onclick="changeSource(event)">Current client => Candidate client</li>
                         <li id="candidate" class="environment" onclick="changeSource(event)">Candidate server => Candidate client</li>
                     </ul>
+                </div>
+                <div>
+                    <span>Date: {date}</span>
+                    <span>Current: <a href="" id="current-url" target="_blank" rel="noopener noreferrer">{currentUrl}</a></span>
+                    <span>Candidate: <a href="" id="candidate-url" target="_blank" rel="noopener noreferrer">{candidateUrl}</a></span>
+                    <span><input type="checkbox" id="show-unchanged" checked> Show unchanged</span>
                 </div>
                 <div id="data">
                     <div class="site-list-container">
@@ -36,7 +40,7 @@
                 </div>
             </div>
             <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js"></script>
-            <script>{scripts}</script>
             <script>window.DIFF_DATA={data}</script>
+            <script>{scripts}</script>
         </body>
     </html>

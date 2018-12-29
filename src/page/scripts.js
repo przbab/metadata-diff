@@ -5,6 +5,10 @@ let source;
 let pathname;
 const metadataDiffNode = document.getElementById('metadata-diff');
 const microdataDiffNode = document.getElementById('microdata-diff');
+const currentUrlNode = document.getElementById('current-url');
+const candidateUrlNode = document.getElementById('candidate-url');
+const currentBaseUrl = window.DIFF_DATA.currentBaseUrl;
+const candidateBaseUrl = window.DIFF_DATA.candidateBaseUrl;
 
 function changeSource(event) {
     document.querySelectorAll('.environment.active').forEach(siteElement => {
@@ -78,6 +82,9 @@ function render() {
 
         const microdataDelta = jsondiff.diff(leftMatchedMicrodata, rightMatchedMicrodata) || {};
         microdataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(microdataDelta, leftMatchedMicrodata);
+
+        currentUrlNode.setAttribute('href', currentBaseUrl + pathname);
+        candidateUrlNode.setAttribute('href', candidateBaseUrl + pathname);
     }
 }
 
@@ -102,9 +109,18 @@ function matchMicrodataItems(leftMicrodata, rightMicrodata) {
     return [left, right];
 }
 
+function handleUnchangedSwitch(event) {
+    if (event.target.checked) {
+        jsondiffpatch.formatters.html.showUnchanged();
+    } else {
+        jsondiffpatch.formatters.html.hideUnchanged();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     changeSource({ target: document.getElementById('server') });
     showSite({ target: document.getElementsByClassName('site-list-item')[0] });
+    document.getElementById('show-unchanged').addEventListener('click', handleUnchangedSwitch);
     window.addEventListener('keydown', e => {
         if (e.metaKey) {
             switch (e.keyCode) {

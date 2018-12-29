@@ -18,9 +18,12 @@ async function full() {
 
 async function report() {
     const config = getConfig();
-    const diffs = diff();
+    const diffs = await diff();
 
-    return generateReport({ date: new Date(), diffs }, config);
+    return generateReport(
+        { date: new Date(), diffs, currentBaseUrl: config.currentBaseUrl, candidateBaseUrl: config.candidateBaseUrl },
+        config
+    );
 }
 
 async function diff() {
