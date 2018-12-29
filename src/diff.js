@@ -27,7 +27,7 @@ function diffMicrodata(currentMetadata, candidateMetadata) {
 }
 
 function diff(left, right) {
-    const delta = jsondiff.diff(left, right);
+    const delta = jsondiff.diff(left, right) || {};
     return jsondiffpatch.formatters.html.format(delta, left);
 }
 
