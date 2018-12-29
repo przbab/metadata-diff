@@ -12,7 +12,9 @@ function compareSites(current, candidate) {
 }
 
 function diffMetadata(currentMetadata, candidateMetadata) {
-    return diff({ ...currentMetadata, microdata: null }, { ...candidateMetadata, microdata: null });
+    const { microdata: currentMicrodata, ...currentReducedMetadata } = currentMetadata;
+    const { microdata: candidateMicrodata, ...candidateReducedMetadata } = candidateMetadata;
+    return diff(currentReducedMetadata, candidateReducedMetadata);
 }
 
 function diffMicrodata(currentMetadata, candidateMetadata) {
