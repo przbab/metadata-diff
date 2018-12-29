@@ -57,7 +57,7 @@ function previousSite() {
 }
 
 function getData() {
-    const data = window.data.diffs.find(site => site.pathname === pathname)[source];
+    const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
     if (source === 'candidate') {
         return [data.server, data.client];
     }

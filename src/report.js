@@ -3,7 +3,6 @@
 const fs = require('fs');
 const { promisify } = require('util');
 
-const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 
 async function getScripts(config) {
@@ -24,11 +23,20 @@ async function getStyles(config) {
     return styles;
 }
 
-function getHtml(data, scripts, styles, config) {
-    const html = template(data, scripts, styles); // TODO move to template
+function fillHtml(html, { data, scripts, styles, pathnames }) {
+    return html
+        .replace(/{styles}/, styles)
+        .replace(/{pathnames}/, pathnames)
+        .replace(/{scripts}/, scripts)
+        .replace(/{data}/, JSON.stringify(data));
+}
+
+async function getHtml(data, scripts, styles, config) {
+    const html = await readFile(config.html, 'utf8');
+    const filledHtml = fillHtml(html, { data, scripts, styles, pathnames: renderDiffList(data) });
     if (config.minify) {
         const minifyHtml = require('html-minifier').minify;
-        return minifyHtml(html, {
+        return minifyHtml(filledHtml, {
             collapseBooleanAttributes: true,
             collapseWhitespace: true,
             minifyCSS: true,
@@ -39,75 +47,21 @@ function getHtml(data, scripts, styles, config) {
             removeRedundantAttributes: true,
         });
     }
-    return html;
+    return filledHtml;
 }
 
 async function generateReport(data, config) {
     const scripts = await getScripts(config);
     const styles = await getStyles(config);
-    const html = getHtml(data, scripts, styles, config);
-
-    if (config.output) {
-        try {
-            await writeFile(config.output, html);
-        } catch (err) {
-            console.error(err);
-            process.exit(1);
-        }
-    }
+    const html = await getHtml(data, scripts, styles, config);
 
     return html;
 }
 
-function renderSiteList(data) {
+function renderDiffList(data) {
     return data.diffs
-        .map(site => `<li class="site-list-item" onclick="showSite(event)">${site.pathname}</li>`)
+        .map(diff => `<li class="site-list-item" onclick="showSite(event)">${diff.pathname}</li>`)
         .join('');
-}
-
-function template(data, scripts, styles) {
-    return `<!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <title>Metadata diff</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/dist/formatters-styles/html.css" type="text/css" />
-            <style>
-                ${styles}
-            </style>
-        </head>
-        <body>
-            <div class="root">
-                <div>
-                    <ul class="environments">
-                        <li id="server" class="environment" onclick="changeSource(event)">Current server => Candidate server</li>
-                        <li id="client" class="environment" onclick="changeSource(event)">Current client => Candidate client</li>
-                        <li id="candidate" class="environment" onclick="changeSource(event)">Candidate server => Candidate client</li>
-                    </ul>
-                </div>
-                <div id="data">
-                    <div class="site-list-container">
-                        <ul class="site-list">
-                            ${renderSiteList(data)}
-                        </ul>
-                    </div>
-                    <div id="diffs">     
-                        <h2>Metadata</h2>
-                        <div class="autoscroll" id="metadata-diff">
-                        </div>
-                        <h2>Microdata</h2>
-                        <div class="autoscroll" id="microdata-diff">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js"></script>
-            <script>${scripts}</script>
-            <script>window.data=${JSON.stringify(data)}</script>
-        </body>
-    </html>`;
 }
 
 module.exports = generateReport;

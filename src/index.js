@@ -5,8 +5,25 @@ const generateReport = require('./report');
 const parse = require('./parser');
 const getConfig = require('./config');
 const prepareHtml = require('./html');
+const save = require('./save');
 
 async function full() {
+    const html = await report();
+    const config = getConfig();
+    await save(html, config);
+    console.info(`Saved report`);
+
+    process.exit(0);
+}
+
+async function report() {
+    const config = getConfig();
+    const diffs = diff();
+
+    return generateReport({ date: new Date(), diffs }, config);
+}
+
+async function diff() {
     const config = getConfig();
     const requestOptions = getRequestOptions(config);
     const diffs = [];
@@ -43,14 +60,9 @@ async function full() {
             client: { current: currentClientMetadata, candidate: candidateClientMetadata },
             server: { current: currentServerMetadata, candidate: candidateServerMetadata },
         });
-        /* eslint-enable */
     }
-
-    console.info(`Saved report`);
-
-    await generateReport({ date: new Date(), diffs }, config);
-
-    process.exit(0);
+    return diffs;
+    /* eslint-enable */
 }
 
 function getRequestOptions(config) {
@@ -61,9 +73,11 @@ function getRequestOptions(config) {
 }
 
 module.exports = {
+    diff,
     fetchClient,
     fetchSSR,
     full,
     parse,
     prepareHtml,
+    report,
 };
