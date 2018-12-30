@@ -4,9 +4,7 @@ const microdata = require('microdata-node');
 const htmlparser = require('htmlparser2');
 
 function parse(html) {
-    const metadata = {
-        microdata: microdata.toJson(html),
-    };
+    const metadata = {};
     let currentTag = '';
 
     const parser = new htmlparser.Parser(
@@ -118,7 +116,7 @@ function parse(html) {
     parser.write(html);
     parser.end();
 
-    return metadata;
+    return { metadata, microdata: microdata.toJson(html) };
 }
 
 module.exports = parse;

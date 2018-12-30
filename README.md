@@ -23,7 +23,7 @@
 - [ ] allow concurrent diffs
 - [ ] redesign the report look
 - [ ] allow for report customization
-- [ ] indicate percentage differences
+- [x] indicate percentage differences
 - [ ] sort by percentage differences
 - [ ] make puppeteer a peer dependency (https://github.com/GoogleChrome/puppeteer/issues/288)
 - [ ] add option to comment pathname (notes)

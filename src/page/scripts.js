@@ -1,6 +1,5 @@
 'use strict';
 
-const jsondiff = jsondiffpatch.create({});
 let source;
 let pathname;
 const metadataDiffNode = document.getElementById('metadata-diff');
@@ -8,6 +7,9 @@ const microdataDiffNode = document.getElementById('microdata-diff');
 const redirectsNode = document.getElementById('redirects');
 const currentUrlNode = document.getElementById('current-url');
 const candidateUrlNode = document.getElementById('candidate-url');
+const serverPercentNode = document.getElementById('server-percent');
+const clientPercentNode = document.getElementById('client-percent');
+const candidatePercentNode = document.getElementById('candidate-percent');
 const currentBaseUrl = window.DIFF_DATA.currentBaseUrl;
 const candidateBaseUrl = window.DIFF_DATA.candidateBaseUrl;
 
@@ -24,9 +26,37 @@ function showSite(event) {
     document.querySelectorAll('.site-list-item.active').forEach(siteElement => {
         siteElement.classList.remove('active');
     });
-    pathname = event.target.textContent;
+    pathname = event.target.getAttribute('name');
     event.target.classList.add('active');
+
+    renderPercent();
     render();
+}
+
+function renderPercent() {
+    const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname);
+
+    const { candidate, client, server } = ['candidate', 'client', 'server'].reduce((acc, type) => {
+        const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
+            (acc2, dataType) => ({
+                all: acc2.all + data[type][dataType].all,
+                differences: acc2.differences + data[type][dataType].differences,
+            }),
+            { all: 0, differences: 0 }
+        );
+        return {
+            ...acc,
+            [type]: internalCount,
+        };
+    }, {});
+
+    const serverPercent = server.differences / server.all;
+    const clientPercent = client.differences / client.all;
+    const candidatePercent = candidate.differences / candidate.all;
+
+    serverPercentNode.innerHTML = `${Math.round(100 * serverPercent)}%`;
+    clientPercentNode.innerHTML = `${Math.round(100 * clientPercent)}%`;
+    candidatePercentNode.innerHTML = `${Math.round(100 * candidatePercent)}%`;
 }
 
 function nextSource() {
@@ -62,55 +92,20 @@ function previousSite() {
 }
 
 function getData() {
-    const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
-    if (source === 'candidate') {
-        return [data.server, data.client];
-    }
-    return [data.current, data.candidate];
+    return window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
 }
 
 function render() {
     if (source && pathname) {
-        const [left, right] = getData();
+        const data = getData();
 
-        const { microdata: leftMicrodata, ...leftReducedMetadata } = left.metadata;
-        const { microdata: rightMicrodata, ...rightReducedMetadata } = right.metadata;
-
-        const metadataDelta = jsondiff.diff(leftReducedMetadata, rightReducedMetadata) || {};
-        metadataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(metadataDelta, leftReducedMetadata);
-
-        const [leftMatchedMicrodata, rightMatchedMicrodata] = matchMicrodataItems(leftMicrodata, rightMicrodata);
-
-        const microdataDelta = jsondiff.diff(leftMatchedMicrodata, rightMatchedMicrodata) || {};
-        microdataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(microdataDelta, leftMatchedMicrodata);
+        metadataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.metadata.delta, data.metadata.left);
+        microdataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.microdata.delta, data.microdata.left);
+        redirectsNode.innerHTML = jsondiffpatch.formatters.html.format(data.redirects.delta, data.redirects.left);
 
         currentUrlNode.setAttribute('href', currentBaseUrl + pathname);
         candidateUrlNode.setAttribute('href', candidateBaseUrl + pathname);
-
-        const redirectsDelta = jsondiff.diff(left.redirects, right.redirects) || {};
-        redirectsNode.innerHTML = jsondiffpatch.formatters.html.format(redirectsDelta, left.redirects);
     }
-}
-
-function matchMicrodataItems(leftMicrodata, rightMicrodata) {
-    const left = {};
-    const right = {};
-    leftMicrodata.items.forEach(item => {
-        const type = (item.type && item.type[0]) || 'Unspecified Type';
-        if (!left[type]) {
-            left[type] = [];
-        }
-        left[type].push(item.properties);
-    });
-    rightMicrodata.items.forEach(item => {
-        const type = (item.type && item.type[0]) || 'Unspecified Type';
-        if (!right[type]) {
-            right[type] = [];
-        }
-        right[type].push(item.properties);
-    });
-
-    return [left, right];
 }
 
 function handleUnchangedSwitch(event) {

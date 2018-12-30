@@ -68,7 +68,28 @@ async function generateReport(data, config) {
 
 function renderDiffList(data) {
     return data.diffs
-        .map(diff => `<li class="site-list-item" onclick="showSite(event)">${diff.pathname}</li>`)
+        .map(diff => {
+            const { all, differences } = ['candidate', 'client', 'server'].reduce(
+                (acc, type) => {
+                    const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
+                        (acc2, dataType) => ({
+                            all: acc2.all + diff[type][dataType].all,
+                            differences: acc2.differences + diff[type][dataType].differences,
+                        }),
+                        { all: 0, differences: 0 }
+                    );
+                    return {
+                        all: acc.all + internalCount.all,
+                        differences: acc.differences + internalCount.differences,
+                    };
+                },
+                { all: 0, differences: 0 }
+            );
+
+            return `<li class="site-list-item" onclick="showSite(event)" name="${diff.pathname}">${
+                diff.pathname
+            } ${Math.round(100 * (differences / all))}%</li>`;
+        })
         .join('');
 }
 
