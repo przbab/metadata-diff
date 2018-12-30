@@ -31,11 +31,11 @@
   },
   "dependencies": {
     "cssnano": "^4.1.7",
+    "got": "^9.5.0",
     "html-minifier": "^3.5.21",
     "htmlparser2": "^3.10.0",
     "jsondiffpatch": "^0.3.11",
     "microdata-node": "^1.0.0",
-    "node-fetch": "^2.3.0",
     "puppeteer": "^1.11.0",
     "uglify-es": "^3.3.9"
   },

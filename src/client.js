@@ -44,20 +44,28 @@ async function blockRequests(page, urls) {
 
 async function getHTML(url, options) {
     const page = await preparePage(options);
-    await page.goto(url, options.goto);
+    const response = await page.goto(url, options.goto);
+    const redirects = response
+        .request()
+        .redirectChain()
+        .map(request => {
+            const chainedResponse = request.response();
+            return {
+                status: chainedResponse.status(),
+                target: chainedResponse.headers().location,
+                url: request.url(),
+            };
+        });
     if (options.additionalWait) {
         await page.waitFor(options.additionalWait);
     }
-    const HTML = await page.content();
+    const html = await page.content();
     await page.close();
 
-    return HTML;
+    return { html, redirects };
 }
 
 function attachCleanupHandlers() {
-    // so the program will not close instantly
-    // process.stdin.resume();
-
     // do something when app is closing
     process.on('exit', exitHandler);
 

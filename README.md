@@ -13,12 +13,12 @@
 - [ ] add config validation
 - [ ] add option for multiple environments
 - [x] add date of the test
-- [ ] show redirects
+- [x] show redirects
 - [x] display current and candidate addresses
 - [ ] add error handling
 - [ ] indicate if there is no data
 - [ ] indicate if all data is identical
-- [ ] add option to jump to the diff urls
+- [x] add option to jump to the diff urls
 - [ ] release as npm package
 - [ ] allow concurrent diffs
 - [ ] redesign the report look

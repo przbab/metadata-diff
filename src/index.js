@@ -4,7 +4,7 @@ const { fetchSSR, fetchClient } = require('./fetches');
 const generateReport = require('./report');
 const parse = require('./parser');
 const getConfig = require('./config');
-const prepareHtml = require('./html');
+const { prepareUrls, prepareRedirects } = require('./urls');
 const save = require('./save');
 
 async function full() {
@@ -51,17 +51,44 @@ async function diff() {
             candidateServerMetadata,
             candidateClientMetadata,
         ] = await Promise.all([
-            parse(prepareHtml(currentServerHtml, config)),
-            parse(prepareHtml(currentClientHtml, config)),
-            parse(prepareHtml(candidateServerHtml, config)),
-            parse(prepareHtml(candidateClientHtml, config)),
+            parse(prepareUrls(currentServerHtml.html, config)),
+            parse(prepareUrls(currentClientHtml.html, config)),
+            parse(prepareUrls(candidateServerHtml.html, config)),
+            parse(prepareUrls(candidateClientHtml.html, config)),
         ]);
 
         diffs.push({
             pathname,
-            candidate: { server: candidateServerMetadata, client: candidateClientMetadata },
-            client: { current: currentClientMetadata, candidate: candidateClientMetadata },
-            server: { current: currentServerMetadata, candidate: candidateServerMetadata },
+            candidate: {
+                server: {
+                    metadata: candidateServerMetadata,
+                    redirects: prepareRedirects(candidateServerHtml.redirects, config),
+                },
+                client: {
+                    metadata: candidateClientMetadata,
+                    redirects: prepareRedirects(candidateClientHtml.redirects, config),
+                },
+            },
+            client: {
+                current: {
+                    metadata: currentClientMetadata,
+                    redirects: prepareRedirects(currentClientHtml.redirects, config),
+                },
+                candidate: {
+                    metadata: candidateClientMetadata,
+                    redirects: prepareRedirects(candidateClientHtml.redirects, config),
+                },
+            },
+            server: {
+                current: {
+                    metadata: currentServerMetadata,
+                    redirects: prepareRedirects(currentServerHtml.redirects, config),
+                },
+                candidate: {
+                    metadata: candidateServerMetadata,
+                    redirects: prepareRedirects(candidateServerHtml.redirects, config),
+                },
+            },
         });
     }
     return diffs;
@@ -81,6 +108,6 @@ module.exports = {
     fetchSSR,
     full,
     parse,
-    prepareHtml,
+    prepareUrls,
     report,
 };

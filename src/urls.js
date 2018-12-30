@@ -1,7 +1,7 @@
 'use strict';
 
-function prepareHtml(html, config) {
-    let output = html;
+function prepareUrls(string, config) {
+    let output = string;
     if (config.replaceBaseUrls) {
         output = output.replace(getBaseUrlRegExp(config), 'base-url');
     }
@@ -28,4 +28,12 @@ function getBaseUrlRegExp(config) {
     return new RegExp(urls.join('|'), 'ig');
 }
 
-module.exports = prepareHtml;
+function prepareRedirects(redirects, config) {
+    return redirects.map(redirect => ({
+        ...redirect,
+        target: prepareUrls(redirect.target, config),
+        url: prepareUrls(redirect.url, config),
+    }));
+}
+
+module.exports = { prepareUrls, prepareRedirects };

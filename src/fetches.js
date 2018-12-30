@@ -1,17 +1,23 @@
 'use strict';
 
-const fetch = require('node-fetch');
+const got = require('got');
 const renderHTML = require('./client');
 
 async function fetchSSR(url, options = {}) {
-    const data = await fetch(url, {
+    const redirects = [];
+    const response = await got(url, {
         headers: {
             'User-Agent': options.userAgent,
         },
+    }).on('redirect', chainedResponse => {
+        redirects.push({
+            status: chainedResponse.statusCode,
+            target: chainedResponse.headers.location,
+            url: chainedResponse.requestUrl,
+        });
     });
-    const text = await data.text();
 
-    return text;
+    return { html: response.body, redirects };
 }
 
 function fetchClient(url, options) {

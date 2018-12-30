@@ -5,6 +5,7 @@ let source;
 let pathname;
 const metadataDiffNode = document.getElementById('metadata-diff');
 const microdataDiffNode = document.getElementById('microdata-diff');
+const redirectsNode = document.getElementById('redirects');
 const currentUrlNode = document.getElementById('current-url');
 const candidateUrlNode = document.getElementById('candidate-url');
 const currentBaseUrl = window.DIFF_DATA.currentBaseUrl;
@@ -72,8 +73,8 @@ function render() {
     if (source && pathname) {
         const [left, right] = getData();
 
-        const { microdata: leftMicrodata, ...leftReducedMetadata } = left;
-        const { microdata: rightMicrodata, ...rightReducedMetadata } = right;
+        const { microdata: leftMicrodata, ...leftReducedMetadata } = left.metadata;
+        const { microdata: rightMicrodata, ...rightReducedMetadata } = right.metadata;
 
         const metadataDelta = jsondiff.diff(leftReducedMetadata, rightReducedMetadata) || {};
         metadataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(metadataDelta, leftReducedMetadata);
@@ -85,6 +86,9 @@ function render() {
 
         currentUrlNode.setAttribute('href', currentBaseUrl + pathname);
         candidateUrlNode.setAttribute('href', candidateBaseUrl + pathname);
+
+        const redirectsDelta = jsondiff.diff(left.redirects, right.redirects) || {};
+        redirectsNode.innerHTML = jsondiffpatch.formatters.html.format(redirectsDelta, left.redirects);
     }
 }
 
