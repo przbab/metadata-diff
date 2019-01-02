@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "cssnano": "^4.1.7",
+    "deepmerge": "^3.0.0",
     "got": "^9.5.0",
     "html-minifier": "^3.5.21",
     "htmlparser2": "^3.10.0",

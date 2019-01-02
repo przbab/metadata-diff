@@ -11,7 +11,7 @@
 - [x] add config file support (e.g. .metadiffrc)
 - [ ] add option to override config file location
 - [ ] add config validation
-- [ ] add option for multiple environments
+- [x] add option for multiple environments
 - [x] add date of the test
 - [x] show redirects
 - [x] display current and candidate addresses

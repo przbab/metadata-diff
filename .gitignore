@@ -4,6 +4,5 @@
 /node_modules/
 !.gitkeep
 npm-debug.log
-.metadatadiffrc
-.metadatadiffrc.json
+.metadatadiffrc*
 *.tmp.html
