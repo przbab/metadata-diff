@@ -84,4 +84,5 @@ skipConfig | boolean | Omit configuration file reading
 - [ ] update `uglify-es` to [terser](https://github.com/terser-js/terser)
 - [ ] add YAML configuration file support
 - [ ] add option to enable/disable redirects, metadata, microdata diff
+- [ ] add response code diff
 - [ ] JSON-LD support
