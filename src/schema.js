@@ -5,9 +5,11 @@ const Joi = require('joi');
 const schema = Joi.object({
     candidateBaseUrl: Joi.string()
         .uri()
+        .replace(/\/$/, '')
         .required(),
     currentBaseUrl: Joi.string()
         .uri()
+        .replace(/\/$/, '')
         .required(),
     html: Joi.string(),
     minify: Joi.boolean().default(true),
