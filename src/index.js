@@ -10,18 +10,21 @@ const save = require('./save');
 
 const jsondiff = jsondiffpatch.create({});
 
-async function full() {
-    const html = await report();
-    const config = getConfig();
+const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig, ...options }) => {
+    const config = getConfig(options, skipConfig, overrideConfig);
+    return wrappedFunction(config);
+};
+
+async function full(config) {
+    const html = await report(config);
     await save(html, config);
     console.info(`Saved report`);
 
     process.exit(0);
 }
 
-async function report() {
-    const config = getConfig();
-    const diffs = await diff();
+async function report(config) {
+    const diffs = await diff(config);
 
     return generateReport(
         {
@@ -120,8 +123,7 @@ function matchMicrodataItems(leftMicrodata, rightMicrodata) {
     return [left, right];
 }
 
-async function diff() {
-    const config = getConfig();
+async function diff(config) {
     const requestOptions = getRequestOptions(config);
     const diffs = [];
 
@@ -202,10 +204,10 @@ function getRequestOptions(config) {
 }
 
 module.exports = {
-    diff,
+    diff: withConfig(diff),
     fetchClient,
     fetchSSR,
-    full,
+    full: withConfig(full),
     parse,
     prepareUrls,
     report,

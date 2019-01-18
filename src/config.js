@@ -8,21 +8,24 @@ const schema = require('./schema');
 
 const CONFIG_FILES = ['.metadatadiffrc', '.metadatadiffrc.json', '.metadatadiffrc.js', 'package.json'];
 
-function getConfig() {
+function getConfig(overrideConfig, skipConfig = false, file) {
+    if (skipConfig) {
+        return validateConfig(overrideConfig);
+    }
+
     const directory = './';
-    const configFile = getFilenameForDirectory(directory);
+    const configFile = file || getFilenameForDirectory(directory);
     if (!configFile) {
         throw new Error('Configuration not found');
     }
     const fullConfig = readFile(path.join(directory, configFile));
-    const config = getConfigEnvironment(fullConfig);
+    const config = getConfigEnvironment(fullConfig, overrideConfig);
     return validateConfig(config);
 }
 
 function readFile(configFile) {
     if (configFile.match(/\.js$/)) {
-        // eslint-disable-next-line import/no-dynamic-require
-        return require(path.join('../', configFile));
+        return readJsFile(configFile);
     }
     if (configFile.match(/package.json$/)) {
         return readPackageJson(configFile);
@@ -46,6 +49,11 @@ function readConfigFile(configFile) {
     }
 }
 
+function readJsFile(configFile) {
+    // eslint-disable-next-line import/no-dynamic-require
+    return require(path.join('../', configFile));
+}
+
 function readPackageJson(configFile) {
     const file = readConfigFile(configFile);
     if (file.metadataDiff) {
@@ -54,12 +62,14 @@ function readPackageJson(configFile) {
     throw new Error('Configuration not found');
 }
 
-function getConfigEnvironment(config) {
+function getConfigEnvironment(config, overrideConfig = {}) {
     if (config.environment) {
         const { environment, ...defaultConfig } = config;
-        const env = process.env.NODE_ENV || 'development';
+        const env = process.env.METADATA_DIFF_ENV || process.env.NODE_ENV || 'development';
         if (environment[env]) {
-            return merge(defaultConfig, environment[env]);
+            console.log('\n\n', overrideConfig, '\n\n');
+
+            return merge.all([defaultConfig, environment[env], overrideConfig]);
         }
         return defaultConfig;
     }
