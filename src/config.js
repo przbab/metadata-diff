@@ -67,8 +67,6 @@ function getConfigEnvironment(config, overrideConfig = {}) {
         const { environment, ...defaultConfig } = config;
         const env = process.env.METADATA_DIFF_ENV || process.env.NODE_ENV || 'development';
         if (environment[env]) {
-            console.log('\n\n', overrideConfig, '\n\n');
-
             return merge.all([defaultConfig, environment[env], overrideConfig]);
         }
         return defaultConfig;

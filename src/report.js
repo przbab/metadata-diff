@@ -3,9 +3,11 @@
 const fs = require('fs');
 const { promisify } = require('util');
 const jsondiffpatch = require('jsondiffpatch');
+const ejs = require('ejs');
 
 const jsondiff = jsondiffpatch.create({});
 const readFile = promisify(fs.readFile);
+const renderFile = promisify(ejs.renderFile);
 
 async function getScripts(config) {
     const scripts = await readFile(config.scripts, 'utf8');
@@ -30,23 +32,12 @@ function formatDate(date) {
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
 }
 
-function fillHtml(html, { data, scripts, styles, pathnames }, config) {
-    return html
-        .replace(/{styles}/, styles)
-        .replace(/{pathnames}/, pathnames)
-        .replace(/{scripts}/, scripts)
-        .replace(/{data}/, JSON.stringify(data))
-        .replace(/{date}/, formatDate(data.date))
-        .replace(/{currentUrl}/, config.currentBaseUrl)
-        .replace(/{candidateUrl}/, data.candidateBaseUrl);
-}
-
 async function getHtml(data, scripts, styles, config) {
-    const html = await readFile(config.html, 'utf8');
-    const filledHtml = fillHtml(html, { data, scripts, styles, pathnames: renderDiffList(data) }, config);
+    const html = await renderFile(config.html, { config, data, scripts, styles });
+
     if (config.minify) {
         const minifyHtml = require('html-minifier').minify;
-        return minifyHtml(filledHtml, {
+        return minifyHtml(html, {
             collapseBooleanAttributes: true,
             collapseWhitespace: true,
             minifyCSS: true,
@@ -57,7 +48,7 @@ async function getHtml(data, scripts, styles, config) {
             removeRedundantAttributes: true,
         });
     }
-    return filledHtml;
+    return html;
 }
 
 async function generateReport(data, config) {
@@ -66,33 +57,6 @@ async function generateReport(data, config) {
     const html = await getHtml(data, scripts, styles, config);
 
     return html;
-}
-
-function renderDiffList(data) {
-    return data.diffs
-        .map(diff => {
-            const { all, differences } = ['candidate', 'client', 'server'].reduce(
-                (acc, type) => {
-                    const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
-                        (acc2, dataType) => ({
-                            all: acc2.all + diff[type][dataType].all,
-                            differences: acc2.differences + diff[type][dataType].differences,
-                        }),
-                        { all: 0, differences: 0 }
-                    );
-                    return {
-                        all: acc.all + internalCount.all,
-                        differences: acc.differences + internalCount.differences,
-                    };
-                },
-                { all: 0, differences: 0 }
-            );
-
-            return `<li class="site-list-item" onclick="showSite(event)" name="${diff.pathname}">${
-                diff.pathname
-            } ${Math.round(100 * (differences / all))}%</li>`;
-        })
-        .join('');
 }
 
 async function report(config, diffs) {

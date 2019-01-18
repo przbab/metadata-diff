@@ -17,8 +17,9 @@ function changeSource(event) {
     document.querySelectorAll('.environment.active').forEach(siteElement => {
         siteElement.classList.remove('active');
     });
-    source = event.target.id;
-    event.target.classList.add('active');
+    const target = event.target.closest('li.environment');
+    source = target.id;
+    target.classList.add('active');
     render();
 }
 
@@ -26,8 +27,10 @@ function showSite(event) {
     document.querySelectorAll('.site-list-item.active').forEach(siteElement => {
         siteElement.classList.remove('active');
     });
-    pathname = event.target.getAttribute('name');
-    event.target.classList.add('active');
+
+    const target = event.target.closest('li.site-list-item');
+    pathname = target.getAttribute('name');
+    target.classList.add('active');
 
     renderPercent();
     render();
@@ -54,9 +57,9 @@ function renderPercent() {
     const clientPercent = client.differences / client.all;
     const candidatePercent = candidate.differences / candidate.all;
 
-    serverPercentNode.innerHTML = `${Math.round(100 * serverPercent)}%`;
-    clientPercentNode.innerHTML = `${Math.round(100 * clientPercent)}%`;
-    candidatePercentNode.innerHTML = `${Math.round(100 * candidatePercent)}%`;
+    serverPercentNode.setAttribute('progress', Math.round(100 * serverPercent));
+    clientPercentNode.setAttribute('progress', Math.round(100 * clientPercent));
+    candidatePercentNode.setAttribute('progress', Math.round(100 * candidatePercent));
 }
 
 function nextSource() {
@@ -145,3 +148,84 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+class ProgressRing extends HTMLElement {
+    constructor() {
+        super();
+        const stroke = this.getAttribute('stroke');
+        const radius = this.getAttribute('radius');
+        const normalizedRadius = radius - stroke * 2;
+        this.circumference = normalizedRadius * 2 * Math.PI;
+
+        this.root = this.attachShadow({ mode: 'open' });
+        this.root.innerHTML = `
+<div>
+    <div>
+        <span></span>
+    </div>
+    <svg
+        height="${radius * 2}"
+        width="${radius * 2}"
+    >
+        <circle
+            stroke="#EEEEEE"
+            stroke-width="${stroke}"
+            fill="transparent"
+            r="${normalizedRadius}"
+            cx="${radius}"
+            cy="${radius}"
+        />
+        <circle
+            stroke="#ee6e73"
+            stroke-dasharray="${this.circumference} ${this.circumference}"
+            style="stroke-dashoffset:${this.circumference}"
+            stroke-width="${stroke}"
+            fill="transparent"
+            r="${normalizedRadius}"
+            cx="${radius}"
+            cy="${radius}"
+        />
+    </svg>
+</div>
+
+<style>
+    div {
+        position: relative;
+        width: ${radius * 2}px;
+        height: ${radius * 2}px;
+    }
+    div > div {
+        position: absolute;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+    }
+</style>`;
+    }
+
+    setProgress(percent) {
+        const offset = this.circumference - (percent / 100) * this.circumference;
+        const circle = this.root.querySelector('circle + circle');
+        const span = this.root.querySelector('span');
+        circle.style.strokeDashoffset = offset;
+        span.innerText = `${percent}%`;
+    }
+
+    static get observedAttributes() {
+        return ['progress'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'progress') {
+            this.setProgress(newValue);
+        }
+    }
+}
+
+window.customElements.define('progress-ring', ProgressRing);

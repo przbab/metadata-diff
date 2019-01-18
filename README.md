@@ -13,7 +13,7 @@ Property name | Required | Type | Default value | Description
 currentBaseUrl | yes | string | | Origin of *current* host
 candidateBaseUrl | yes | string | | Origin of *candidate* host
 environment | no | object | `{}` | Allows for altering config for given environment taken from `METADATA_DIFF_ENV` or`NODE_ENV` defaulting to `development`. E.g. `{ "development": { "candidateBaseUrl": "http://localhost:3000" } }`
-html | no | string | `./src/page/index.html` | Path to the template html file
+html | no | string | `./src/page/index.html` | Path to the ejs template file
 minify | no | boolean | `true` | Should the report be minified
 output | no | string | `metadataDiffReport.html` | Path for the output file
 pathnames | yes | array(string) | | Array of pathnames to be tested
@@ -71,17 +71,17 @@ skipConfig | boolean | Omit configuration file reading
 - [x] show redirects
 - [x] display current and candidate addresses
 - [ ] add error handling
-- [ ] indicate if there is no data
-- [ ] indicate if all data is identical
 - [x] add option to jump to the diff urls
 - [ ] release as npm package
 - [ ] allow concurrent diffs
-- [ ] redesign the report look
-- [ ] allow for report customization
+- [x] redesign the report look
+- [x] make report more human friendly
+- [x] allow for report customization
 - [x] indicate percentage differences
-- [ ] sort by percentage differences
+- [x] sort by percentage differences
 - [ ] make puppeteer a peer dependency (https://github.com/GoogleChrome/puppeteer/issues/288)
 - [ ] add option to comment pathname (notes)
 - [ ] update `uglify-es` to [terser](https://github.com/terser-js/terser)
 - [ ] add YAML configuration file support
+- [ ] add option to enable/disable redirects, metadata, microdata diff
 - [ ] JSON-LD support

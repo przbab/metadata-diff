@@ -14,10 +14,15 @@ const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig, ...
 };
 
 async function full(config) {
-    const diffs = await diff(config);
-    const html = await report(config, diffs);
-    await save(html, config);
-    console.info(`Saved report`);
+    try {
+        const diffs = await diff(config);
+        const html = await report(config, diffs);
+        await save(html, config);
+        console.info(`Saved report`);
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
 
     process.exit(0);
 }
