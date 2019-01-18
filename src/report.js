@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const { promisify } = require('util');
+const path = require('path');
 const jsondiffpatch = require('jsondiffpatch');
 const ejs = require('ejs');
 
@@ -10,7 +11,8 @@ const readFile = promisify(fs.readFile);
 const renderFile = promisify(ejs.renderFile);
 
 async function getScripts(config) {
-    const scripts = await readFile(config.scripts, 'utf8');
+    const file = config.scripts || path.join(__dirname, './page/scripts.js');
+    const scripts = await readFile(file, 'utf8');
     if (config.minify) {
         const uglifyJs = require('uglify-es');
         return uglifyJs.minify(scripts).code;
@@ -19,21 +21,18 @@ async function getScripts(config) {
 }
 
 async function getStyles(config) {
-    const styles = await readFile(config.styles, 'utf8');
+    const file = config.styles || path.join(__dirname, './page/styles.css');
+    const styles = await readFile(file, 'utf8');
     if (config.minify) {
         const cssnano = require('cssnano');
-        return (await cssnano.process(styles)).css;
+        return (await cssnano.process(styles, { from: undefined })).css;
     }
     return styles;
 }
 
-function formatDate(date) {
-    const d = new Date(date);
-    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
-}
-
 async function getHtml(data, scripts, styles, config) {
-    const html = await renderFile(config.html, { config, data, scripts, styles });
+    const file = config.html || path.join(__dirname, './page/index.ejs');
+    const html = await renderFile(file, { config, data, scripts, styles });
 
     if (config.minify) {
         const minifyHtml = require('html-minifier').minify;

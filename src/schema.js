@@ -9,7 +9,7 @@ const schema = Joi.object({
     currentBaseUrl: Joi.string()
         .uri()
         .required(),
-    html: Joi.string().default('./src/page/index.html'),
+    html: Joi.string(),
     minify: Joi.boolean().default(true),
     output: Joi.string().default('metadataDiffReport.html'),
     pathnames: Joi.array()
@@ -29,8 +29,8 @@ const schema = Joi.object({
             replace: Joi.string().required(),
         })
     ),
-    scripts: Joi.string().default('./src/page/scripts.js'),
-    styles: Joi.string().default('./src/page/styles.css'),
+    scripts: Joi.string(),
+    styles: Joi.string(),
     userAgent: Joi.string().default('metadata-diff'),
 });
 

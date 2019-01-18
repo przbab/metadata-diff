@@ -13,7 +13,7 @@ function getConfig(overrideConfig, skipConfig = false, file) {
         return validateConfig(overrideConfig);
     }
 
-    const directory = './';
+    const directory = process.cwd();
     const configFile = file || getFilenameForDirectory(directory);
     if (!configFile) {
         throw new Error('Configuration not found');
@@ -51,7 +51,7 @@ function readConfigFile(configFile) {
 
 function readJsFile(configFile) {
     // eslint-disable-next-line import/no-dynamic-require
-    return require(path.join('../', configFile));
+    return require(configFile);
 }
 
 function readPackageJson(configFile) {

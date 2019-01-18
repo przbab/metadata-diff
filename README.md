@@ -8,27 +8,27 @@ You can use any way to configure the report, the merged configuration will be va
 
 By default configuration should be in one of the `.metadatadiffrc`, `.metadatadiffrc.json`, `.metadatadiffrc.js` file. You can also put configuration in `package.json` under `metadataDiff` property.
 
-Property name | Required | Type | Default value | Description
---- | --- | --- | --- | ---
-currentBaseUrl | yes | string | | Origin of *current* host
-candidateBaseUrl | yes | string | | Origin of *candidate* host
-environment | no | object | `{}` | Allows for altering config for given environment taken from `METADATA_DIFF_ENV` or`NODE_ENV` defaulting to `development`. E.g. `{ "development": { "candidateBaseUrl": "http://localhost:3000" } }`
-html | no | string | `./src/page/index.html` | Path to the ejs template file
-minify | no | boolean | `true` | Should the report be minified
-output | no | string | `metadataDiffReport.html` | Path for the output file
-pathnames | yes | array(string) | | Array of pathnames to be tested
-puppeteerOption | no | object | `{}` |
-puppeteerOption.additionalWait | no | number | `0` | By setting this property you may give puppeteer some timeout to increase the chance of completing js tasks.
-puppeteerOption.blockRequests | no | array(string) | `[]` | Array of regular expressions that will be matched against outgoing requests and cancelling matched. Intended for ads, tracking, etc.
-puppeteerOption.goto | no | object | `{}` | This property will be passed to puppeteer's `page.goto` as options. https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options
-replaceBaseUrls | no | boolean | `true` | Should base url be replaced with string (to simplify comparison)
-replacements | no | array(object) | `[]` | Allows for replacing some properties in html before parsing. Intended for random parts like tokens, etc,
-replacements.flags | no | string | `''` |
-replacements.regExp | yes | string | | Regular expression
-replacements.replace | yes | string | | Replacement
-scripts | no | string | `./src/page/scripts.js` | Path to the script file. This file will be included in report.
-styles | no | string | `./src/page/styles.css` | Path to the style file. This file will be included in report.
-userAgent | no | string | `metadata-diff` | User agent
+Property name | Required | Type | Description
+--- | --- | --- | ---
+currentBaseUrl | yes | string | Origin of *current* host
+candidateBaseUrl | yes | string | Origin of *candidate* host
+environment | no | object | Allows for altering config for given environment taken from `METADATA_DIFF_ENV` or `NODE_ENV` defaulting to `development`. E.g. `{ "development": { "candidateBaseUrl": "http://localhost:3000" } }`
+html | no | string | Path to the ejs template file
+minify | no | boolean | Should the report be minified (Default: `true`)
+output | no | string | Path for the output file (Default: `metadataDiffReport.html`)
+pathnames | yes | array(string) | Array of pathnames to be tested
+puppeteerOption | no | object |
+puppeteerOption.additionalWait | no | number | By setting this property you may give puppeteer some timeout to increase the chance of completing js tasks. (Default: `0`)
+puppeteerOption.blockRequests | no | array(string) |  Array of regular expressions that will be matched against outgoing requests and cancelling matched. Intended for ads, tracking, etc.
+puppeteerOption.goto | no | object | This property will be passed to puppeteer's `page.goto` as options. https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options
+replaceBaseUrls | no | boolean | Should base url be replaced with string (to simplify comparison) (Default: `true`)
+replacements | no | array(object) | Allows for replacing some properties in html before parsing. Intended for random parts like tokens, etc,
+replacements.flags | no | string | Flags for the expression
+replacements.regExp | yes | string | Regular expression
+replacements.replace | yes | string | Replacement
+scripts | no | string | Path to the script file. This file will be included in report.
+styles | no | string | Path to the style file. This file will be included in report.
+userAgent | no | string | User agent (Default: `metadata-diff`)
 
 ### Command line
 
