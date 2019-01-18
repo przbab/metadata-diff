@@ -124,19 +124,23 @@ async function diff() {
     const config = getConfig();
     const requestOptions = getRequestOptions(config);
     const diffs = [];
+
     /* eslint-disable no-await-in-loop */
     for (let i = 0; i < config.pathnames.length; i++) {
         const pathname = config.pathnames[i];
         console.info(`Processing ${i + 1}/${config.pathnames.length}: ${pathname}`);
 
-        const current = config.currentBaseUrl + pathname;
-        const candidate = config.candidateBaseUrl + pathname;
+        const current = new URL(config.currentBaseUrl);
+        const candidate = new URL(config.candidateBaseUrl);
+
+        current.pathname = pathname;
+        candidate.pathname = pathname;
 
         const [currentServerHtml, currentClientHtml, candidateServerHtml, candidateClientHtml] = await Promise.all([
-            fetchSSR(current, requestOptions),
-            fetchClient(current, requestOptions),
-            fetchSSR(candidate, requestOptions),
-            fetchClient(candidate, requestOptions),
+            fetchSSR(current.href, requestOptions),
+            fetchClient(current.href, requestOptions),
+            fetchSSR(candidate.href, requestOptions),
+            fetchClient(candidate.href, requestOptions),
         ]);
 
         const [currentServerData, currentClientData, candidateServerData, candidateClientData] = await Promise.all([

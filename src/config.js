@@ -3,6 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const merge = require('deepmerge');
+const Joi = require('joi');
+const schema = require('./schema');
 
 const CONFIG_FILES = ['.metadatadiffrc', '.metadatadiffrc.json', '.metadatadiffrc.js', 'package.json'];
 
@@ -12,8 +14,9 @@ function getConfig() {
     if (!configFile) {
         throw new Error('Configuration not found');
     }
-    const config = readFile(path.join(directory, configFile));
-    return getConfigEnvironment(config);
+    const fullConfig = readFile(path.join(directory, configFile));
+    const config = getConfigEnvironment(fullConfig);
+    return validateConfig(config);
 }
 
 function readFile(configFile) {
@@ -61,6 +64,15 @@ function getConfigEnvironment(config) {
         return defaultConfig;
     }
     return config;
+}
+
+function validateConfig(config) {
+    const { error, value } = Joi.validate(config, schema);
+    if (error) {
+        throw error;
+    }
+
+    return value;
 }
 
 module.exports = getConfig;
