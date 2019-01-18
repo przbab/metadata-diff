@@ -83,6 +83,11 @@ body {
     align-items: center;
 }
 
+.site-list-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .environment.active {
     background-color: #dfdfdf;
 }
