@@ -12,7 +12,8 @@
     "prettier": "prettier --write",
     "start": "node index",
     "stylelint": "stylelint './**/*.scss' --syntax scss",
-    "test": "npm run lint && npm run stylelint"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "license": "MIT",
   "lint-staged": {
@@ -24,10 +25,16 @@
       "npm run prettier",
       "git add"
     ],
-    "*.scss": [
-      "stylelint --syntax=scss --fix",
+    "*.css": [
+      "stylelint --fix",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
   },
   "dependencies": {
     "cssnano": "^4.1.7",
@@ -53,6 +60,7 @@
     "eslint-plugin-jest": "^22.1.2",
     "eslint-plugin-prettier": "^3.0.0",
     "husky": "^1.2.0",
+    "jest": "^24.0.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3"
   }

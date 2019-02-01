@@ -2,7 +2,7 @@
 
 const { fetchSSR, fetchClient } = require('./fetches');
 const parse = require('./parser');
-const { prepareUrls, prepareRedirects } = require('./urls');
+const { prepareUrls } = require('./urls');
 
 async function diffAll(config) {
     const requestOptions = getRequestOptions(config);
@@ -92,6 +92,21 @@ function getRequestOptions(config) {
         ...config.puppeteerOptions,
         userAgent: config.userAgent,
     };
+}
+
+/**
+ * Prepares urls in redirect object
+ *
+ * @param {object} redirects
+ * @param {object} config
+ * @return {object} Prepared redirect object
+ */
+function prepareRedirects(redirects, config) {
+    return redirects.map(redirect => ({
+        ...redirect,
+        target: prepareUrls(redirect.target, config),
+        url: prepareUrls(redirect.url, config),
+    }));
 }
 
 module.exports = diffAll;
