@@ -86,4 +86,4 @@ skipConfig | boolean | Omit configuration file reading
 - [ ] add option to enable/disable redirects, metadata, microdata diff
 - [ ] add option to collapse redirects, metadata, microdata sections
 - [ ] add response code diff
-- [ ] JSON-LD support
+- [x] JSON-LD support

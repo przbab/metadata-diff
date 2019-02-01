@@ -5,6 +5,7 @@ const htmlparser = require('htmlparser2');
 
 function parse(html) {
     const metadata = {};
+    const jsonLd = { items: [] };
     let currentTag = '';
 
     const parser = new htmlparser.Parser(
@@ -13,6 +14,11 @@ function parse(html) {
                 currentTag = name;
 
                 switch (name) {
+                    case 'script':
+                        if (attribs.type === 'application/ld+json') {
+                            currentTag = 'jsonLd';
+                        }
+                        break;
                     case 'link':
                         if (['canonical', 'icon', 'shortcut', 'manifest'].includes(attribs.rel)) {
                             metadata[attribs.rel] = attribs.href;
@@ -93,6 +99,9 @@ function parse(html) {
             },
             ontext(text) {
                 switch (currentTag) {
+                    case 'jsonLd':
+                        jsonLd.items.push(JSON.parse(text));
+                        break;
                     case 'title':
                         metadata.title = text;
                         break;
@@ -116,7 +125,7 @@ function parse(html) {
     parser.write(html);
     parser.end();
 
-    return { metadata, microdata: microdata.toJson(html) };
+    return { metadata, microdata: microdata.toJson(html), jsonLd };
 }
 
 module.exports = parse;

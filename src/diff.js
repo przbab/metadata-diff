@@ -46,11 +46,13 @@ async function diffSingle(pathname, config, requestOptions) {
             server: {
                 metadata: candidateServerData.metadata,
                 microdata: candidateServerData.microdata,
+                jsonLd: candidateServerData.jsonLd,
                 redirects: prepareRedirects(candidateServerHtml.redirects, config),
             },
             client: {
                 metadata: candidateClientData.metadata,
                 microdata: candidateClientData.microdata,
+                jsonLd: candidateClientData.jsonLd,
                 redirects: prepareRedirects(candidateClientHtml.redirects, config),
             },
         },
@@ -58,11 +60,13 @@ async function diffSingle(pathname, config, requestOptions) {
             current: {
                 metadata: currentClientData.metadata,
                 microdata: currentClientData.microdata,
+                jsonLd: currentClientData.jsonLd,
                 redirects: prepareRedirects(currentClientHtml.redirects, config),
             },
             candidate: {
                 metadata: candidateClientData.metadata,
                 microdata: candidateClientData.microdata,
+                jsonLd: candidateClientData.jsonLd,
                 redirects: prepareRedirects(candidateClientHtml.redirects, config),
             },
         },
@@ -70,11 +74,13 @@ async function diffSingle(pathname, config, requestOptions) {
             current: {
                 metadata: currentServerData.metadata,
                 microdata: currentServerData.microdata,
+                jsonLd: currentServerData.jsonLd,
                 redirects: prepareRedirects(currentServerHtml.redirects, config),
             },
             candidate: {
                 metadata: candidateServerData.metadata,
                 microdata: candidateServerData.microdata,
+                jsonLd: candidateServerData.jsonLd,
                 redirects: prepareRedirects(candidateServerHtml.redirects, config),
             },
         },

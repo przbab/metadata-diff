@@ -80,8 +80,12 @@ function processDiff(data) {
         data.current.microdata,
         data.candidate.microdata
     );
-    const metadataDelta = jsondiff.diff(data.current.metadata, data.candidate.metadata) || {};
     const microdataDelta = jsondiff.diff(leftMatchedMicrodata, rightMatchedMicrodata) || {};
+
+    const [leftMatchedJsonLd, rightMatchedJsonLd] = matchMicrodataItems(data.current.jsonLd, data.candidate.jsonLd);
+    const jsonLdDelta = jsondiff.diff(leftMatchedJsonLd, rightMatchedJsonLd) || {};
+
+    const metadataDelta = jsondiff.diff(data.current.metadata, data.candidate.metadata) || {};
     const redirectsDelta = jsondiff.diff(data.current.redirects, data.candidate.redirects) || {};
     return {
         metadata: {
@@ -95,6 +99,12 @@ function processDiff(data) {
             delta: microdataDelta,
             differences: Object.keys(microdataDelta).length,
             left: data.current.microdata,
+        },
+        jsonLd: {
+            all: Object.keys(data.current.jsonLd).length,
+            delta: jsonLdDelta,
+            differences: Object.keys(jsonLdDelta).length,
+            left: data.current.jsonLd,
         },
         redirects: {
             all: Object.keys(data.current.redirects).length,
@@ -110,8 +120,12 @@ function processCandidateDiff(data) {
         data.server.microdata,
         data.client.microdata
     );
-    const metadataDelta = jsondiff.diff(data.server.metadata, data.client.metadata) || {};
     const microdataDelta = jsondiff.diff(leftMatchedMicrodata, rightMatchedMicrodata) || {};
+
+    const [leftMatchedJsonLd, rightMatchedJsonLd] = matchMicrodataItems(data.server.jsonLd, data.client.jsonLd);
+    const jsonLdDelta = jsondiff.diff(leftMatchedJsonLd, rightMatchedJsonLd) || {};
+
+    const metadataDelta = jsondiff.diff(data.server.metadata, data.client.metadata) || {};
     const redirectsDelta = jsondiff.diff(data.server.redirects, data.client.redirects) || {};
     return {
         metadata: {
@@ -125,6 +139,12 @@ function processCandidateDiff(data) {
             delta: microdataDelta,
             differences: Object.keys(microdataDelta).length,
             left: data.server.microdata,
+        },
+        jsonLd: {
+            all: Object.keys(leftMatchedJsonLd).length,
+            delta: jsonLdDelta,
+            differences: Object.keys(jsonLdDelta).length,
+            left: data.server.jsonLd,
         },
         redirects: {
             all: Object.keys(data.server.redirects).length,

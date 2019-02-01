@@ -4,6 +4,7 @@ let source;
 let pathname;
 const metadataDiffNode = document.getElementById('metadata-diff');
 const microdataDiffNode = document.getElementById('microdata-diff');
+const jsonLdDiffNode = document.getElementById('json-ld-diff');
 const redirectsNode = document.getElementById('redirects');
 const currentUrlNode = document.getElementById('current-url');
 const candidateUrlNode = document.getElementById('candidate-url');
@@ -104,6 +105,7 @@ function render() {
 
         metadataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.metadata.delta, data.metadata.left);
         microdataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.microdata.delta, data.microdata.left);
+        jsonLdDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.jsonLd.delta, data.jsonLd.left);
         redirectsNode.innerHTML = jsondiffpatch.formatters.html.format(data.redirects.delta, data.redirects.left);
 
         currentUrlNode.setAttribute('href', currentBaseUrl + pathname);
