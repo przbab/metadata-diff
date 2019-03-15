@@ -1,12 +1,12 @@
 'use strict';
 
-const { fetchSSR, fetchClient } = require('./fetches');
-const parse = require('./parser');
-const getConfig = require('./config');
+const { fetchSSR, fetchClient } = require('./client/ssr');
+const { parse } = require('./parser');
+const { getConfig } = require('./config');
 const { prepareUrls } = require('./urls');
 const save = require('./save');
-const diff = require('./diff');
-const report = require('./report');
+const { diffAll } = require('./diff');
+const { report } = require('./report');
 
 const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig, ...options } = {}, ...rest) => {
     const config = getConfig(options, skipConfig, overrideConfig);
@@ -15,7 +15,7 @@ const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig, ...
 
 async function full(config) {
     try {
-        const diffs = await diff(config);
+        const diffs = await diffAll(config);
         const html = await report(config, diffs);
         await save(html, config);
         console.info(`Saved report`);
@@ -28,7 +28,7 @@ async function full(config) {
 }
 
 module.exports = {
-    diff: withConfig(diff),
+    diff: withConfig(diffAll),
     fetchClient,
     fetchSSR,
     full: withConfig(full),

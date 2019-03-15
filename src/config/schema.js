@@ -36,4 +36,4 @@ const schema = Joi.object({
     userAgent: Joi.string().default('metadata-diff'),
 });
 
-module.exports = schema;
+module.exports = { schema };

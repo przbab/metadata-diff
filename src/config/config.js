@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const merge = require('deepmerge');
 const Joi = require('joi');
-const schema = require('./schema');
+const { schema } = require('./schema');
 
 const CONFIG_FILES = ['.metadatadiffrc', '.metadatadiffrc.json', '.metadatadiffrc.js', 'package.json'];
 
@@ -14,7 +14,7 @@ function getConfig(overrideConfig, skipConfig = false, file) {
     }
 
     const directory = process.cwd();
-    const configFile = file || getFilenameForDirectory(directory);
+    const configFile = file || getConfigFileForDirectory(directory);
     if (!configFile) {
         throw new Error('Configuration not found');
     }
@@ -31,16 +31,16 @@ function readFile(configFile) {
         return readPackageJson(configFile);
     }
     if (configFile) {
-        return readConfigFile(configFile);
+        return readJSONConfigFile(configFile);
     }
     throw new Error('Unsupported configuration file type');
 }
 
-function getFilenameForDirectory(directory) {
+function getConfigFileForDirectory(directory) {
     return CONFIG_FILES.find(filename => fs.existsSync(path.join(directory, filename)));
 }
 
-function readConfigFile(configFile) {
+function readJSONConfigFile(configFile) {
     const file = fs.readFileSync(configFile, 'utf-8');
     try {
         return JSON.parse(file);
@@ -55,7 +55,7 @@ function readJsFile(configFile) {
 }
 
 function readPackageJson(configFile) {
-    const file = readConfigFile(configFile);
+    const file = readJSONConfigFile(configFile);
     if (file.metadataDiff) {
         return file.metadataDiff;
     }
@@ -71,7 +71,7 @@ function getConfigEnvironment(config, overrideConfig = {}) {
         }
         return defaultConfig;
     }
-    return config;
+    return merge(config, overrideConfig);
 }
 
 function validateConfig(config) {
@@ -83,4 +83,11 @@ function validateConfig(config) {
     return value;
 }
 
-module.exports = getConfig;
+module.exports = {
+    getConfig,
+    getConfigEnvironment,
+    readJSONConfigFile,
+    readFile,
+    readPackageJson,
+    validateConfig,
+};

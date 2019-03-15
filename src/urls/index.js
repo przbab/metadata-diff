@@ -1,6 +1,6 @@
 'use strict';
 
-const prepareUrls = require('./prepareUrls');
+const { prepareUrls } = require('./prepareUrls');
 
 module.exports = {
     prepareUrls,

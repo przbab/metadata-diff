@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`diff diffSingle should diff single pathname 1`] = `
+Object {
+  "candidate": Object {
+    "client": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateClient",
+        },
+      ],
+    },
+    "server": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateServer",
+        },
+      ],
+    },
+  },
+  "client": Object {
+    "candidate": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateClient",
+        },
+      ],
+    },
+    "current": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/currentClient",
+        },
+      ],
+    },
+  },
+  "pathname": "/",
+  "server": Object {
+    "candidate": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateServer",
+        },
+      ],
+    },
+    "current": Object {
+      "0": "/",
+      "redirects": Array [
+        Object {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/currentServer",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`diff parseData should parse data in correct order 1`] = `
+Object {
+  "candidateClient": Array [
+    "candidateClient",
+  ],
+  "candidateServer": Array [
+    "candidateServer",
+  ],
+  "currentClient": Array [
+    "currentClient",
+  ],
+  "currentServer": Array [
+    "currentServer",
+  ],
+}
+`;
+
+exports[`diff transformData should transform redirects 1`] = `
+Object {
+  "jsonLd": Object {},
+  "metadata": Object {},
+  "microdata": Object {},
+  "redirects": Array [
+    Object {
+      "status": 301,
+      "target": "http://example.com/test",
+      "url": "http://example.com",
+    },
+  ],
+}
+`;

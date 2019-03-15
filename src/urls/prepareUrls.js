@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * Prepares url for diffing.
- *
- * @param {string} url
- * @param {object} config
- * @return {string} Prepared url
- */
 function prepareUrls(url, config) {
     if (config.replaceBaseUrls) {
         const baseUrlRegExp = getBaseUrlRegExp(config);
@@ -24,12 +17,6 @@ function prepareUrls(url, config) {
     return output;
 }
 
-/**
- * Creates regex matching variations of base urls
- *
- * @param {object} config
- * @return {object} Regular expression
- */
 function getBaseUrlRegExp(config) {
     return new RegExp(
         `(https?://)?(www.)?(${striptUrl(config.currentBaseUrl)}|${striptUrl(config.candidateBaseUrl)})`,
@@ -37,14 +24,12 @@ function getBaseUrlRegExp(config) {
     );
 }
 
-/**
- * Strips protocol and www from url
- *
- * @param {string} url
- * @return {string} Stripped url
- */
 function striptUrl(url) {
     return url.replace(/https?:\/\/|www\./gi, '');
 }
 
-module.exports = prepareUrls;
+module.exports = {
+    getBaseUrlRegExp,
+    prepareUrls,
+    striptUrl,
+};

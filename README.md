@@ -82,7 +82,6 @@ skipConfig | boolean | Omit configuration file reading
 - [ ] make puppeteer a peer dependency (https://github.com/GoogleChrome/puppeteer/issues/288)
 - [ ] add option to comment pathname (notes)
 - [ ] update `uglify-es` to [terser](https://github.com/terser-js/terser)
-- [ ] add YAML configuration file support
 - [ ] add option to enable/disable redirects, metadata, microdata diff
 - [ ] add option to collapse redirects, metadata, microdata sections
 - [ ] add response code diff

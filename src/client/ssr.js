@@ -1,7 +1,6 @@
 'use strict';
 
 const got = require('got');
-const renderHTML = require('./client');
 
 async function fetchSSR(url, options = {}) {
     const redirects = [];
@@ -24,11 +23,6 @@ async function fetchSSR(url, options = {}) {
     }
 }
 
-function fetchClient(url, options) {
-    return renderHTML(url, options);
-}
-
 module.exports = {
-    fetchClient,
     fetchSSR,
 };

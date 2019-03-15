@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`report processDiff remapDiffs should remap diffs 1`] = `
+Array [
+  Object {
+    "candidate": Object {
+      "left": Object {
+        "metadata": Object {
+          "title": "test candidate server title",
+        },
+      },
+      "right": Object {
+        "metadata": Object {
+          "title": "test candidate client title",
+        },
+      },
+    },
+    "client": Object {
+      "left": Object {
+        "metadata": Object {
+          "title": "test client current title",
+        },
+      },
+      "right": Object {
+        "metadata": Object {
+          "title": "test client candidate title",
+        },
+      },
+    },
+    "pathname": "/",
+    "server": Object {
+      "left": Object {
+        "metadata": Object {
+          "title": "test server current title",
+        },
+      },
+      "right": Object {
+        "metadata": Object {
+          "title": "test server candidate title",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`report processDiff transformData transform data 1`] = `
+Object {
+  "all": 2,
+  "delta": Object {
+    "title": "changed title",
+  },
+  "differences": 1,
+  "left": Object {
+    "description": "test description",
+    "title": "test title",
+  },
+}
+`;

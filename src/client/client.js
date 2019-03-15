@@ -42,7 +42,7 @@ async function blockRequests(page, urls) {
     });
 }
 
-async function getHTML(url, options) {
+async function fetchClient(url, options) {
     const page = await preparePage(options);
     const response = await page.goto(url, options.goto);
     const redirects = response
@@ -86,4 +86,4 @@ async function exitHandler(code) {
     process.exit(code);
 }
 
-module.exports = getHTML;
+module.exports = { fetchClient };

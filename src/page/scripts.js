@@ -1,7 +1,7 @@
 'use strict';
 
-let source;
-let pathname;
+let globalSource;
+let globalPathname;
 const metadataDiffNode = document.getElementById('metadata-diff');
 const microdataDiffNode = document.getElementById('microdata-diff');
 const jsonLdDiffNode = document.getElementById('json-ld-diff');
@@ -19,8 +19,12 @@ function changeSource(event) {
         siteElement.classList.remove('active');
     });
     const target = event.target.closest('li.environment');
-    source = target.id;
+    globalSource = target.id;
     target.classList.add('active');
+    metadataDiffNode.setAttribute('source', globalSource);
+    microdataDiffNode.setAttribute('source', globalSource);
+    jsonLdDiffNode.setAttribute('source', globalSource);
+    redirectsNode.setAttribute('source', globalSource);
     render();
 }
 
@@ -30,15 +34,20 @@ function showSite(event) {
     });
 
     const target = event.target.closest('li.site-list-item');
-    pathname = target.getAttribute('name');
+    globalPathname = target.getAttribute('name');
     target.classList.add('active');
+
+    metadataDiffNode.setAttribute('pathname', globalPathname);
+    microdataDiffNode.setAttribute('pathname', globalPathname);
+    jsonLdDiffNode.setAttribute('pathname', globalPathname);
+    redirectsNode.setAttribute('pathname', globalPathname);
 
     renderPercent();
     render();
 }
 
 function renderPercent() {
-    const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname);
+    const data = window.DIFF_DATA.diffs.find(site => site.pathname === globalPathname);
 
     const { candidate, client, server } = ['candidate', 'client', 'server'].reduce((acc, type) => {
         const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
@@ -95,21 +104,10 @@ function previousSite() {
     }
 }
 
-function getData() {
-    return window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
-}
-
 function render() {
-    if (source && pathname) {
-        const data = getData();
-
-        metadataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.metadata.delta, data.metadata.left);
-        microdataDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.microdata.delta, data.microdata.left);
-        jsonLdDiffNode.innerHTML = jsondiffpatch.formatters.html.format(data.jsonLd.delta, data.jsonLd.left);
-        redirectsNode.innerHTML = jsondiffpatch.formatters.html.format(data.redirects.delta, data.redirects.left);
-
-        currentUrlNode.setAttribute('href', currentBaseUrl + pathname);
-        candidateUrlNode.setAttribute('href', candidateBaseUrl + pathname);
+    if (globalSource && globalPathname) {
+        currentUrlNode.setAttribute('href', currentBaseUrl + globalPathname);
+        candidateUrlNode.setAttribute('href', candidateBaseUrl + globalPathname);
     }
 }
 
@@ -230,4 +228,48 @@ class ProgressRing extends HTMLElement {
     }
 }
 
+class Diff extends HTMLElement {
+    constructor() {
+        super();
+        const title = this.getAttribute('title');
+
+        this.root = this.attachShadow({ mode: 'open' });
+        this.root.innerHTML = `
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/dist/formatters-styles/html.css" type="text/css" />
+<h2>${title}</h2>
+<div class="autoscroll"></div>
+<style>
+.autoscroll {
+    overflow-x: auto;
+}
+</style>`;
+    }
+
+    renderData() {
+        const pathname = this.getAttribute('pathname');
+        const source = this.getAttribute('source');
+        const property = this.getAttribute('property');
+
+        if (pathname !== null && source !== null) {
+            const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
+
+            const html = jsondiffpatch.formatters.html.format(data[property].delta, data[property].left);
+
+            const content = this.root.querySelector('div');
+            content.innerHTML = html;
+        }
+    }
+
+    static get observedAttributes() {
+        return ['pathname', 'source'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if ((name === 'pathname' || name === 'source') && oldValue !== newValue) {
+            this.renderData(newValue);
+        }
+    }
+}
+
 window.customElements.define('progress-ring', ProgressRing);
+window.customElements.define('data-diff', Diff);

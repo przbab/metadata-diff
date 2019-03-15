@@ -1,8 +1,8 @@
 'use strict';
 
-const prepareUrls = require('./prepareUrls');
+const { prepareUrls } = require('./prepareUrls');
 
-describe('Urls', () => {
+describe('urls', () => {
     describe('prepareUrls', () => {
         test(`base urls replacement with same urls`, () => {
             const config = {

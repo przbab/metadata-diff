@@ -5,7 +5,6 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/dist/formatters-styles/html.css" type="text/css" />
             <style><%- styles %></style>
         </head>
         <body>
@@ -77,15 +76,11 @@
                             %>
                         </ul>
                     </div>
-                    <div id="diffs">     
-                        <h2>Redirects</h2>
-                        <div class="autoscroll" id="redirects"></div>
-                        <h2>Metadata</h2>
-                        <div class="autoscroll" id="metadata-diff"></div>
-                        <h2>Microdata</h2>
-                        <div class="autoscroll" id="microdata-diff"></div>
-                        <h2>JSON LD</h2>
-                        <div class="autoscroll" id="json-ld-diff"></div>
+                    <div id="diffs">
+                        <data-diff title="Redirects" property="redirects" id="redirects"></data-diff>
+                        <data-diff title="Metadata" property="metadata" id="metadata-diff"></data-diff>
+                        <data-diff title="Microdata" property="microdata" id="microdata-diff"></data-diff>
+                        <data-diff title="JSON LD" property="jsonLd" id="json-ld-diff"></data-diff>
                     </div>
                 </div>
             </div>
