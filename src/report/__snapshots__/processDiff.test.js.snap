@@ -1,5 +1,119 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`report processDiff processDiff should process diff 1`] = `
+Object {
+  "jsonLd": Object {
+    "all": 4,
+    "delta": Object {
+      "contactPoint": Object {
+        "0": Object {
+          "telephone": Array [
+            "+1-401-555-1212",
+            0,
+            0,
+          ],
+        },
+        "_t": "a",
+      },
+      "url": Array [
+        "http://example.com",
+        0,
+        0,
+      ],
+    },
+    "differences": 2,
+    "left": Object {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "contactPoint": Array [
+        Object {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+1-401-555-1212",
+        },
+      ],
+      "url": "http://example.com",
+    },
+  },
+  "metadata": Object {
+    "all": 2,
+    "delta": Object {
+      "cannonical": Array [
+        "http://example.com",
+        "http://example.com/test",
+      ],
+      "h1": Object {
+        "_1": Array [
+          "header 2",
+          0,
+          0,
+        ],
+        "_t": "a",
+      },
+    },
+    "differences": 2,
+    "left": Object {
+      "cannonical": "http://example.com",
+      "h1": Array [
+        "header 1",
+        "header 2",
+      ],
+    },
+  },
+  "microdata": Object {
+    "all": 4,
+    "delta": Object {
+      "contactPoint": Object {
+        "telephone": Array [
+          "+1-401-555-1212",
+          0,
+          0,
+        ],
+      },
+      "url": Array [
+        "http://example.com",
+        0,
+        0,
+      ],
+    },
+    "differences": 2,
+    "left": Object {
+      "@context": "http://schema.org/",
+      "@type": "Organization",
+      "contactPoint": Object {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "telephone": "+1-401-555-1212",
+      },
+      "url": "http://example.com",
+    },
+  },
+  "redirects": Object {
+    "all": 1,
+    "delta": Object {
+      "_0": Array [
+        Object {
+          "status": 301,
+          "target": "http://example.com",
+          "url": "http://example.com/test",
+        },
+        0,
+        0,
+      ],
+      "_t": "a",
+    },
+    "differences": 2,
+    "left": Array [
+      Object {
+        "status": 301,
+        "target": "http://example.com",
+        "url": "http://example.com/test",
+      },
+    ],
+  },
+}
+`;
+
 exports[`report processDiff remapDiffs should remap diffs 1`] = `
 Array [
   Object {

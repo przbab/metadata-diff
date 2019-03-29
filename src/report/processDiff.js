@@ -12,44 +12,65 @@ function transformData(data, delta) {
         left: data,
     };
 }
+function transformPropertyFactory(context) {
+    function transformProperty(property) {
+        if (property !== null && typeof property === 'object') {
+            return {
+                '@type': property.type ? property.type[0].replace(context, '') : 'Unspecified Type',
+                ...Object.keys(property.properties).reduce(
+                    (acc, key) => ({ ...acc, [key]: extractProperties(property.properties[key]) }),
+                    {}
+                ),
+            };
+        }
+        return property;
+    }
+
+    function extractProperties(properties) {
+        if (properties.length > 1) {
+            return properties.map(property => transformProperty(property));
+        }
+        if (properties.length === 1) {
+            return transformProperty(properties[0]);
+        }
+        return undefined;
+    }
+
+    return transformProperty;
+}
+
+function microdataToJsonLd(microdata) {
+    const jsonLd = microdata.items.map(item => {
+        const context = 'http://schema.org/';
+        const transformProperty = transformPropertyFactory(context);
+
+        return {
+            '@context': context,
+            ...transformProperty(item),
+        };
+    });
+
+    if (jsonLd.length === 1) {
+        return jsonLd[0];
+    }
+    return jsonLd;
+}
 
 function processDiff(data) {
-    const [leftMatchedMicrodata, rightMatchedMicrodata] = matchItems(data.left.microdata, data.right.microdata);
-    const microdataDelta = jsondiff.diff(leftMatchedMicrodata, rightMatchedMicrodata) || {};
+    const leftTransformedMicrodata = microdataToJsonLd(data.left.microdata);
+    const rightTransformedMicrodata = microdataToJsonLd(data.right.microdata);
 
-    const [leftMatchedJsonLd, rightMatchedJsonLd] = matchItems(data.left.jsonLd, data.right.jsonLd);
-    const jsonLdDelta = jsondiff.diff(leftMatchedJsonLd, rightMatchedJsonLd) || {};
-
+    const microdataDelta = jsondiff.diff(leftTransformedMicrodata, rightTransformedMicrodata) || {};
+    const jsonLdDelta = jsondiff.diff(data.left.jsonLd, data.right.jsonLd) || {};
     const metadataDelta = jsondiff.diff(data.left.metadata, data.right.metadata) || {};
     const redirectsDelta = jsondiff.diff(data.left.redirects, data.right.redirects) || {};
 
     return {
         metadata: transformData(data.left.metadata, metadataDelta),
-        microdata: transformData(data.left.microdata, microdataDelta),
+        microdata: transformData(leftTransformedMicrodata, microdataDelta),
         jsonLd: transformData(data.left.jsonLd, jsonLdDelta),
         redirects: transformData(data.left.redirects, redirectsDelta),
     };
-}
-
-function matchItems(leftMicrodata, rightMicrodata) {
-    const left = {};
-    const right = {};
-    leftMicrodata.items.forEach(item => {
-        const type = (item.type && item.type[0]) || 'Unspecified Type';
-        if (!left[type]) {
-            left[type] = [];
-        }
-        left[type].push(item.properties);
-    });
-    rightMicrodata.items.forEach(item => {
-        const type = (item.type && item.type[0]) || 'Unspecified Type';
-        if (!right[type]) {
-            right[type] = [];
-        }
-        right[type].push(item.properties);
-    });
-
-    return [left, right];
 }
 
 function remapDiffs(diffs) {
@@ -71,8 +92,8 @@ function remapDiffs(diffs) {
 }
 
 module.exports = {
-    matchItems,
     processDiff,
     remapDiffs,
     transformData,
+    microdataToJsonLd,
 };

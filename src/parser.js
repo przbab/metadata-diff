@@ -80,7 +80,7 @@ function isInterestingMetaProperty(name, attribs) {
 
 function parse(html) {
     const metadata = {};
-    const jsonLd = { items: [] };
+    let jsonLd = [];
     let currentTag = '';
 
     const parser = new htmlparser.Parser(
@@ -114,7 +114,7 @@ function parse(html) {
             ontext(text) {
                 switch (currentTag) {
                     case 'jsonLd':
-                        jsonLd.items.push(JSON.parse(text));
+                        jsonLd.push(JSON.parse(text));
                         break;
                     case 'title':
                         metadata.title = text;
@@ -138,6 +138,10 @@ function parse(html) {
     );
     parser.write(html);
     parser.end();
+
+    if (jsonLd.length === 1) {
+        jsonLd = jsonLd[0];
+    }
 
     return { metadata, microdata: microdata.toJson(html), jsonLd };
 }
