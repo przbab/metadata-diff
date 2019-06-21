@@ -4,18 +4,21 @@ const puppeteer = require('puppeteer');
 
 let browserInstance;
 
-async function getBrowser() {
+async function getBrowser(options) {
     if (browserInstance) {
         return browserInstance;
     }
-    browserInstance = await puppeteer.launch();
+    browserInstance = await puppeteer.launch({
+        headless: options.headless,
+        slowMo: options.slowMo,
+    });
     attachCleanupHandlers();
 
     return browserInstance;
 }
 
 async function preparePage(options = {}) {
-    const browser = await getBrowser();
+    const browser = await getBrowser(options);
     const page = await browser.newPage();
     if (options.userAgent) {
         page.setUserAgent(options.userAgent);

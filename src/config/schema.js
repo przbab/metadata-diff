@@ -22,6 +22,10 @@ const schema = Joi.object({
         additionalWait: Joi.number(),
         blockRequests: Joi.array().items(Joi.string()),
         goto: Joi.any(),
+        headless: Joi.boolean().default(true),
+        slowMo: Joi.number()
+            .min(0)
+            .default(0),
     }),
     replaceBaseUrls: Joi.boolean().default(true),
     replacements: Joi.array().items(
