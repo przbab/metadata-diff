@@ -82,6 +82,7 @@ function parse(html) {
     const metadata = {};
     let jsonLd = [];
     let currentTag = '';
+    let inHead = false;
 
     const parser = new htmlparser.Parser(
         {
@@ -107,6 +108,9 @@ function parse(html) {
                             metadata[attribs.property] = attribs.content;
                         }
                         break;
+                    case 'head':
+                        inHead = true;
+                        break;
                     default:
                         break;
                 }
@@ -117,7 +121,9 @@ function parse(html) {
                         jsonLd.push(JSON.parse(text));
                         break;
                     case 'title':
-                        metadata.title = text;
+                        if (inHead) {
+                            metadata.title = text;
+                        }
                         break;
                     case 'h1':
                         if (metadata.h1) {
@@ -130,7 +136,10 @@ function parse(html) {
                         break;
                 }
             },
-            onclosetag() {
+            onclosetag(name) {
+                if (name === 'head') {
+                    inHead = false;
+                }
                 currentTag = '';
             },
         },
