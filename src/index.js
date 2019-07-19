@@ -3,13 +3,12 @@
 const { fetchSSR, fetchClient } = require('./client/ssr');
 const { parse } = require('./parser');
 const { getConfig } = require('./config');
-const { prepareUrls } = require('./urls');
 const save = require('./save');
 const { diffAll } = require('./diff');
 const { report } = require('./report');
 
-const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig, ...options } = {}, ...rest) => {
-    const config = getConfig(options, skipConfig, overrideConfig);
+const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
+    const config = getConfig(overrideConfig, skipConfig);
     return wrappedFunction(config, ...rest);
 };
 
@@ -18,7 +17,7 @@ async function full(config) {
         const diffs = await diffAll(config);
         const html = await report(config, diffs);
         await save(html, config);
-        console.info(`Saved report`);
+        console.info(`Saved report to ${config.output}`);
     } catch (err) {
         console.error(err);
         process.exit(1);
@@ -33,6 +32,5 @@ module.exports = {
     fetchSSR,
     full: withConfig(full),
     parse,
-    prepareUrls,
     report: withConfig(report),
 };

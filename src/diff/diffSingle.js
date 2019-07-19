@@ -2,7 +2,7 @@
 
 const { fetchPathname } = require('../client');
 const { parse } = require('../parser');
-const { prepareUrls } = require('../urls');
+const { processReplacements } = require('../utils');
 
 async function diffSingle(pathname, config, requestOptions) {
     const { currentServerData, currentClientData, candidateServerData, candidateClientData } = await fetchPathname(
@@ -11,7 +11,7 @@ async function diffSingle(pathname, config, requestOptions) {
         requestOptions
     );
 
-    const { currentServer, currentClient, candidateServer, candidateClient } = await parseData(
+    const { currentServer, currentClient, candidateServer, candidateClient } = parseData(
         { currentServerData, currentClientData, candidateServerData, candidateClientData },
         config
     );
@@ -43,18 +43,16 @@ function transformData(parsedData, rawData, config) {
 function prepareRedirects(redirects, config) {
     return redirects.map(redirect => ({
         ...redirect,
-        target: prepareUrls(redirect.target, config),
-        url: prepareUrls(redirect.url, config),
+        target: processReplacements(redirect.target, config),
+        url: processReplacements(redirect.url, config),
     }));
 }
 
-async function parseData({ currentServerData, currentClientData, candidateServerData, candidateClientData }, config) {
-    const [currentServer, currentClient, candidateServer, candidateClient] = await Promise.all([
-        parse(prepareUrls(currentServerData.html, config)),
-        parse(prepareUrls(currentClientData.html, config)),
-        parse(prepareUrls(candidateServerData.html, config)),
-        parse(prepareUrls(candidateClientData.html, config)),
-    ]);
+function parseData({ currentServerData, currentClientData, candidateServerData, candidateClientData }, config) {
+    const currentServer = parse(processReplacements(config, currentServerData.html));
+    const currentClient = parse(processReplacements(config, currentClientData.html));
+    const candidateServer = parse(processReplacements(config, candidateServerData.html));
+    const candidateClient = parse(processReplacements(config, candidateClientData.html));
 
     return { currentServer, currentClient, candidateServer, candidateClient };
 }
