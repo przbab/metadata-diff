@@ -41,18 +41,22 @@ function transformData(parsedData, rawData, config) {
 }
 
 function prepareRedirects(redirects, config) {
+    const processReplacementsWithConfig = processReplacements(config);
+
     return redirects.map(redirect => ({
         ...redirect,
-        target: processReplacements(redirect.target, config),
-        url: processReplacements(redirect.url, config),
+        target: processReplacementsWithConfig(redirect.target),
+        url: processReplacementsWithConfig(redirect.url),
     }));
 }
 
 function parseData({ currentServerData, currentClientData, candidateServerData, candidateClientData }, config) {
-    const currentServer = parse(processReplacements(config, currentServerData.html));
-    const currentClient = parse(processReplacements(config, currentClientData.html));
-    const candidateServer = parse(processReplacements(config, candidateServerData.html));
-    const candidateClient = parse(processReplacements(config, candidateClientData.html));
+    const processReplacementsWithConfig = processReplacements(config);
+
+    const currentServer = parse(processReplacementsWithConfig(currentServerData.html));
+    const currentClient = parse(processReplacementsWithConfig(currentClientData.html));
+    const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html));
+    const candidateClient = parse(processReplacementsWithConfig(candidateClientData.html));
 
     return { currentServer, currentClient, candidateServer, candidateClient };
 }
