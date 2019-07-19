@@ -1,6 +1,7 @@
 'use strict';
 
 const puppeteer = require('puppeteer');
+const { getLogger } = require('../logger');
 
 let browserInstance;
 
@@ -84,7 +85,7 @@ function attachCleanupHandlers() {
 }
 
 async function exitHandler(code) {
-    console.info('Closing chrome...');
+    getLogger().verbose('Closing chrome...');
     await browserInstance.close();
     process.exit(code);
 }

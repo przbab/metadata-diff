@@ -46,6 +46,9 @@ const schema = Joi.object({
     scripts: Joi.string(),
     styles: Joi.string(),
     userAgent: Joi.string().default('metadata-diff'),
+    logLevel: Joi.string()
+        .allow('error', 'warn', 'info', 'verbose', 'debug', 'silly')
+        .default('info'),
 });
 
 module.exports = { schema };

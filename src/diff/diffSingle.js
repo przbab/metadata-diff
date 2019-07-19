@@ -1,20 +1,29 @@
 'use strict';
 
+const { getLogger } = require('../logger');
 const { fetchPathname } = require('../client');
 const { parse } = require('../parser');
 const { processReplacements } = require('../utils');
 
 async function diffSingle(pathname, config, requestOptions) {
+    const logger = getLogger();
+
+    logger.verbose(`Diffing pathname ${pathname}`);
+
     const { currentServerData, currentClientData, candidateServerData, candidateClientData } = await fetchPathname(
         pathname,
         config,
         requestOptions
     );
 
+    logger.debug(`Pathname ${pathname} fetched`);
+
     const { currentServer, currentClient, candidateServer, candidateClient } = parseData(
         { currentServerData, currentClientData, candidateServerData, candidateClientData },
         config
     );
+
+    logger.debug(`Pathname ${pathname} parsed`);
 
     return {
         pathname,
