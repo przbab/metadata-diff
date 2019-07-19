@@ -11,6 +11,8 @@ const candidateUrlNode = document.getElementById('candidate-url');
 const serverPercentNode = document.getElementById('server-percent');
 const clientPercentNode = document.getElementById('client-percent');
 const candidatePercentNode = document.getElementById('candidate-percent');
+const pathnameNode = document.getElementById('pathname');
+const noteNode = document.getElementById('note');
 const currentBaseUrl = window.DIFF_DATA.currentBaseUrl;
 const candidateBaseUrl = window.DIFF_DATA.candidateBaseUrl;
 
@@ -46,8 +48,12 @@ function showSite(event) {
     render();
 }
 
+function findEntryByPathname(pathname) {
+    return window.DIFF_DATA.diffs.find(site => site.pathname === pathname);
+}
+
 function renderPercent() {
-    const data = window.DIFF_DATA.diffs.find(site => site.pathname === globalPathname);
+    const data = findEntryByPathname(globalPathname);
 
     const { candidate, client, server } = ['candidate', 'client', 'server'].reduce((acc, type) => {
         const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
@@ -108,6 +114,9 @@ function render() {
     if (globalSource && globalPathname) {
         currentUrlNode.setAttribute('href', currentBaseUrl + globalPathname);
         candidateUrlNode.setAttribute('href', candidateBaseUrl + globalPathname);
+        pathnameNode.textContent = `Pathname: ${globalPathname}`;
+        const data = findEntryByPathname(globalPathname);
+        noteNode.textContent = data.note;
     }
 }
 
@@ -236,7 +245,7 @@ class Diff extends HTMLElement {
         this.root = this.attachShadow({ mode: 'open' });
         this.root.innerHTML = `
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/dist/formatters-styles/html.css" type="text/css" />
-<h2>${title}</h2>
+<h3>${title}</h3>
 <div class="autoscroll"></div>
 <style>
 .autoscroll {

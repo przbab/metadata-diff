@@ -7,11 +7,12 @@ async function report(config, diffs) {
     const remappedDiffs = remapDiffs(diffs);
     const data = {
         date: new Date(),
-        diffs: remappedDiffs.map(pathname => ({
-            pathname: pathname.pathname,
-            candidate: processDiff(pathname.candidate),
-            client: processDiff(pathname.client),
-            server: processDiff(pathname.server),
+        diffs: remappedDiffs.map(diff => ({
+            pathname: diff.pathname,
+            note: diff.note,
+            candidate: processDiff(diff.candidate),
+            client: processDiff(diff.client),
+            server: processDiff(diff.server),
         })),
         currentBaseUrl: config.currentBaseUrl,
         candidateBaseUrl: config.candidateBaseUrl,

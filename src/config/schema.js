@@ -15,7 +15,15 @@ const schema = Joi.object({
     minify: Joi.boolean().default(true),
     output: Joi.string().default('metadataDiffReport.html'),
     pathnames: Joi.array()
-        .items(Joi.string().uri({ relativeOnly: true }))
+        .items(
+            Joi.string().uri({ relativeOnly: true }),
+            Joi.object().keys({
+                path: Joi.string()
+                    .uri({ relativeOnly: true })
+                    .required(),
+                note: Joi.string(),
+            })
+        )
         .min(1)
         .required(),
     puppeteerOptions: Joi.object().keys({
