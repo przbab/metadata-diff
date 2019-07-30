@@ -1,5 +1,6 @@
 'use strict';
 
+const mapLimit = require('async/mapLimit');
 const { getLogger } = require('../logger');
 const { get, getOr } = require('../utils');
 const { diffSingle } = require('./diffSingle');
@@ -12,24 +13,28 @@ function getPathname(pathname) {
     return get('path', pathname);
 }
 
-async function diffAll(config) {
+function processPathnames(config) {
     const logger = getLogger();
     const requestOptions = getRequestOptions(config);
-    const diffs = [];
+
+    return async pathnameObject => {
+        const pathname = getPathname(pathnameObject);
+
+        logger.info(`Processing ${pathname}`);
+
+        return {
+            ...(await diffSingle(pathname, config, requestOptions)),
+            note: getOr('', 'note', pathname),
+        };
+    };
+}
+
+async function diffAll(config) {
+    const logger = getLogger();
 
     logger.verbose('Diffing all the files');
 
-    /* eslint-disable no-await-in-loop */
-    for (let i = 0; i < config.pathnames.length; i++) {
-        const pathname = getPathname(config.pathnames[i]);
-        logger.info(`Processing ${i + 1}/${config.pathnames.length}: ${pathname}`);
-        diffs.push({
-            ...(await diffSingle(pathname, config, requestOptions)),
-            note: getOr('', 'note', pathname),
-        });
-    }
-    return diffs;
-    /* eslint-enable */
+    return mapLimit(config.pathnames, config.concurrency, processPathnames(config));
 }
 
 function getRequestOptions(config) {

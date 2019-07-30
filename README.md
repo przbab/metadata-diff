@@ -73,7 +73,7 @@ skipConfig | boolean | Omit configuration file reading
 - [ ] add error handling
 - [x] add option to jump to the diff urls
 - [ ] release as npm package
-- [ ] allow concurrent diffs
+- [x] allow concurrent diffs
 - [x] redesign the report look
 - [x] make report more human friendly
 - [x] allow for report customization

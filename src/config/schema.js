@@ -51,6 +51,7 @@ const schema = Joi.object({
         .default('info'),
     logToFile: Joi.boolean().default(false),
     logFilename: Joi.string().default('metadata-diff.log'),
+    concurrency: Joi.number().default(1),
 });
 
 module.exports = { schema };
