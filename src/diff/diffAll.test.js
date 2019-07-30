@@ -8,11 +8,12 @@ describe('diff', () => {
     describe('diffAll', () => {
         test(`should diff all of the pathnames`, async () => {
             const config = {
-                pathnames: ['/test1', '/test2'],
+                pathnames: ['/test1', { path: '/test2' }],
                 userAgent: 'testUserAgent',
                 puppeteerOptions: {
                     additionalWait: 5000,
                 },
+                concurrency: 1,
             };
             const diffs = await diffAll(config);
 
