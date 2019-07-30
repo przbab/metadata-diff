@@ -2,7 +2,7 @@
 
 const { diffAll } = require('./diffAll');
 
-jest.mock('./diffSingle', () => ({ diffSingle: async pathname => pathname }));
+jest.mock('./diffSingle', () => ({ diffSingle: async pathname => ({ pathname }) }));
 
 describe('diff', () => {
     describe('diffAll', () => {
@@ -16,7 +16,7 @@ describe('diff', () => {
             };
             const diffs = await diffAll(config);
 
-            expect(diffs).toEqual(['/test1', '/test2']);
+            expect(diffs).toEqual([{ note: '', pathname: '/test1' }, { note: '', pathname: '/test2' }]);
         });
     });
 });

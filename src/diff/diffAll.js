@@ -25,7 +25,7 @@ async function diffAll(config) {
         logger.info(`Processing ${i + 1}/${config.pathnames.length}: ${pathname}`);
         diffs.push({
             ...(await diffSingle(pathname, config, requestOptions)),
-            note: getOr('', 'note', config.pathnames[i]),
+            note: getOr('', 'note', pathname),
         });
     }
     return diffs;
