@@ -49,6 +49,8 @@ const schema = Joi.object({
     logLevel: Joi.string()
         .allow('error', 'warn', 'info', 'verbose', 'debug', 'silly')
         .default('info'),
+    logToFile: Joi.boolean().default(false),
+    logFilename: Joi.string().default('metadata-diff.log'),
 });
 
 module.exports = { schema };

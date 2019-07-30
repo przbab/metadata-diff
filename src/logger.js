@@ -10,6 +10,10 @@ function initializeLogger(config) {
         format: winston.format.json(),
         transports: [new winston.transports.Console()],
     });
+
+    if (config.logToFile) {
+        logger.add(new winston.transports.File({ filename: config.logFilename }));
+    }
 }
 
 function getLogger() {
