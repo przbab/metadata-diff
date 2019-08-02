@@ -2,12 +2,12 @@
 
 module.exports = {
     getLogger: () => ({
-        error: console.error,
-        warn: console.warn,
-        info: console.info,
-        verbose: console.log,
-        debug: console.debug,
-        silly: console.log,
+        error: () => null,
+        warn: () => null,
+        info: () => null,
+        verbose: () => null,
+        debug: () => null,
+        silly: () => null,
     }),
     initializeLogger: () => null,
 };
