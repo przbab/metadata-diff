@@ -1,0 +1,26 @@
+dist: trusty
+language: node_js
+node_js:
+- "10"
+cache:
+    directories:
+    - "$(npm config get cache)"
+env:
+    global:
+    - PATH=$HOME/.local/bin:$PATH
+install:
+- npm ci
+
+jobs:
+    include:
+    - stage: "Run tests"
+      name: "Eslint"
+      script:
+      - npm run test
+    - name: "Jest"
+      script:
+      - npm run test
+    - name: "Stylelint"
+      script:
+      - npm run stylelint
+

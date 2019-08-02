@@ -4,7 +4,6 @@ exports[`diff diffSingle should diff single pathname 1`] = `
 Object {
   "candidate": Object {
     "client": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -14,7 +13,6 @@ Object {
       ],
     },
     "server": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -26,7 +24,6 @@ Object {
   },
   "client": Object {
     "candidate": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -36,7 +33,6 @@ Object {
       ],
     },
     "current": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -49,7 +45,6 @@ Object {
   "pathname": "/",
   "server": Object {
     "candidate": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -59,7 +54,6 @@ Object {
       ],
     },
     "current": Object {
-      "0": "/",
       "redirects": Array [
         Object {
           "status": 302,
@@ -74,18 +68,10 @@ Object {
 
 exports[`diff parseData should parse data in correct order 1`] = `
 Object {
-  "candidateClient": Array [
-    "candidateClient",
-  ],
-  "candidateServer": Array [
-    "candidateServer",
-  ],
-  "currentClient": Array [
-    "currentClient",
-  ],
-  "currentServer": Array [
-    "currentServer",
-  ],
+  "candidateClient": Promise {},
+  "candidateServer": Promise {},
+  "currentClient": Promise {},
+  "currentServer": Promise {},
 }
 `;
 

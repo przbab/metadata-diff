@@ -2,7 +2,7 @@
     <html>
         <head>
             <meta charset="utf-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta content="IE=edge">
             <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <style><%- styles %></style>
@@ -11,9 +11,7 @@
             <div class="root">
                 <div class="top-bar">
                     <header>
-                        <h1>
-                            <a href="">MetadataDiff</a>
-                        </h1>
+                        <h1>MetadataDiff</h1>
                     </header>
                     <div>
                         <span>Generation date: <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()} ${data.date.getHours()}:${data.date.getMinutes()}` %></span>
@@ -77,6 +75,8 @@
                         </ul>
                     </div>
                     <div id="diffs">
+                        <h2 id="pathname"></h2>
+                        <p id="note"></p>
                         <data-diff title="Redirects" property="redirects" id="redirects"></data-diff>
                         <data-diff title="Metadata" property="metadata" id="metadata-diff"></data-diff>
                         <data-diff title="Microdata" property="microdata" id="microdata-diff"></data-diff>

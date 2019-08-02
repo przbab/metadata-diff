@@ -4,16 +4,28 @@ const fs = require('fs');
 const { promisify } = require('util');
 const path = require('path');
 const ejs = require('ejs');
+const { getLogger } = require('../logger');
 
 const readFile = promisify(fs.readFile);
 const renderFile = promisify(ejs.renderFile);
 
 async function getScripts(config) {
+    const logger = getLogger();
     const file = config.scripts || path.join(__dirname, '../page/scripts.js');
     const scripts = await readFile(file, 'utf8');
+
     if (config.minify) {
-        const uglifyJs = require('uglify-es');
-        return uglifyJs.minify(scripts).code;
+        const terser = require('terser');
+        const result = terser.minify(scripts);
+
+        if (result.error) {
+            logger.error('Scripts minification failed');
+            logger.error(result.error);
+
+            return scripts;
+        }
+
+        return result.code;
     }
     return scripts;
 }

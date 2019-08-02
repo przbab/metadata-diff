@@ -34,13 +34,38 @@ const argv = require('yargs')
         nargs: 1,
         type: 'string',
     })
+    .option('concurrency', {
+        describe: 'Specify how many diffs can run in parallel',
+        nargs: 1,
+        type: 'number',
+    })
+    .option('logToFile', {
+        alias: 'l',
+        describe: 'Output log to file',
+        nargs: 1,
+        type: 'boolean',
+    })
+    .option('logFilename', {
+        describe: 'Output log filename',
+        nargs: 1,
+        type: 'string',
+    })
     .strict()
     .help('help')
     .alias('h', 'help')
     .alias('v', 'version')
     .version().argv;
 
-const allowed = ['config', 'output', 'minify', 'currentBaseUrl', 'candidateBaseUrl'];
+const allowed = [
+    'config',
+    'output',
+    'minify',
+    'currentBaseUrl',
+    'candidateBaseUrl',
+    'concurrency',
+    'logToFile',
+    'logFilename',
+];
 
 const filteredOptions = Object.keys(argv)
     .filter(key => allowed.includes(key))
@@ -50,4 +75,4 @@ const filteredOptions = Object.keys(argv)
         return acc;
     }, {});
 
-require('../src/index').full(filteredOptions);
+require('../src/index').full({ config: filteredOptions });
