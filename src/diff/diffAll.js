@@ -24,7 +24,7 @@ function processPathnames(config) {
 
         return {
             ...(await diffSingle(pathname, config, requestOptions)),
-            note: getOr('', 'note', pathname),
+            note: getOr('', 'note', pathnameObject),
         };
     };
 }
