@@ -17,6 +17,10 @@ jobs:
       name: "Eslint"
       script:
       - npm run test
-    - name: "Tests"
+    - name: "Jest"
       script:
       - npm run test
+    - name: "Stylelint"
+      script:
+      - npm run stylelint
+
