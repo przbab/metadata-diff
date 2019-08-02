@@ -2,7 +2,7 @@
 
 ## Configuration
 
-You can use any way to configure the report, the merged configuration will be validated against model described in [configuration file section](#configuration-file).
+Configuration will be validated against model described in [configuration file section](#configuration-file). The main way to configure library is throught configuration file. Cli options allow for some quick overrides. When using this project as a library you can turn off configuration file and pass your own configuration.
 
 ### Configuration file
 
@@ -16,11 +16,15 @@ environment | no | object | Allows for altering config for given environment tak
 html | no | string | Path to the ejs template file
 minify | no | boolean | Should the report be minified (Default: `true`)
 output | no | string | Path for the output file (Default: `metadataDiffReport.html`)
-pathnames | yes | array(string) | Array of pathnames to be tested
+pathnames | yes | array(string) OR array(object) | Array of pathnames to be tested
+pathnames.path | yes | string | Pathname to be tested
+pathnames.note | no | string | Optional note for the pathname
 puppeteerOption | no | object |
 puppeteerOption.additionalWait | no | number | By setting this property you may give puppeteer some timeout to increase the chance of completing js tasks. (Default: `0`)
 puppeteerOption.blockRequests | no | array(string) |  Array of regular expressions that will be matched against outgoing requests and cancelling matched. Intended for ads, tracking, etc.
 puppeteerOption.goto | no | object | This property will be passed to puppeteer's `page.goto` as options. https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options
+puppeteerOption.headless | no | boolean | Disable headless
+puppeteerOption.slowMo | no | number | Slow the puppeteer
 replaceBaseUrls | no | boolean | Should base url be replaced with string (to simplify comparison) (Default: `true`)
 replacements | no | array(object) | Allows for replacing some properties in html before parsing. Intended for random parts like tokens, etc,
 replacements.flags | no | string | Flags for the expression
@@ -29,6 +33,10 @@ replacements.replace | yes | string | Replacement
 scripts | no | string | Path to the script file. This file will be included in report.
 styles | no | string | Path to the style file. This file will be included in report.
 userAgent | no | string | User agent (Default: `metadata-diff`)
+logLevel | no | string | Log level (avaliable options: `error`, `warn`, `info`, `verbose`, `debug`, `silly`)
+logToFile | no | boolean | Save log to file
+logFilename | no | string | Log filename
+concurrency | no | number | Option to make diffs concurrently (default: 1)
 
 ### Command line
 
@@ -41,12 +49,15 @@ Options | Type | Description
 --minify, -m | boolean | Override minify option
 --currentBaseUrl, --current, -p | string | Override currentBaseUrl
 --candidateBaseUrl, --candidate, -b | string | Override candidateBaseUrl
+--concurrency | number | Option to make diffs concurrently
+--logToFile, -l | boolean | Save log to file
+--logFilename | string | Log filename
 --help, -h | boolean | Show help
 --version, -v | boolean | Show version number
 
 ### Using as library
 
-Functions `diff` and `full` require full configuration. The configuration is the same as in [configuration file]((#configuration-file)
+Library exposes 3 functions `diff`, `full`, `report`. Function `full` is a composition of `diff` and `report`. The result of function `diff` is a list of diffed pathnames, this result is then passed to fuction `report` to generate the report. The configuration is the same as in [configuration file]((#configuration-file)
 ), but 2 additional properties are possible.
 
 Property name | Type | Description
@@ -56,33 +67,9 @@ skipConfig | boolean | Omit configuration file reading
 
 ## TODO
 
-- [ ] proper readme
 - [ ] usage manual
-- [ ] add tests
-- [x] add timeout to puppeteer to let js finish the job
-- [x] remove microdata from metadata
-- [x] make current and candidate addresses match each other
-- [x] add option to hide identical fields
-- [x] add config file support (e.g. .metadiffrc)
-- [x] add option to override config file location
-- [x] add config validation
-- [x] add option for multiple environments
-- [x] add date of the test
-- [x] show redirects
-- [x] display current and candidate addresses
-- [ ] add error handling
-- [x] add option to jump to the diff urls
 - [ ] release as npm package
-- [x] allow concurrent diffs
-- [x] redesign the report look
-- [x] make report more human friendly
-- [x] allow for report customization
-- [x] indicate percentage differences
-- [x] sort by percentage differences
 - [ ] make puppeteer a peer dependency (https://github.com/GoogleChrome/puppeteer/issues/288)
-- [x] add option to comment pathname (notes)
-- [x] update `uglify-es` to [terser](https://github.com/terser-js/terser)
 - [ ] add option to enable/disable redirects, metadata, microdata diff
 - [ ] add option to collapse redirects, metadata, microdata sections
 - [ ] add response code diff
-- [x] JSON-LD support
