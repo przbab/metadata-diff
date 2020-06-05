@@ -3,8 +3,8 @@
 const { diffSingle, parseData, transformData } = require('./diffSingle');
 
 jest.mock('../client', () => ({
-    fetchPathname: async pathname => {
-        const mockData = type => ({
+    fetchPathname: async (pathname) => {
+        const mockData = (type) => ({
             html: pathname,
             redirects: [
                 {

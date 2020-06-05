@@ -6,7 +6,7 @@ const save = require('./save');
 const { diffAll } = require('./diff');
 const { report } = require('./report');
 
-const withConfig = wrappedFunction => ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
+const withConfig = (wrappedFunction) => ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
     const config = getConfig(overrideConfig, skipConfig);
     initializeLogger(config);
     const logger = getLogger();

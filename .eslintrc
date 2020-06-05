@@ -25,6 +25,7 @@
         "prettier"
     ],
     "rules": {
+        "strict": ["error", "global"],
         "no-console": "off",
         "global-require": "off",
         "import/exports-last": "error",

@@ -7,7 +7,7 @@ async function report(config, diffs) {
     const remappedDiffs = remapDiffs(diffs);
     const data = {
         date: new Date(),
-        diffs: remappedDiffs.map(diff => ({
+        diffs: remappedDiffs.map((diff) => ({
             pathname: diff.pathname,
             note: diff.note,
             candidate: processDiff(diff.candidate),

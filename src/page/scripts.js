@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 'use strict';
 
 let globalSource;
@@ -17,7 +19,7 @@ const currentBaseUrl = window.DIFF_DATA.currentBaseUrl;
 const candidateBaseUrl = window.DIFF_DATA.candidateBaseUrl;
 
 function changeSource(event) {
-    document.querySelectorAll('.environment.active').forEach(siteElement => {
+    document.querySelectorAll('.environment.active').forEach((siteElement) => {
         siteElement.classList.remove('active');
     });
     const target = event.target.closest('li.environment');
@@ -31,7 +33,7 @@ function changeSource(event) {
 }
 
 function showSite(event) {
-    document.querySelectorAll('.site-list-item.active').forEach(siteElement => {
+    document.querySelectorAll('.site-list-item.active').forEach((siteElement) => {
         siteElement.classList.remove('active');
     });
 
@@ -49,7 +51,7 @@ function showSite(event) {
 }
 
 function findEntryByPathname(pathname) {
-    return window.DIFF_DATA.diffs.find(site => site.pathname === pathname);
+    return window.DIFF_DATA.diffs.find((site) => site.pathname === pathname);
 }
 
 function renderPercent() {
@@ -132,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     changeSource({ target: document.getElementById('server') });
     showSite({ target: document.getElementsByClassName('site-list-item')[0] });
     document.getElementById('show-unchanged').addEventListener('click', handleUnchangedSwitch);
-    window.addEventListener('keydown', e => {
+    window.addEventListener('keydown', (e) => {
         if (e.metaKey) {
             switch (e.keyCode) {
                 case 37:
@@ -260,7 +262,7 @@ class Diff extends HTMLElement {
         const property = this.getAttribute('property');
 
         if (pathname !== null && source !== null) {
-            const data = window.DIFF_DATA.diffs.find(site => site.pathname === pathname)[source];
+            const data = window.DIFF_DATA.diffs.find((site) => site.pathname === pathname)[source];
 
             const html = jsondiffpatch.formatters.html.format(data[property].delta, data[property].left);
 

@@ -2,9 +2,9 @@
 
 const { curry } = require('./functional');
 
-const striptUrl = url => url.replace(/https?:\/\/|www\./gi, '');
+const striptUrl = (url) => url.replace(/https?:\/\/|www\./gi, '');
 
-const getBaseUrlRegExp = config =>
+const getBaseUrlRegExp = (config) =>
     new RegExp(`(https?://)?(www.)?(${striptUrl(config.currentBaseUrl)}|${striptUrl(config.candidateBaseUrl)})`, 'ig');
 
 const processReplacements = curry((config, string) => {
@@ -18,7 +18,7 @@ const processReplacements = curry((config, string) => {
     }
 
     if (config.replacements && config.replacements.length > 0) {
-        config.replacements.forEach(replacement => {
+        config.replacements.forEach((replacement) => {
             output = output.replace(new RegExp(replacement.regExp, replacement.flags), replacement.replace);
         });
     }

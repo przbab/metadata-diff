@@ -52,7 +52,7 @@ function transformData(parsedData, rawData, config) {
 function prepareRedirects(redirects, config) {
     const processReplacementsWithConfig = processReplacements(config);
 
-    return redirects.map(redirect => ({
+    return redirects.map((redirect) => ({
         ...redirect,
         target: processReplacementsWithConfig(redirect.target),
         url: processReplacementsWithConfig(redirect.url),

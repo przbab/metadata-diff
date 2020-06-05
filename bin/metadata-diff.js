@@ -68,7 +68,7 @@ const allowed = [
 ];
 
 const filteredOptions = Object.keys(argv)
-    .filter(key => allowed.includes(key))
+    .filter((key) => allowed.includes(key))
     .reduce((acc, key) => {
         acc[key] = argv[key];
 

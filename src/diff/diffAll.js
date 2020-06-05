@@ -17,7 +17,7 @@ function processPathnames(config) {
     const logger = getLogger();
     const requestOptions = getRequestOptions(config);
 
-    return async pathnameObject => {
+    return async (pathnameObject) => {
         const pathname = getPathname(pathnameObject);
 
         logger.info(`Processing ${pathname}`);
