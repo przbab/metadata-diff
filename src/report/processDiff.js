@@ -28,7 +28,7 @@ function transformPropertyFactory(context) {
 
     function extractProperties(properties) {
         if (properties.length > 1) {
-            return properties.map(property => transformProperty(property));
+            return properties.map((property) => transformProperty(property));
         }
         if (properties.length === 1) {
             return transformProperty(properties[0]);
@@ -40,7 +40,7 @@ function transformPropertyFactory(context) {
 }
 
 function microdataToJsonLd(microdata) {
-    const jsonLd = microdata.items.map(item => {
+    const jsonLd = microdata.items.map((item) => {
         const context = 'http://schema.org/';
         const transformProperty = transformPropertyFactory(context);
 
@@ -74,7 +74,7 @@ function processDiff(data) {
 }
 
 function remapDiffs(diffs) {
-    return diffs.map(diff => ({
+    return diffs.map((diff) => ({
         ...diff,
         candidate: {
             left: diff.candidate.server,

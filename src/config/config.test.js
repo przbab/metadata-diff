@@ -4,7 +4,7 @@ const path = require('path');
 const { getConfig, getConfigEnvironment, readFile } = require('./config');
 
 jest.mock('joi', () => ({
-    validate: config => ({
+    validate: (config) => ({
         value: config,
     }),
 }));

@@ -28,7 +28,7 @@ describe('report', () => {
                 getScripts({
                     scripts: './thisPathShouldNotExist',
                     minify: false,
-                }).catch(e => {
+                }).catch((e) => {
                     expect(e).toBeDefined();
                 }));
         });
@@ -56,7 +56,7 @@ describe('report', () => {
                 getStyles({
                     scripts: './thisPathShouldNotExist',
                     minify: false,
-                }).catch(e => {
+                }).catch((e) => {
                     expect(e).toBeDefined();
                 }));
         });
@@ -124,7 +124,7 @@ describe('report', () => {
                 getHtml({
                     scripts: './thisPathShouldNotExist',
                     minify: false,
-                }).catch(e => {
+                }).catch((e) => {
                     expect(e).toBeDefined();
                 }));
         });

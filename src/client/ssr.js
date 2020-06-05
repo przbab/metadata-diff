@@ -9,7 +9,7 @@ async function fetchSSR(url, options = {}) {
             headers: {
                 'User-Agent': options.userAgent,
             },
-        }).on('redirect', chainedResponse => {
+        }).on('redirect', (chainedResponse) => {
             redirects.push({
                 status: chainedResponse.statusCode,
                 target: chainedResponse.headers.location,

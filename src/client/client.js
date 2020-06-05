@@ -35,7 +35,7 @@ async function blockRequests(page, urls) {
     const blockedRequests = new RegExp(`(${urls.join('|')})`, 'i');
 
     await page.setRequestInterception(true);
-    page.on('request', interceptedRequest => {
+    page.on('request', (interceptedRequest) => {
         const url = interceptedRequest.url();
 
         if (blockedRequests.test(url)) {
@@ -52,7 +52,7 @@ async function fetchClient(url, options) {
     const redirects = response
         .request()
         .redirectChain()
-        .map(request => {
+        .map((request) => {
             const chainedResponse = request.response();
             return {
                 status: chainedResponse.status(),

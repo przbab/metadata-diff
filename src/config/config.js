@@ -37,7 +37,7 @@ function readFile(configFile) {
 }
 
 function getConfigFileForDirectory(directory) {
-    return CONFIG_FILES.find(filename => fs.existsSync(path.join(directory, filename)));
+    return CONFIG_FILES.find((filename) => fs.existsSync(path.join(directory, filename)));
 }
 
 function readJSONConfigFile(configFile) {
