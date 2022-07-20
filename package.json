@@ -40,7 +40,7 @@
     "jsondiffpatch": "^0.4.1",
     "microdata-node": "^2.0.0",
     "puppeteer": "^3.3.0",
-    "terser": "^4.7.0",
+    "terser": "^4.8.1",
     "winston": "^3.2.1",
     "yargs": "^15.3.1"
   },
