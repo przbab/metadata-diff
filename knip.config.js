@@ -1,6 +1,7 @@
 const config = {
+    entry: ['eslint.config.mjs', 'src/page/*'],
     ignore: [],
-    ignoreBinaries: ['convox', 'mkcert', 'eslint'],
+    ignoreBinaries: ['eslint', 'prettier'],
     ignoreDependencies: [],
     paths: {},
     rules: {

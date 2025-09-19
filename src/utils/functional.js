@@ -1,4 +1,4 @@
-export const curryN = (length, fn) =>
+const curryN = (length, fn) =>
     function applyArgs(...args) {
         return args.length < length ? (...newArgs) => applyArgs(...args, ...newArgs) : fn(...args);
     };
@@ -11,8 +11,3 @@ export const compose =
     (...fns) =>
     (input) =>
         fns.reduceRight((result, fn) => fn(result), input);
-
-export const pipe =
-    (...fns) =>
-    (input) =>
-        fns.reduce((result, fn) => fn(result), input);

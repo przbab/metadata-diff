@@ -21,7 +21,7 @@ export async function getConfig(cliConfig) {
     return null;
 }
 
-export function validateConfig(config) {
+function validateConfig(config) {
     const { error, value } = Joi.validate(config, schema);
     if (error) {
         throw error;

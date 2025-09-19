@@ -1,8 +1,8 @@
 import { curry } from './functional.js';
 
-export const striptUrl = (url) => url.replace(/https?:\/\//gi, '').replace(/www\./gi, '');
+const striptUrl = (url) => url.replace(/https?:\/\//gi, '').replace(/www\./gi, '');
 
-export const getBaseUrlRegExp = (config) =>
+const getBaseUrlRegExp = (config) =>
     new RegExp(`(https?://)?(www.)?(${striptUrl(config.candidateBaseUrl)}|${striptUrl(config.currentBaseUrl)})`, 'ig');
 
 export const processReplacements = curry((config, string) => {
