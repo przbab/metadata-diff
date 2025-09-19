@@ -1,0 +1,22 @@
+name: PR
+
+on:
+    pull_request:
+
+jobs:
+    validate_pr_title:
+        name: Validate PR title
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v5
+            - uses: ./.github/actions/setup
+            - name: Validate PR name
+              env:
+                  PR_TITLE: ${{ github.event.pull_request.title }}
+              run: echo "$PR_TITLE" | npx commitlint
+              shell: bash
+    validate:
+        name: Validate
+        uses: ./.github/workflows/validate.yml
