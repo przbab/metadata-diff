@@ -24,12 +24,27 @@ Configuration is read using js `import` statement, so it may be a `.js` or `.jso
 | puppeteerOption.goto           | no       | object                         | This property will be passed to puppeteer's `page.goto` as options. https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options |
 | puppeteerOption.headless       | no       | boolean                        | Disable headless                                                                                                                                          |
 | puppeteerOption.slowMo         | no       | number                         | Slow the puppeteer                                                                                                                                        |
-| replaceBaseUrls                | no       | boolean                        | Should base url be replaced with string (to simplify comparison) (Default: `true`)                                                                        |
-| replacements                   | no       | array(object)                  | Allows for replacing some properties in html before parsing. Intended for random parts like tokens, etc,                                                  |
-| replacements.flags             | no       | string                         | Flags for the expression                                                                                                                                  |
-| replacements.regExp            | yes      | string                         | Regular expression                                                                                                                                        |
-| replacements.replace           | yes      | string                         | Replacement                                                                                                                                               |
+| replacements                   | no       | array(object)                  | Allows for replacing some properties in html before parsing. Intended for random parts like urls, tokens, etc. check below for more info                  |
 | concurrency                    | no       | number                         | Option to make diffs concurrently (default: 1)                                                                                                            |
+
+#### How to use replacements
+
+The `replacements` property allows for replacing some parts of html before parsing. Example:
+
+```js
+replacements: {
+    'base-url': [
+        'https://www.new.example.no',
+        'https://new.example.no',
+        'https://www.example.no',
+        'www.example.no',
+        'new.example.no',
+        'example.no',
+    ],
+},
+```
+
+Block above will replace all occurences of any url from the list with `base-url` string. This will help with diffing metadata that contains absolute urls. Order of replacements matter, they will be applied from first to the last so place most specific ones first. You will notice what you need to replace when you see the diff report and differences in values you don't care about (e.g. because they are natural for different environments).
 
 ### Command line
 

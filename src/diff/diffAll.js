@@ -1,13 +1,12 @@
 import async from 'async';
 import { getLogger } from '../logger.js';
-import { get, getOr } from '../utils/index.js';
 
 function getPathname(pathname) {
     if (typeof pathname === 'string') {
         return pathname;
     }
 
-    return get('path', pathname);
+    return pathname.path;
 }
 
 async function processPathnames(config) {
@@ -22,7 +21,7 @@ async function processPathnames(config) {
 
         return {
             ...(await diffSingle(pathname, config, requestOptions)),
-            note: getOr('', 'note', pathnameObject),
+            note: pathnameObject.note,
         };
     };
 }

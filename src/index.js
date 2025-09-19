@@ -40,6 +40,7 @@ const argv = yargs(hideBin(process.argv))
 async function full(cliConfig) {
     initializeLogger(cliConfig);
     const logger = getLogger();
+    logger.silly('Started with cli options', cliConfig);
 
     const config = await getConfig(cliConfig);
     logger.silly('Running with configuration', config);

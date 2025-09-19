@@ -1,5 +1,14 @@
 import { getLogger } from '../logger.js';
-import { processReplacements } from '../utils/index.js';
+
+export const processReplacements = (config) => (string) => {
+    let output = string;
+
+    Object.entries(config.replacements ?? {}).forEach(([target, sources]) => {
+        output = output.replaceAll(new RegExp(sources.map((source) => `(${source})`).join('|'), 'ig'), target);
+    });
+
+    return output;
+};
 
 export async function diffSingle(pathname, config, requestOptions) {
     const logger = getLogger();

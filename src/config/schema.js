@@ -30,12 +30,5 @@ export const schema = Joi.object({
         headless: Joi.boolean().default(true),
         slowMo: Joi.number().min(0).default(0),
     }),
-    replaceBaseUrls: Joi.boolean().default(true),
-    replacements: Joi.array().items(
-        Joi.object().keys({
-            flags: Joi.string().default(''),
-            regExp: Joi.string().required(),
-            replace: Joi.string().required(),
-        })
-    ),
+    replacements: Joi.object().pattern(Joi.string(), Joi.array().items(Joi.string())).default({}),
 });
