@@ -1,8 +1,8 @@
-import { nicheBase, nichePrettier, nicheTests } from '@schibsted/niche-eslint-config';
+import { nicheBase, nichePrettier } from '@schibsted/niche-eslint-config';
+import globals from 'globals';
 
 export default [
     ...nicheBase,
-    ...nicheTests,
     ...nichePrettier,
     {
         ignores: ['node_modules'],
@@ -26,6 +26,15 @@ export default [
                 },
             ],
             'import/no-unresolved': ['error', { ignore: ['yargs/helpers'] }],
+        },
+    },
+    {
+        files: ['src/page/**/*.js'],
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                jsondiffpatch: true,
+            },
         },
     },
 ];
