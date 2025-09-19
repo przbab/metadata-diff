@@ -86,8 +86,8 @@ function validateConfig(config) {
 module.exports = {
     getConfig,
     getConfigEnvironment,
-    readJSONConfigFile,
     readFile,
+    readJSONConfigFile,
     readPackageJson,
     validateConfig,
 };

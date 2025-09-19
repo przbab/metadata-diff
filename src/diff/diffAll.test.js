@@ -8,9 +8,9 @@ describe('diff', () => {
     describe('diffAll', () => {
         test(`should diff all of the pathnames`, async () => {
             const config = {
+                concurrency: 1,
                 pathnames: ['/test1', { path: '/test2' }],
                 userAgent: 'testUserAgent',
-                concurrency: 1,
             };
             const diffs = await diffAll(config);
 
@@ -22,9 +22,9 @@ describe('diff', () => {
 
         test(`should pass notes`, async () => {
             const config = {
-                pathnames: [{ path: '/test', note: 'test note' }],
-                userAgent: 'testUserAgent',
                 concurrency: 1,
+                pathnames: [{ note: 'test note', path: '/test' }],
+                userAgent: 'testUserAgent',
             };
             const diffs = await diffAll(config);
 

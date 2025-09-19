@@ -19,7 +19,7 @@ async function fetchPathname(pathname, config, requestOptions) {
         fetchSSR(decodedCandidateHref, requestOptions),
         fetchClient(decodedCandidateHref, requestOptions),
     ]);
-    return { currentServerData, currentClientData, candidateServerData, candidateClientData };
+    return { candidateClientData, candidateServerData, currentClientData, currentServerData };
 }
 
 module.exports = {

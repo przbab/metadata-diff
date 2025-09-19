@@ -39,14 +39,14 @@ describe('config', () => {
             expect(config).toEqual({ test: { betterTest: true }, test2: true, test3: true });
         });
         test(`should merge with envoronment`, () => {
-            const testConfig = { test: true, test3: true, environment: { test: { test4: true } } };
+            const testConfig = { environment: { test: { test4: true } }, test: true, test3: true };
             const config = getConfigEnvironment(testConfig);
 
             expect(config).toEqual({ test: true, test3: true, test4: true });
         });
 
         test(`should merge with envoronment and override`, () => {
-            const testConfig = { test: true, test3: true, environment: { test: { test4: true } } };
+            const testConfig = { environment: { test: { test4: true } }, test: true, test3: true };
             const overrideConfig = { test: { betterTest: true }, test2: true };
             const config = getConfigEnvironment(testConfig, overrideConfig);
 

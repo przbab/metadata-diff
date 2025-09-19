@@ -9,16 +9,16 @@ jest.mock('../client', () => ({
             redirects: [
                 {
                     status: 302,
-                    url: `http://example.com/${type}`,
                     target: 'http://example.com',
+                    url: `http://example.com/${type}`,
                 },
             ],
         });
         return {
-            currentServerData: mockData('currentServer'),
-            currentClientData: mockData('currentClient'),
-            candidateServerData: mockData('candidateServer'),
             candidateClientData: mockData('candidateClient'),
+            candidateServerData: mockData('candidateServer'),
+            currentClientData: mockData('currentClient'),
+            currentServerData: mockData('currentServer'),
         };
     },
 }));
@@ -39,10 +39,10 @@ describe('diff', () => {
         test(`should parse data in correct order`, async () => {
             const parsedData = await parseData(
                 {
-                    currentServerData: { html: 'currentServer' },
-                    currentClientData: { html: 'currentClient' },
-                    candidateServerData: { html: 'candidateServer' },
                     candidateClientData: { html: 'candidateClient' },
+                    candidateServerData: { html: 'candidateServer' },
+                    currentClientData: { html: 'currentClient' },
+                    currentServerData: { html: 'currentServer' },
                 },
                 {}
             );
@@ -53,13 +53,13 @@ describe('diff', () => {
     describe('transformData', () => {
         test(`should transform redirects`, () => {
             const parsedData = {
+                jsonLd: {},
                 metadata: {},
                 microdata: {},
-                jsonLd: {},
             };
             const rawData = {
                 html: '',
-                redirects: [{ status: 301, url: 'http://example.com', target: 'http://example.com/test' }],
+                redirects: [{ status: 301, target: 'http://example.com/test', url: 'http://example.com' }],
             };
 
             const transformedData = transformData(parsedData, rawData, {

@@ -66,9 +66,9 @@ function processDiff(data) {
     const redirectsDelta = jsondiff.diff(data.left.redirects, data.right.redirects) || {};
 
     return {
+        jsonLd: transformData(data.left.jsonLd, jsonLdDelta),
         metadata: transformData(data.left.metadata, metadataDelta),
         microdata: transformData(leftTransformedMicrodata, microdataDelta),
-        jsonLd: transformData(data.left.jsonLd, jsonLdDelta),
         redirects: transformData(data.left.redirects, redirectsDelta),
     };
 }
@@ -92,8 +92,8 @@ function remapDiffs(diffs) {
 }
 
 module.exports = {
+    microdataToJsonLd,
     processDiff,
     remapDiffs,
     transformData,
-    microdataToJsonLd,
 };

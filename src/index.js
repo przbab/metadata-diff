@@ -6,14 +6,16 @@ const save = require('./save');
 const { diffAll } = require('./diff');
 const { report } = require('./report');
 
-const withConfig = (wrappedFunction) => ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
-    const config = getConfig(overrideConfig, skipConfig);
-    initializeLogger(config);
-    const logger = getLogger();
-    logger.silly(config);
+const withConfig =
+    (wrappedFunction) =>
+    ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
+        const config = getConfig(overrideConfig, skipConfig);
+        initializeLogger(config);
+        const logger = getLogger();
+        logger.silly(config);
 
-    return wrappedFunction(config, ...rest);
-};
+        return wrappedFunction(config, ...rest);
+    };
 
 async function full(config) {
     const logger = getLogger();

@@ -26,4 +26,4 @@ const processReplacements = curry((config, string) => {
     return output;
 });
 
-module.exports = { striptUrl, getBaseUrlRegExp, processReplacements };
+module.exports = { getBaseUrlRegExp, processReplacements, striptUrl };

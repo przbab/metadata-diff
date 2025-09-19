@@ -10,7 +10,7 @@ async function diffSingle(pathname, config, requestOptions) {
 
     logger.verbose(`Diffing pathname ${pathname}`);
 
-    const { currentServerData, currentClientData, candidateServerData, candidateClientData } = await fetchPathname(
+    const { candidateClientData, candidateServerData, currentClientData, currentServerData } = await fetchPathname(
         pathname,
         config,
         requestOptions
@@ -18,26 +18,26 @@ async function diffSingle(pathname, config, requestOptions) {
 
     logger.debug(`Pathname ${pathname} fetched`);
 
-    const { currentServer, currentClient, candidateServer, candidateClient } = parseData(
-        { currentServerData, currentClientData, candidateServerData, candidateClientData },
+    const { candidateClient, candidateServer, currentClient, currentServer } = parseData(
+        { candidateClientData, candidateServerData, currentClientData, currentServerData },
         config
     );
 
     logger.debug(`Pathname ${pathname} parsed`);
 
     return {
-        pathname,
         candidate: {
-            server: transformData(candidateServer, candidateServerData, config),
             client: transformData(candidateClient, candidateClientData, config),
+            server: transformData(candidateServer, candidateServerData, config),
         },
         client: {
-            current: transformData(currentClient, currentClientData, config),
             candidate: transformData(candidateClient, candidateClientData, config),
+            current: transformData(currentClient, currentClientData, config),
         },
+        pathname,
         server: {
-            current: transformData(currentServer, currentServerData, config),
             candidate: transformData(candidateServer, candidateServerData, config),
+            current: transformData(currentServer, currentServerData, config),
         },
     };
 }
@@ -63,7 +63,7 @@ function prepareRedirects(redirects, config) {
     }));
 }
 
-function parseData({ currentServerData, currentClientData, candidateServerData, candidateClientData }, config) {
+function parseData({ candidateClientData, candidateServerData, currentClientData, currentServerData }, config) {
     const processReplacementsWithConfig = processReplacements(config);
 
     const currentServer = parse(processReplacementsWithConfig(currentServerData.html));
@@ -71,7 +71,7 @@ function parseData({ currentServerData, currentClientData, candidateServerData, 
     const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html));
     const candidateClient = parse(processReplacementsWithConfig(candidateClientData.html));
 
-    return { currentServer, currentClient, candidateServer, candidateClient };
+    return { candidateClient, candidateServer, currentClient, currentServer };
 }
 
 module.exports = {

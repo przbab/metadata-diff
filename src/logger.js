@@ -6,8 +6,8 @@ let logger;
 
 function initializeLogger(config) {
     logger = winston.createLogger({
-        level: config.logLevel,
         format: winston.format.json(),
+        level: config.logLevel,
         transports: [new winston.transports.Console()],
     });
 

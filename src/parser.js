@@ -9,7 +9,7 @@ function isJsonLd(name, attribs) {
 }
 
 function isInterestingLink(name, attribs) {
-    return ['canonical', 'icon', 'shortcut', 'manifest'].includes(attribs.rel);
+    return ['canonical', 'icon', 'manifest', 'shortcut'].includes(attribs.rel);
 }
 
 function isInterestingMetaName(name, attribs) {
@@ -68,6 +68,10 @@ function isInterestingMetaProperty(name, attribs) {
         'profile:gender',
         'profile:last_name',
         'profile:username',
+        'twitter:card',
+        'twitter:description',
+        'twitter:image',
+        'twitter:title',
         'video:actor',
         'video:actor:role',
         'video:director',
@@ -76,10 +80,6 @@ function isInterestingMetaProperty(name, attribs) {
         'video:series',
         'video:tag',
         'video:writer',
-        'twitter:card',
-        'twitter:title',
-        'twitter:description',
-        'twitter:image',
     ].includes(attribs.property);
 }
 
@@ -91,14 +91,18 @@ function parse(html) {
 
     const parser = new htmlparser.Parser(
         {
+            onclosetag(name) {
+                if (name === 'head') {
+                    inHead = false;
+                }
+                currentTag = '';
+            },
             onopentag(name, attribs) {
                 currentTag = name;
 
                 switch (name) {
-                    case 'script':
-                        if (isJsonLd(name, attribs)) {
-                            currentTag = 'jsonLd';
-                        }
+                    case 'head':
+                        inHead = true;
                         break;
                     case 'link':
                         if (isInterestingLink(name, attribs)) {
@@ -113,8 +117,10 @@ function parse(html) {
                             metadata[attribs.property] = attribs.content;
                         }
                         break;
-                    case 'head':
-                        inHead = true;
+                    case 'script':
+                        if (isJsonLd(name, attribs)) {
+                            currentTag = 'jsonLd';
+                        }
                         break;
                     default:
                         break;
@@ -122,6 +128,13 @@ function parse(html) {
             },
             ontext(text) {
                 switch (currentTag) {
+                    case 'h1':
+                        if (metadata.h1) {
+                            metadata.h1.push(text);
+                        } else {
+                            metadata.h1 = [text];
+                        }
+                        break;
                     case 'jsonLd':
                         jsonLd.push(JSON.parse(decode(text)));
                         break;
@@ -130,22 +143,9 @@ function parse(html) {
                             metadata.title = text;
                         }
                         break;
-                    case 'h1':
-                        if (metadata.h1) {
-                            metadata.h1.push(text);
-                        } else {
-                            metadata.h1 = [text];
-                        }
-                        break;
                     default:
                         break;
                 }
-            },
-            onclosetag(name) {
-                if (name === 'head') {
-                    inHead = false;
-                }
-                currentTag = '';
             },
         },
         { decodeEntities: true }
@@ -157,7 +157,7 @@ function parse(html) {
         jsonLd = jsonLd[0];
     }
 
-    return { metadata, microdata: microdata.toJson(html), jsonLd };
+    return { jsonLd, metadata, microdata: microdata.toJson(html) };
 }
 
 module.exports = { parse };

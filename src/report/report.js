@@ -1,21 +1,21 @@
 'use strict';
 
-const { getScripts, getHtml, getStyles } = require('./files');
+const { getHtml, getScripts, getStyles } = require('./files');
 const { processDiff, remapDiffs } = require('./processDiff');
 
 async function report(config, diffs) {
     const remappedDiffs = remapDiffs(diffs);
     const data = {
+        candidateBaseUrl: config.candidateBaseUrl,
+        currentBaseUrl: config.currentBaseUrl,
         date: new Date(),
         diffs: remappedDiffs.map((diff) => ({
-            pathname: diff.pathname,
-            note: diff.note,
             candidate: processDiff(diff.candidate),
             client: processDiff(diff.client),
+            note: diff.note,
+            pathname: diff.pathname,
             server: processDiff(diff.server),
         })),
-        currentBaseUrl: config.currentBaseUrl,
-        candidateBaseUrl: config.candidateBaseUrl,
     };
 
     const scripts = await getScripts(config);
