@@ -17,8 +17,8 @@ describe('diff', () => {
             const diffs = await diffAll(config);
 
             t.assert.deepEqual(diffs, [
-                { note: '', pathname: '/test1' },
-                { note: '', pathname: '/test2' },
+                { note: undefined, pathname: '/test1' },
+                { note: undefined, pathname: '/test2' },
             ]);
         });
 
