@@ -1,21 +1,18 @@
-'use strict';
+import fsPromises from 'fs/promises';
+import { promisify } from 'util';
+import path from 'path';
+import ejs from 'ejs';
+import { getLogger } from '../logger.js';
 
-const fs = require('fs');
-const { promisify } = require('util');
-const path = require('path');
-const ejs = require('ejs');
-const { getLogger } = require('../logger');
-
-const readFile = promisify(fs.readFile);
 const renderFile = promisify(ejs.renderFile);
 
-async function getScripts(config) {
+export async function getScripts(config) {
     const logger = getLogger();
-    const file = config.scripts || path.join(__dirname, '../page/scripts.js');
-    const scripts = await readFile(file, 'utf8');
+    const file = path.resolve(process.cwd(), './src/page/scripts.js');
+    const scripts = await fsPromises.readFile(file, 'utf8');
 
     if (config.minify) {
-        const terser = require('terser');
+        const terser = (await import('terser')).default;
         const result = terser.minify(scripts);
 
         if (result.error) {
@@ -30,22 +27,22 @@ async function getScripts(config) {
     return scripts;
 }
 
-async function getStyles(config) {
-    const file = config.styles || path.join(__dirname, '../page/styles.css');
-    const styles = await readFile(file, 'utf8');
+export async function getStyles(config) {
+    const file = path.resolve(process.cwd(), './src/page/styles.css');
+    const styles = await fsPromises.readFile(file, 'utf8');
     if (config.minify) {
-        const cssnano = require('cssnano');
+        const cssnano = (await import('cssnano')).default;
         return (await cssnano.process(styles, { from: undefined })).css;
     }
     return styles;
 }
 
-async function getHtml(data, scripts, styles, config) {
-    const file = config.html || path.join(__dirname, '../page/index.ejs');
+export async function getHtml(data, scripts, styles, config) {
+    const file = path.resolve(process.cwd(), './src/page/index.ejs');
     const html = await renderFile(file, { config, data, scripts, styles });
 
     if (config.minify) {
-        const minifyHtml = require('html-minifier').minify;
+        const minifyHtml = (await import('html-minifier')).minify;
         return minifyHtml(html, {
             collapseBooleanAttributes: true,
             collapseWhitespace: true,
@@ -59,9 +56,3 @@ async function getHtml(data, scripts, styles, config) {
     }
     return html;
 }
-
-module.exports = {
-    getHtml,
-    getScripts,
-    getStyles,
-};

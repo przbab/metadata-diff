@@ -1,9 +1,7 @@
-'use strict';
-
-const { getLogger } = require('../logger');
-const { fetchPathname } = require('../client');
-const { parse } = require('../parser');
-const { processReplacements } = require('../utils');
+import { getLogger } from '../logger.js';
+import { fetchPathname } from '../client/index.js';
+import { parse } from '../parser.js';
+import { processReplacements } from '../utils/index.js';
 
 async function diffSingle(pathname, config, requestOptions) {
     const logger = getLogger();
@@ -74,8 +72,4 @@ function parseData({ candidateClientData, candidateServerData, currentClientData
     return { candidateClient, candidateServer, currentClient, currentServer };
 }
 
-module.exports = {
-    diffSingle,
-    parseData,
-    transformData,
-};
+export { diffSingle, parseData, transformData };

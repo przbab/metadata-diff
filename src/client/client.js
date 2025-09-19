@@ -1,7 +1,5 @@
-'use strict';
-
-const puppeteer = require('puppeteer');
-const { getLogger } = require('../logger');
+import puppeteer from 'puppeteer';
+import { getLogger } from '../logger.js';
 
 let browserInstance;
 
@@ -49,7 +47,7 @@ async function blockRequests(page, urls) {
     });
 }
 
-async function fetchClient(url, options) {
+export async function fetchClient(url, options) {
     const page = await preparePage(options);
     const response = await page.goto(url, options.goto);
     const redirects = response
@@ -92,5 +90,3 @@ async function exitHandler(code) {
     await browserInstance.close();
     process.exit(code);
 }
-
-module.exports = { fetchClient };

@@ -1,9 +1,7 @@
-'use strict';
+import { getHtml, getScripts, getStyles } from './files.js';
+import { processDiff, remapDiffs } from './processDiff.js';
 
-const { getHtml, getScripts, getStyles } = require('./files');
-const { processDiff, remapDiffs } = require('./processDiff');
-
-async function report(config, diffs) {
+export async function report(config, diffs) {
     const remappedDiffs = remapDiffs(diffs);
     const data = {
         candidateBaseUrl: config.candidateBaseUrl,
@@ -24,5 +22,3 @@ async function report(config, diffs) {
 
     return html;
 }
-
-module.exports = { report };

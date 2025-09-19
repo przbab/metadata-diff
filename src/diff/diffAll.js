@@ -1,9 +1,7 @@
-'use strict';
-
-const mapLimit = require('async/mapLimit');
-const { getLogger } = require('../logger');
-const { get, getOr } = require('../utils');
-const { diffSingle } = require('./diffSingle');
+import async from 'async';
+import { getLogger } from '../logger.js';
+import { get, getOr } from '../utils/index.js';
+import { diffSingle } from './diffSingle.js';
 
 function getPathname(pathname) {
     if (typeof pathname === 'string') {
@@ -34,7 +32,7 @@ async function diffAll(config) {
 
     logger.verbose('Diffing all the files');
 
-    return mapLimit(config.pathnames, config.concurrency, processPathnames(config));
+    return async.mapLimit(config.pathnames, config.concurrency, processPathnames(config));
 }
 
 function getRequestOptions(config) {
@@ -45,4 +43,4 @@ function getRequestOptions(config) {
     };
 }
 
-module.exports = { diffAll };
+export { diffAll };

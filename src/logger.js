@@ -1,10 +1,8 @@
-'use strict';
-
-const winston = require('winston');
+import winston from 'winston';
 
 let logger;
 
-function initializeLogger(config) {
+export function initializeLogger(config) {
     logger = winston.createLogger({
         format: winston.format.json(),
         level: config.logLevel,
@@ -16,8 +14,6 @@ function initializeLogger(config) {
     }
 }
 
-function getLogger() {
+export function getLogger() {
     return logger;
 }
-
-module.exports = { getLogger, initializeLogger };

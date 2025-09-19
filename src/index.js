@@ -1,24 +1,48 @@
-'use strict';
+import { getLogger, initializeLogger } from './logger.js';
+import { getConfig } from './config/index.js';
+import save from './save.js';
+import { diffAll } from './diff/index.js';
+import { report } from './report/index.js';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-const { getLogger, initializeLogger } = require('./logger');
-const { getConfig } = require('./config');
-const save = require('./save');
-const { diffAll } = require('./diff');
-const { report } = require('./report');
+const argv = yargs(hideBin(process.argv))
+    .usage('Usage: $0 [options]')
+    .option('config', {
+        alias: 'c',
+        describe: 'Specify configuration file to use',
+        required: true,
+        type: 'string',
+    })
+    .option('logLevel', {
+        choices: ['error', 'warn', 'info', 'verbose', 'debug', 'silly'],
+        default: 'info',
+        describe: 'Set the log level',
+        type: 'string',
+    })
+    .option('logToFile', {
+        default: false,
+        describe: 'Output log to file',
+        type: 'boolean',
+    })
+    .option('logFilename', {
+        default: 'metadata-diff.log',
+        describe: 'Output log filename',
+        type: 'string',
+    })
+    .strict()
+    .help('help')
+    .alias('h', 'help')
+    .alias('v', 'version')
+    .version()
+    .parse();
 
-const withConfig =
-    (wrappedFunction) =>
-    ({ config: overrideConfig, skipConfig } = {}, ...rest) => {
-        const config = getConfig(overrideConfig, skipConfig);
-        initializeLogger(config);
-        const logger = getLogger();
-        logger.silly(config);
-
-        return wrappedFunction(config, ...rest);
-    };
-
-async function full(config) {
+async function full(cliConfig) {
+    initializeLogger(cliConfig);
     const logger = getLogger();
+
+    const config = await getConfig(cliConfig);
+    logger.silly('Running with configuration', config);
 
     try {
         const diffs = await diffAll(config);
@@ -32,8 +56,4 @@ async function full(config) {
     process.exit(0);
 }
 
-module.exports = {
-    diff: withConfig(diffAll),
-    full: withConfig(full),
-    report: withConfig(report),
-};
+full(argv);

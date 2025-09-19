@@ -1,8 +1,6 @@
-'use strict';
+import got from 'got';
 
-const got = require('got');
-
-async function fetchSSR(url, options = {}) {
+export async function fetchSSR(url, options = {}) {
     const redirects = [];
     try {
         const response = await got(url, {
@@ -20,7 +18,3 @@ async function fetchSSR(url, options = {}) {
         return { html: err.response?.body, redirects, statusCode: err.response.statusCode };
     }
 }
-
-module.exports = {
-    fetchSSR,
-};

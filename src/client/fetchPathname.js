@@ -1,9 +1,7 @@
-'use strict';
+import { fetchSSR } from './ssr.js';
+import { fetchClient } from './client.js';
 
-const { fetchSSR } = require('./ssr');
-const { fetchClient } = require('./client');
-
-async function fetchPathname(pathname, config, requestOptions) {
+export async function fetchPathname(pathname, config, requestOptions) {
     const current = new URL(config.currentBaseUrl);
     const candidate = new URL(config.candidateBaseUrl);
 
@@ -21,7 +19,3 @@ async function fetchPathname(pathname, config, requestOptions) {
     ]);
     return { candidateClientData, candidateServerData, currentClientData, currentServerData };
 }
-
-module.exports = {
-    fetchPathname,
-};

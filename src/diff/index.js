@@ -1,5 +1,3 @@
-'use strict';
+import { diffAll } from './diffAll.js';
 
-const { diffAll } = require('./diffAll');
-
-module.exports = { diffAll };
+export { diffAll };

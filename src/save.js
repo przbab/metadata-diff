@@ -1,12 +1,10 @@
-'use strict';
-
-const fs = require('fs');
-const { promisify } = require('util');
-const { getLogger } = require('./logger');
+import fs from 'fs';
+import { promisify } from 'util';
+import { getLogger } from './logger.js';
 
 const writeFile = promisify(fs.writeFile);
 
-async function save(report, config) {
+export default async function save(report, config) {
     const logger = getLogger();
 
     try {
@@ -18,5 +16,3 @@ async function save(report, config) {
         process.exit(1);
     }
 }
-
-module.exports = save;

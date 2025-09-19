@@ -18,6 +18,14 @@ export default [
         },
     },
     {
-        rules: {},
+        rules: {
+            'import/extensions': [
+                'error',
+                {
+                    js: 'always',
+                },
+            ],
+            'import/no-unresolved': ['error', { ignore: ['yargs/helpers'] }],
+        },
     },
 ];

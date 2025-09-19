@@ -1,11 +1,11 @@
-'use strict';
+import * as functional from './functional.js';
+import * as object from './object.js';
+import * as string from './string.js';
 
-const functional = require('./functional');
-const object = require('./object');
-const string = require('./string');
+export * from './functional.js';
+export * from './object.js';
+export * from './string.js';
 
-module.exports = {
-    ...functional,
-    ...object,
-    ...string,
-};
+const combined = { ...functional, ...object, ...string };
+
+export default combined;

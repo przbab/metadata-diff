@@ -5,13 +5,14 @@
     "bin": {
         "metadata-diff": "./bin/metadata-diff.js"
     },
+    "type": "module",
     "scripts": {
         "lint": "eslint .",
         "lint-fix": "eslint . --fix",
         "precommit": "lint-staged",
         "prepush": "npm test",
         "prettier": "prettier --write",
-        "start": "node index",
+        "start": "node ./src/index.js",
         "stylelint": "stylelint '**/*.css'",
         "test": "jest",
         "knip": "knip",
@@ -33,7 +34,6 @@
     "dependencies": {
         "async": "^3.2.0",
         "cssnano": "^4.1.10",
-        "deepmerge": "^4.2.2",
         "ejs": "^3.1.3",
         "got": "^11.2.0",
         "html-entities": "^2.3.2",
@@ -45,7 +45,7 @@
         "puppeteer": "^3.3.0",
         "terser": "^4.7.0",
         "winston": "^3.2.1",
-        "yargs": "^15.3.1"
+        "yargs": "18.0.0"
     },
     "devDependencies": {
         "@commitlint/cli": "19.8.1",

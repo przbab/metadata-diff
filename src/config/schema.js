@@ -1,8 +1,6 @@
-'use strict';
+import Joi from 'joi';
 
-const Joi = require('joi');
-
-const schema = Joi.object({
+export const schema = Joi.object({
     candidateBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
     concurrency: Joi.number().min(1).default(1),
     currentBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
@@ -14,9 +12,6 @@ const schema = Joi.object({
             'User-Agent': Joi.string().default('metadata-diff'),
         }),
     html: Joi.string(),
-    logFilename: Joi.string().default('metadata-diff.log'),
-    logLevel: Joi.string().allow('error', 'warn', 'info', 'verbose', 'debug', 'silly').default('silly'),
-    logToFile: Joi.boolean().default(false),
     minify: Joi.boolean().default(true),
     output: Joi.string().default('metadataDiffReport.html'),
     pathnames: Joi.array()
@@ -44,8 +39,4 @@ const schema = Joi.object({
             replace: Joi.string().required(),
         })
     ),
-    scripts: Joi.string(),
-    styles: Joi.string(),
 });
-
-module.exports = { schema };

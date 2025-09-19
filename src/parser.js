@@ -1,8 +1,6 @@
-'use strict';
-
-const microdata = require('microdata-node');
-const htmlparser = require('htmlparser2');
-const { decode } = require('html-entities');
+import * as microdata from 'microdata-node';
+import * as htmlparser from 'htmlparser2';
+import { decode } from 'html-entities';
 
 function isJsonLd(name, attribs) {
     return attribs.type === 'application/ld+json';
@@ -160,4 +158,4 @@ function parse(html) {
     return { jsonLd, metadata, microdata: microdata.toJson(html) };
 }
 
-module.exports = { parse };
+export { parse };
