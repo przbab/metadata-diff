@@ -86,7 +86,8 @@ function attachCleanupHandlers() {
 }
 
 async function exitHandler(code) {
-    getLogger().verbose('Closing chrome...');
+    const logger = getLogger();
+    logger.verbose('Closing chrome...');
     await browserInstance.close();
     process.exit(code);
 }

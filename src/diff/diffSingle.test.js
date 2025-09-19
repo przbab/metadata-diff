@@ -1,42 +1,45 @@
-'use strict';
+import { diffSingle, parseData, transformData } from './diffSingle.js';
+import { describe, mock, test } from 'node:test';
 
-const { diffSingle, parseData, transformData } = require('./diffSingle');
-
-jest.mock('../client', () => ({
-    fetchPathname: async (pathname) => {
-        const mockData = (type) => ({
-            html: pathname,
-            redirects: [
-                {
-                    status: 302,
-                    target: 'http://example.com',
-                    url: `http://example.com/${type}`,
-                },
-            ],
-        });
-        return {
-            candidateClientData: mockData('candidateClient'),
-            candidateServerData: mockData('candidateServer'),
-            currentClientData: mockData('currentClient'),
-            currentServerData: mockData('currentServer'),
-        };
+mock.module('../client/index.js', {
+    namedExports: {
+        fetchPathname: async (pathname) => {
+            const mockData = (type) => ({
+                html: pathname,
+                redirects: [
+                    {
+                        status: 302,
+                        target: 'http://example.com',
+                        url: `http://example.com/${type}`,
+                    },
+                ],
+            });
+            return {
+                candidateClientData: mockData('candidateClient'),
+                candidateServerData: mockData('candidateServer'),
+                currentClientData: mockData('currentClient'),
+                currentServerData: mockData('currentServer'),
+            };
+        },
     },
-}));
+});
 
-jest.mock('../parser', () => ({
-    parse: async (...params) => params,
-}));
+mock.module('../parser.js', {
+    namedExports: {
+        parse: async (...params) => params,
+    },
+});
 
 describe('diff', () => {
     describe('diffSingle', () => {
-        test(`should diff single pathname`, async () => {
+        test(`should diff single pathname`, async (t) => {
             const diff = await diffSingle('/', {}, {});
 
-            expect(diff).toMatchSnapshot();
+            t.assert.snapshot(diff);
         });
     });
     describe('parseData', () => {
-        test(`should parse data in correct order`, async () => {
+        test(`should parse data in correct order`, async (t) => {
             const parsedData = await parseData(
                 {
                     candidateClientData: { html: 'candidateClient' },
@@ -47,11 +50,11 @@ describe('diff', () => {
                 {}
             );
 
-            expect(parsedData).toMatchSnapshot();
+            t.assert.snapshot(parsedData);
         });
     });
     describe('transformData', () => {
-        test(`should transform redirects`, () => {
+        test(`should transform redirects`, (t) => {
             const parsedData = {
                 jsonLd: {},
                 metadata: {},
@@ -66,7 +69,7 @@ describe('diff', () => {
                 replaceBaseUrls: false,
             });
 
-            expect(transformedData).toMatchSnapshot();
+            t.assert.snapshot(transformedData);
         });
     });
 });

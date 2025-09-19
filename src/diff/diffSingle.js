@@ -1,12 +1,11 @@
 import { getLogger } from '../logger.js';
-import { fetchPathname } from '../client/index.js';
-import { parse } from '../parser.js';
 import { processReplacements } from '../utils/index.js';
 
-async function diffSingle(pathname, config, requestOptions) {
+export async function diffSingle(pathname, config, requestOptions) {
     const logger = getLogger();
 
     logger.verbose(`Diffing pathname ${pathname}`);
+    const { fetchPathname } = await import('../client/index.js');
 
     const { candidateClientData, candidateServerData, currentClientData, currentServerData } = await fetchPathname(
         pathname,
@@ -16,7 +15,7 @@ async function diffSingle(pathname, config, requestOptions) {
 
     logger.debug(`Pathname ${pathname} fetched`);
 
-    const { candidateClient, candidateServer, currentClient, currentServer } = parseData(
+    const { candidateClient, candidateServer, currentClient, currentServer } = await parseData(
         { candidateClientData, candidateServerData, currentClientData, currentServerData },
         config
     );
@@ -40,7 +39,7 @@ async function diffSingle(pathname, config, requestOptions) {
     };
 }
 
-function transformData(parsedData, rawData, config) {
+export function transformData(parsedData, rawData, config) {
     return {
         ...parsedData,
         metadata: {
@@ -61,8 +60,12 @@ function prepareRedirects(redirects, config) {
     }));
 }
 
-function parseData({ candidateClientData, candidateServerData, currentClientData, currentServerData }, config) {
+export async function parseData(
+    { candidateClientData, candidateServerData, currentClientData, currentServerData },
+    config
+) {
     const processReplacementsWithConfig = processReplacements(config);
+    const { parse } = await import('../parser.js');
 
     const currentServer = parse(processReplacementsWithConfig(currentServerData.html));
     const currentClient = parse(processReplacementsWithConfig(currentClientData.html));
@@ -71,5 +74,3 @@ function parseData({ candidateClientData, candidateServerData, currentClientData
 
     return { candidateClient, candidateServer, currentClient, currentServer };
 }
-
-export { diffSingle, parseData, transformData };

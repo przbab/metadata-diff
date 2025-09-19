@@ -1,7 +1,6 @@
 import async from 'async';
 import { getLogger } from '../logger.js';
 import { get, getOr } from '../utils/index.js';
-import { diffSingle } from './diffSingle.js';
 
 function getPathname(pathname) {
     if (typeof pathname === 'string') {
@@ -11,9 +10,10 @@ function getPathname(pathname) {
     return get('path', pathname);
 }
 
-function processPathnames(config) {
+async function processPathnames(config) {
     const logger = getLogger();
     const requestOptions = getRequestOptions(config);
+    const { diffSingle } = await import('./diffSingle.js');
 
     return async (pathnameObject) => {
         const pathname = getPathname(pathnameObject);
@@ -32,7 +32,7 @@ async function diffAll(config) {
 
     logger.verbose('Diffing all the files');
 
-    return async.mapLimit(config.pathnames, config.concurrency, processPathnames(config));
+    return async.mapLimit(config.pathnames, config.concurrency, await processPathnames(config));
 }
 
 function getRequestOptions(config) {

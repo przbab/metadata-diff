@@ -1,34 +1,35 @@
-'use strict';
+import { diffAll } from './diffAll.js';
+import { describe, mock, test } from 'node:test';
 
-const { diffAll } = require('./diffAll');
-
-jest.mock('./diffSingle', () => ({ diffSingle: async (pathname) => ({ pathname }) }));
+mock.module('./diffSingle.js', {
+    namedExports: {
+        diffSingle: async (pathname) => ({ pathname }),
+    },
+});
 
 describe('diff', () => {
     describe('diffAll', () => {
-        test(`should diff all of the pathnames`, async () => {
+        test(`should diff all of the pathnames`, async (t) => {
             const config = {
                 concurrency: 1,
                 pathnames: ['/test1', { path: '/test2' }],
-                userAgent: 'testUserAgent',
             };
             const diffs = await diffAll(config);
 
-            expect(diffs).toEqual([
+            t.assert.deepEqual(diffs, [
                 { note: '', pathname: '/test1' },
                 { note: '', pathname: '/test2' },
             ]);
         });
 
-        test(`should pass notes`, async () => {
+        test(`should pass notes`, async (t) => {
             const config = {
                 concurrency: 1,
                 pathnames: [{ note: 'test note', path: '/test' }],
-                userAgent: 'testUserAgent',
             };
             const diffs = await diffAll(config);
 
-            expect(diffs).toEqual([{ note: 'test note', pathname: '/test' }]);
+            t.assert.deepEqual(diffs, [{ note: 'test note', pathname: '/test' }]);
         });
     });
 });

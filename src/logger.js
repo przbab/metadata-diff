@@ -15,5 +15,18 @@ export function initializeLogger(config) {
 }
 
 export function getLogger() {
+    if (process.env.NODE_ENV === 'test') {
+        return {
+            debug: () => {},
+            error: () => {},
+            info: () => {},
+            verbose: () => {},
+            warn: () => {},
+        };
+    }
+    if (!logger) {
+        throw new Error('Logger not initialized. Please call initializeLogger(config) first.');
+    }
+
     return logger;
 }

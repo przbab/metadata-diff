@@ -1,11 +1,10 @@
-'use strict';
-
-const { microdataToJsonLd, processDiff, remapDiffs, transformData } = require('./processDiff');
+import { microdataToJsonLd, processDiff, remapDiffs, transformData } from './processDiff.js';
+import { describe, test } from 'node:test';
 
 describe('report', () => {
     describe('processDiff', () => {
         describe('transformData', () => {
-            test(`transform data`, () => {
+            test(`transform data`, (t) => {
                 const data = {
                     description: 'test description',
                     title: 'test title',
@@ -14,14 +13,13 @@ describe('report', () => {
                     title: 'changed title',
                 };
                 const transformedData = transformData(data, delta);
-
-                expect(transformedData.all).toBe(Object.keys(data).length);
-                expect(transformedData.differences).toBe(Object.keys(delta).length);
-                expect(transformedData).toMatchSnapshot();
+                t.assert.deepEqual(transformedData.all, Object.keys(data).length);
+                t.assert.deepEqual(transformedData.differences, Object.keys(delta).length);
+                t.assert.snapshot(transformedData);
             });
         });
         describe('remapDiffs', () => {
-            test(`should remap diffs`, () => {
+            test(`should remap diffs`, (t) => {
                 const diffs = [
                     {
                         candidate: {
@@ -51,14 +49,12 @@ describe('report', () => {
                         },
                     },
                 ];
-
                 const remappedDiffs = remapDiffs(diffs);
-
-                expect(remappedDiffs).toMatchSnapshot();
+                t.assert.snapshot(remappedDiffs);
             });
         });
         describe('processDiff', () => {
-            test(`should process diff`, () => {
+            test(`should process diff`, (t) => {
                 const diff = processDiff({
                     left: {
                         jsonLd: {
@@ -128,38 +124,34 @@ describe('report', () => {
                         redirects: [],
                     },
                 });
-
-                expect(diff).toMatchSnapshot();
+                t.assert.snapshot(diff);
             });
-            test(`should provide default values for deltas`, () => {
+            test(`should provide default values for deltas`, (t) => {
                 const emptyData = {
                     jsonLd: [],
                     metadata: [],
                     microdata: { items: [] },
                     redirects: [],
                 };
-
                 const emptyResult = {
                     all: 0,
                     delta: {},
                     differences: 0,
                     left: [],
                 };
-
                 const diff = processDiff({
                     left: emptyData,
                     right: emptyData,
                 });
-
-                expect(diff.metadata).toEqual(emptyResult);
-                expect(diff.microdata).toEqual(emptyResult);
-                expect(diff.jsonLd).toEqual(emptyResult);
-                expect(diff.redirects).toEqual(emptyResult);
+                t.assert.deepEqual(diff.metadata, emptyResult);
+                t.assert.deepEqual(diff.microdata, emptyResult);
+                t.assert.deepEqual(diff.jsonLd, emptyResult);
+                t.assert.deepEqual(diff.redirects, emptyResult);
             });
         });
         describe('microdataToJsonLd', () => {
-            test('should convert microdata to JSON-LD', () => {
-                expect(
+            test('should convert microdata to JSON-LD', (t) => {
+                t.assert.deepEqual(
                     microdataToJsonLd({
                         items: [
                             {
@@ -197,24 +189,25 @@ describe('report', () => {
                                 type: ['http://schema.org/Organization'],
                             },
                         ],
-                    })
-                ).toEqual({
-                    '@context': 'http://schema.org/',
-                    '@type': 'Organization',
-                    contactPoint: {
-                        '@type': 'ContactPoint',
-                        availableLanguage: ['en', 'nb'],
-                        contactType: 'customer service',
-                        productSupported: 'base-url',
-                    },
-                    employee: [
-                        { '@type': 'Person', jobTitle: 'Job title 1', name: 'Employee1' },
-                        { '@type': 'Person', jobTitle: 'Job title 2', name: 'Employee2' },
-                    ],
-                    name: 'Test name',
-                    sameAs: ['https://instagram.com/test', 'https://www.facebook.com/test'],
-                    url: 'base-url',
-                });
+                    }),
+                    {
+                        '@context': 'http://schema.org/',
+                        '@type': 'Organization',
+                        contactPoint: {
+                            '@type': 'ContactPoint',
+                            availableLanguage: ['en', 'nb'],
+                            contactType: 'customer service',
+                            productSupported: 'base-url',
+                        },
+                        employee: [
+                            { '@type': 'Person', jobTitle: 'Job title 1', name: 'Employee1' },
+                            { '@type': 'Person', jobTitle: 'Job title 2', name: 'Employee2' },
+                        ],
+                        name: 'Test name',
+                        sameAs: ['https://instagram.com/test', 'https://www.facebook.com/test'],
+                        url: 'base-url',
+                    }
+                );
             });
         });
     });
