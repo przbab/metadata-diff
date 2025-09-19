@@ -17,9 +17,9 @@ async function fetchSSR(url, options = {}) {
             });
         });
 
-        return { html: response.body, redirects };
+        return { html: response.body, redirects, statusCode: response.statusCode };
     } catch (err) {
-        return { html: err.body, redirects };
+        return { html: err.response?.body, redirects, statusCode: err.response.statusCode };
     }
 }
 

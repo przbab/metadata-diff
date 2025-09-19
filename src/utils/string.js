@@ -5,7 +5,7 @@ const { curry } = require('./functional');
 const striptUrl = (url) => url.replace(/https?:\/\/|www\./gi, '');
 
 const getBaseUrlRegExp = (config) =>
-    new RegExp(`(https?://)?(www.)?(${striptUrl(config.currentBaseUrl)}|${striptUrl(config.candidateBaseUrl)})`, 'ig');
+    new RegExp(`(https?://)?(www.)?(${striptUrl(config.candidateBaseUrl)}|${striptUrl(config.currentBaseUrl)})`, 'ig');
 
 const processReplacements = curry((config, string) => {
     let output = string;
@@ -13,7 +13,7 @@ const processReplacements = curry((config, string) => {
     if (config.replaceBaseUrls) {
         const baseUrlRegExp = getBaseUrlRegExp(config);
         if (baseUrlRegExp.test(output)) {
-            output = output.replace(baseUrlRegExp, 'base-url');
+            output = output.replaceAll(baseUrlRegExp, 'base-url');
         }
     }
 

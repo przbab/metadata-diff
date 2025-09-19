@@ -10,11 +10,14 @@ async function fetchPathname(pathname, config, requestOptions) {
     current.pathname = pathname;
     candidate.pathname = pathname;
 
+    const decodedCurrentHref = decodeURIComponent(current.href);
+    const decodedCandidateHref = decodeURIComponent(candidate.href);
+
     const [currentServerData, currentClientData, candidateServerData, candidateClientData] = await Promise.all([
-        fetchSSR(current.href, requestOptions),
-        fetchClient(current.href, requestOptions),
-        fetchSSR(candidate.href, requestOptions),
-        fetchClient(candidate.href, requestOptions),
+        fetchSSR(decodedCurrentHref, requestOptions),
+        fetchClient(decodedCurrentHref, requestOptions),
+        fetchSSR(decodedCandidateHref, requestOptions),
+        fetchClient(decodedCandidateHref, requestOptions),
     ]);
     return { currentServerData, currentClientData, candidateServerData, candidateClientData };
 }

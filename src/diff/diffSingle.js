@@ -45,6 +45,10 @@ async function diffSingle(pathname, config, requestOptions) {
 function transformData(parsedData, rawData, config) {
     return {
         ...parsedData,
+        metadata: {
+            ...parsedData.metadata,
+            statusCode: rawData.statusCode,
+        },
         redirects: prepareRedirects(rawData.redirects, config),
     };
 }

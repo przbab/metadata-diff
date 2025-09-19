@@ -2,6 +2,7 @@
 
 const microdata = require('microdata-node');
 const htmlparser = require('htmlparser2');
+const { decode } = require('html-entities');
 
 function isJsonLd(name, attribs) {
     return attribs.type === 'application/ld+json';
@@ -12,7 +13,7 @@ function isInterestingLink(name, attribs) {
 }
 
 function isInterestingMetaName(name, attribs) {
-    return ['description', 'keywords'].includes(attribs.name);
+    return ['description', 'keywords', 'robots'].includes(attribs.name);
 }
 
 function isInterestingMetaProperty(name, attribs) {
@@ -75,6 +76,10 @@ function isInterestingMetaProperty(name, attribs) {
         'video:series',
         'video:tag',
         'video:writer',
+        'twitter:card',
+        'twitter:title',
+        'twitter:description',
+        'twitter:image',
     ].includes(attribs.property);
 }
 
@@ -118,7 +123,7 @@ function parse(html) {
             ontext(text) {
                 switch (currentTag) {
                     case 'jsonLd':
-                        jsonLd.push(JSON.parse(text));
+                        jsonLd.push(JSON.parse(decode(text)));
                         break;
                     case 'title':
                         if (inHead) {
