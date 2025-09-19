@@ -1,11 +1,3 @@
-'use strict';
+import { fetchPathname } from './fetchPathname.js';
 
-const { fetchClient } = require('./client');
-const { fetchPathname } = require('./fetchPathname');
-const { fetchSSR } = require('./ssr');
-
-module.exports = {
-    fetchClient,
-    fetchPathname,
-    fetchSSR,
-};
+export { fetchPathname };

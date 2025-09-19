@@ -1,10 +1,8 @@
-'use strict';
-
-const jsondiffpatch = require('jsondiffpatch');
+import jsondiffpatch from 'jsondiffpatch';
 
 const jsondiff = jsondiffpatch.create({});
 
-function transformData(data, delta) {
+export function transformData(data, delta) {
     return {
         all: Object.keys(data).length,
         delta,
@@ -39,7 +37,7 @@ function transformPropertyFactory(context) {
     return transformProperty;
 }
 
-function microdataToJsonLd(microdata) {
+export function microdataToJsonLd(microdata) {
     const jsonLd = microdata.items.map((item) => {
         const context = 'http://schema.org/';
         const transformProperty = transformPropertyFactory(context);
@@ -56,7 +54,7 @@ function microdataToJsonLd(microdata) {
     return jsonLd;
 }
 
-function processDiff(data) {
+export function processDiff(data) {
     const leftTransformedMicrodata = microdataToJsonLd(data.left.microdata);
     const rightTransformedMicrodata = microdataToJsonLd(data.right.microdata);
 
@@ -66,14 +64,14 @@ function processDiff(data) {
     const redirectsDelta = jsondiff.diff(data.left.redirects, data.right.redirects) || {};
 
     return {
+        jsonLd: transformData(data.left.jsonLd, jsonLdDelta),
         metadata: transformData(data.left.metadata, metadataDelta),
         microdata: transformData(leftTransformedMicrodata, microdataDelta),
-        jsonLd: transformData(data.left.jsonLd, jsonLdDelta),
         redirects: transformData(data.left.redirects, redirectsDelta),
     };
 }
 
-function remapDiffs(diffs) {
+export function remapDiffs(diffs) {
     return diffs.map((diff) => ({
         ...diff,
         candidate: {
@@ -90,10 +88,3 @@ function remapDiffs(diffs) {
         },
     }));
 }
-
-module.exports = {
-    processDiff,
-    remapDiffs,
-    transformData,
-    microdataToJsonLd,
-};

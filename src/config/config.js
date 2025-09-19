@@ -1,77 +1,24 @@
-'use strict';
+import path from 'path';
+import Joi from 'joi';
+import { schema } from './schema.js';
+import { getLogger } from '../logger.js';
 
-const fs = require('fs');
-const path = require('path');
-const merge = require('deepmerge');
-const Joi = require('joi');
-const { schema } = require('./schema');
+export async function getConfig(cliConfig) {
+    const logger = getLogger();
+    const configFile = cliConfig.config;
+    const configPath = path.resolve(process.cwd(), configFile);
 
-const CONFIG_FILES = ['.metadatadiffrc', '.metadatadiffrc.json', '.metadatadiffrc.js', 'package.json'];
-
-function getConfig(overrideConfig, skipConfig = false, file) {
-    if (skipConfig) {
-        return validateConfig(overrideConfig);
-    }
-
-    const directory = process.cwd();
-    const configFile = file || getConfigFileForDirectory(directory);
-    if (!configFile) {
-        throw new Error('Configuration not found');
-    }
-    const fullConfig = readFile(path.join(directory, configFile));
-    const config = getConfigEnvironment(fullConfig, overrideConfig);
-    return validateConfig(config);
-}
-
-function readFile(configFile) {
-    if (configFile.match(/\.js$/)) {
-        return readJsFile(configFile);
-    }
-    if (configFile.match(/package.json$/)) {
-        return readPackageJson(configFile);
-    }
-    if (configFile) {
-        return readJSONConfigFile(configFile);
-    }
-    throw new Error('Unsupported configuration file type');
-}
-
-function getConfigFileForDirectory(directory) {
-    return CONFIG_FILES.find((filename) => fs.existsSync(path.join(directory, filename)));
-}
-
-function readJSONConfigFile(configFile) {
-    const file = fs.readFileSync(configFile, 'utf-8');
     try {
-        return JSON.parse(file);
-    } catch (err) {
-        throw new Error('Malformed config');
-    }
-}
+        const fullConfig = await import(configPath);
 
-function readJsFile(configFile) {
-    // eslint-disable-next-line import/no-dynamic-require
-    return require(configFile);
-}
+        return validateConfig(fullConfig.default);
+    } catch (error) {
+        logger.error(`Cannot read config file: ${configPath}`, error);
 
-function readPackageJson(configFile) {
-    const file = readJSONConfigFile(configFile);
-    if (file.metadataDiff) {
-        return file.metadataDiff;
+        process.exit(1);
     }
-    throw new Error('Configuration not found');
-}
 
-function getConfigEnvironment(config, overrideConfig = {}) {
-    if (config.environment) {
-        const { environment, ...defaultConfig } = config;
-        const env = process.env.METADATA_DIFF_ENV || process.env.NODE_ENV || 'development';
-        if (environment[env]) {
-            return merge.all([defaultConfig, environment[env], overrideConfig]);
-        }
-        return defaultConfig;
-    }
-    return merge(config, overrideConfig);
+    return null;
 }
 
 function validateConfig(config) {
@@ -82,12 +29,3 @@ function validateConfig(config) {
 
     return value;
 }
-
-module.exports = {
-    getConfig,
-    getConfigEnvironment,
-    readJSONConfigFile,
-    readFile,
-    readPackageJson,
-    validateConfig,
-};

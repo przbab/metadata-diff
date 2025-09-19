@@ -1,0 +1,14 @@
+name: Runtime & application setup
+description: Sets right node version, installs dependencies
+
+runs:
+    using: "composite"
+    steps:
+        - name: Set correct node version
+          uses: actions/setup-node@v4
+          with:
+              node-version-file: package.json
+              cache: "npm"
+        - name: Install dependencies
+          run: npm ci --quiet --no-audit --no-fund --ignore-scripts
+          shell: bash

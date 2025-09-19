@@ -1,7 +1,3 @@
-'use strict';
+import { getConfig } from './config.js';
 
-const { getConfig } = require('./config');
-
-module.exports = {
-    getConfig,
-};
+export { getConfig };

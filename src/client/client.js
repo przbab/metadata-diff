@@ -1,7 +1,5 @@
-'use strict';
-
-const puppeteer = require('puppeteer');
-const { getLogger } = require('../logger');
+import puppeteer from 'puppeteer';
+import { getLogger } from '../logger.js';
 
 let browserInstance;
 
@@ -21,8 +19,11 @@ async function getBrowser(options) {
 async function preparePage(options = {}) {
     const browser = await getBrowser(options);
     const page = await browser.newPage();
-    if (options.userAgent) {
-        page.setUserAgent(options.userAgent);
+    if (options.headers['User-Agent']) {
+        page.setUserAgent(options.headers['User-Agent']);
+    }
+    if (options.headers.Authorization) {
+        page.setExtraHTTPHeaders({ Authorization: options.headers.Authorization });
     }
     if (options.blockRequests && options.blockRequests.length > 0) {
         await blockRequests(page, options.blockRequests);
@@ -46,7 +47,7 @@ async function blockRequests(page, urls) {
     });
 }
 
-async function fetchClient(url, options) {
+export async function fetchClient(url, options) {
     const page = await preparePage(options);
     const response = await page.goto(url, options.goto);
     const redirects = response
@@ -85,9 +86,8 @@ function attachCleanupHandlers() {
 }
 
 async function exitHandler(code) {
-    getLogger().verbose('Closing chrome...');
+    const logger = getLogger();
+    logger.verbose('Closing chrome...');
     await browserInstance.close();
     process.exit(code);
 }
-
-module.exports = { fetchClient };

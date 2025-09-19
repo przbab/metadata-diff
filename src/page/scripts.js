@@ -161,6 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 class ProgressRing extends HTMLElement {
+    static get observedAttributes() {
+        return ['progress'];
+    }
+
     constructor() {
         super();
         const stroke = this.getAttribute('stroke');
@@ -220,6 +224,12 @@ class ProgressRing extends HTMLElement {
 </style>`;
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'progress') {
+            this.setProgress(newValue);
+        }
+    }
+
     setProgress(percent) {
         const offset = this.circumference - (percent / 100) * this.circumference;
         const circle = this.root.querySelector('circle + circle');
@@ -227,19 +237,13 @@ class ProgressRing extends HTMLElement {
         circle.style.strokeDashoffset = offset;
         span.innerText = `${percent}%`;
     }
-
-    static get observedAttributes() {
-        return ['progress'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'progress') {
-            this.setProgress(newValue);
-        }
-    }
 }
 
 class Diff extends HTMLElement {
+    static get observedAttributes() {
+        return ['pathname', 'source'];
+    }
+
     constructor() {
         super();
         const title = this.getAttribute('title');
@@ -256,6 +260,12 @@ class Diff extends HTMLElement {
 </style>`;
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+        if ((name === 'pathname' || name === 'source') && oldValue !== newValue) {
+            this.renderData(newValue);
+        }
+    }
+
     renderData() {
         const pathname = this.getAttribute('pathname');
         const source = this.getAttribute('source');
@@ -268,16 +278,6 @@ class Diff extends HTMLElement {
 
             const content = this.root.querySelector('div');
             content.innerHTML = html;
-        }
-    }
-
-    static get observedAttributes() {
-        return ['pathname', 'source'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if ((name === 'pathname' || name === 'source') && oldValue !== newValue) {
-            this.renderData(newValue);
         }
     }
 }

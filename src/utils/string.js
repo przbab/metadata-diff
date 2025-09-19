@@ -1,19 +1,19 @@
-'use strict';
+import { curry } from './functional.js';
 
-const { curry } = require('./functional');
-
-const striptUrl = (url) => url.replace(/https?:\/\/|www\./gi, '');
+const striptUrl = (url) => url.replace(/https?:\/\//gi, '').replace(/www\./gi, '');
 
 const getBaseUrlRegExp = (config) =>
-    new RegExp(`(https?://)?(www.)?(${striptUrl(config.currentBaseUrl)}|${striptUrl(config.candidateBaseUrl)})`, 'ig');
+    new RegExp(`(https?://)?(www.)?(${striptUrl(config.candidateBaseUrl)}|${striptUrl(config.currentBaseUrl)})`, 'ig');
 
-const processReplacements = curry((config, string) => {
+export const processReplacements = curry((config, string) => {
     let output = string;
 
     if (config.replaceBaseUrls) {
         const baseUrlRegExp = getBaseUrlRegExp(config);
         if (baseUrlRegExp.test(output)) {
-            output = output.replace(baseUrlRegExp, 'base-url');
+            output = output.replaceAll
+                ? output.replaceAll(baseUrlRegExp, 'base-url')
+                : output.replace(baseUrlRegExp, 'base-url');
         }
     }
 
@@ -25,5 +25,3 @@ const processReplacements = curry((config, string) => {
 
     return output;
 });
-
-module.exports = { striptUrl, getBaseUrlRegExp, processReplacements };

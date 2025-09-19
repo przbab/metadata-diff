@@ -1,0 +1,95 @@
+exports[`diff > diffSingle > should diff single pathname 1`] = `
+{
+  "candidate": {
+    "client": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateClient"
+        }
+      ]
+    },
+    "server": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateServer"
+        }
+      ]
+    }
+  },
+  "client": {
+    "candidate": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateClient"
+        }
+      ]
+    },
+    "current": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/currentClient"
+        }
+      ]
+    }
+  },
+  "pathname": "/",
+  "server": {
+    "candidate": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/candidateServer"
+        }
+      ]
+    },
+    "current": {
+      "metadata": {},
+      "redirects": [
+        {
+          "status": 302,
+          "target": "http://example.com",
+          "url": "http://example.com/currentServer"
+        }
+      ]
+    }
+  }
+}
+`;
+
+exports[`diff > parseData > should parse data in correct order 1`] = `
+{
+  "candidateClient": {},
+  "candidateServer": {},
+  "currentClient": {},
+  "currentServer": {}
+}
+`;
+
+exports[`diff > transformData > should transform redirects 1`] = `
+{
+  "jsonLd": {},
+  "metadata": {},
+  "microdata": {},
+  "redirects": [
+    {
+      "status": 301,
+      "target": "http://example.com/test",
+      "url": "http://example.com"
+    }
+  ]
+}
+`;

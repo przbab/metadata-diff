@@ -1,24 +1,21 @@
-'use strict';
+import { fetchSSR } from './ssr.js';
+import { fetchClient } from './client.js';
 
-const { fetchSSR } = require('./ssr');
-const { fetchClient } = require('./client');
-
-async function fetchPathname(pathname, config, requestOptions) {
+export async function fetchPathname(pathname, config, requestOptions) {
     const current = new URL(config.currentBaseUrl);
     const candidate = new URL(config.candidateBaseUrl);
 
     current.pathname = pathname;
     candidate.pathname = pathname;
 
-    const [currentServerData, currentClientData, candidateServerData, candidateClientData] = await Promise.all([
-        fetchSSR(current.href, requestOptions),
-        fetchClient(current.href, requestOptions),
-        fetchSSR(candidate.href, requestOptions),
-        fetchClient(candidate.href, requestOptions),
-    ]);
-    return { currentServerData, currentClientData, candidateServerData, candidateClientData };
-}
+    const decodedCurrentHref = decodeURIComponent(current.href);
+    const decodedCandidateHref = decodeURIComponent(candidate.href);
 
-module.exports = {
-    fetchPathname,
-};
+    const [currentServerData, currentClientData, candidateServerData, candidateClientData] = await Promise.all([
+        fetchSSR(decodedCurrentHref, requestOptions),
+        fetchClient(decodedCurrentHref, requestOptions),
+        fetchSSR(decodedCandidateHref, requestOptions),
+        fetchClient(decodedCandidateHref, requestOptions),
+    ]);
+    return { candidateClientData, candidateServerData, currentClientData, currentServerData };
+}

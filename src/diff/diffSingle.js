@@ -1,16 +1,13 @@
-'use strict';
+import { getLogger } from '../logger.js';
+import { processReplacements } from '../utils/index.js';
 
-const { getLogger } = require('../logger');
-const { fetchPathname } = require('../client');
-const { parse } = require('../parser');
-const { processReplacements } = require('../utils');
-
-async function diffSingle(pathname, config, requestOptions) {
+export async function diffSingle(pathname, config, requestOptions) {
     const logger = getLogger();
 
     logger.verbose(`Diffing pathname ${pathname}`);
+    const { fetchPathname } = await import('../client/index.js');
 
-    const { currentServerData, currentClientData, candidateServerData, candidateClientData } = await fetchPathname(
+    const { candidateClientData, candidateServerData, currentClientData, currentServerData } = await fetchPathname(
         pathname,
         config,
         requestOptions
@@ -18,33 +15,37 @@ async function diffSingle(pathname, config, requestOptions) {
 
     logger.debug(`Pathname ${pathname} fetched`);
 
-    const { currentServer, currentClient, candidateServer, candidateClient } = parseData(
-        { currentServerData, currentClientData, candidateServerData, candidateClientData },
+    const { candidateClient, candidateServer, currentClient, currentServer } = await parseData(
+        { candidateClientData, candidateServerData, currentClientData, currentServerData },
         config
     );
 
     logger.debug(`Pathname ${pathname} parsed`);
 
     return {
-        pathname,
         candidate: {
-            server: transformData(candidateServer, candidateServerData, config),
             client: transformData(candidateClient, candidateClientData, config),
+            server: transformData(candidateServer, candidateServerData, config),
         },
         client: {
-            current: transformData(currentClient, currentClientData, config),
             candidate: transformData(candidateClient, candidateClientData, config),
+            current: transformData(currentClient, currentClientData, config),
         },
+        pathname,
         server: {
-            current: transformData(currentServer, currentServerData, config),
             candidate: transformData(candidateServer, candidateServerData, config),
+            current: transformData(currentServer, currentServerData, config),
         },
     };
 }
 
-function transformData(parsedData, rawData, config) {
+export function transformData(parsedData, rawData, config) {
     return {
         ...parsedData,
+        metadata: {
+            ...parsedData.metadata,
+            statusCode: rawData.statusCode,
+        },
         redirects: prepareRedirects(rawData.redirects, config),
     };
 }
@@ -59,19 +60,17 @@ function prepareRedirects(redirects, config) {
     }));
 }
 
-function parseData({ currentServerData, currentClientData, candidateServerData, candidateClientData }, config) {
+export async function parseData(
+    { candidateClientData, candidateServerData, currentClientData, currentServerData },
+    config
+) {
     const processReplacementsWithConfig = processReplacements(config);
+    const { parse } = await import('../parser.js');
 
     const currentServer = parse(processReplacementsWithConfig(currentServerData.html));
     const currentClient = parse(processReplacementsWithConfig(currentClientData.html));
     const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html));
     const candidateClient = parse(processReplacementsWithConfig(candidateClientData.html));
 
-    return { currentServer, currentClient, candidateServer, candidateClient };
+    return { candidateClient, candidateServer, currentClient, currentServer };
 }
-
-module.exports = {
-    diffSingle,
-    parseData,
-    transformData,
-};

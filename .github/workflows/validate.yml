@@ -1,0 +1,42 @@
+name: Validate
+
+permissions:
+    contents: read
+    id-token: write
+
+on:
+    workflow_call:
+
+env:
+    TZ: Europe/Warsaw
+
+jobs:
+    linters:
+        name: Run linters
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v5
+            - uses: ./.github/actions/setup
+            - name: Lint
+              run: npm run lint
+            - name: Stylelint
+              run: npm run stylelint
+    tests:
+        name: Run tests
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v5
+            - uses: ./.github/actions/setup
+            - name: Tests
+              run: npm run test
+    knip:
+        name: Run knip
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v5
+            - uses: ./.github/actions/setup
+            - name: Knip
+              run: npm run knip

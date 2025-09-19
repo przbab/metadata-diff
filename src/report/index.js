@@ -1,7 +1,3 @@
-'use strict';
+import { report } from './report.js';
 
-const { report } = require('./report');
-
-module.exports = {
-    report,
-};
+export { report };

@@ -1,19 +1,24 @@
-'use strict';
+import Joi from 'joi';
 
-const Joi = require('joi');
-
-const schema = Joi.object({
+export const schema = Joi.object({
     candidateBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
+    concurrency: Joi.number().min(1).default(1),
     currentBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
-    html: Joi.string(),
+    headers: Joi.object({
+        'User-Agent': Joi.string().default('metadata-diff'), // TODO can I add version?
+    })
+        .pattern(Joi.string(), Joi.string())
+        .default({
+            'User-Agent': Joi.string().default('metadata-diff'),
+        }),
     minify: Joi.boolean().default(true),
     output: Joi.string().default('metadataDiffReport.html'),
     pathnames: Joi.array()
         .items(
             Joi.string().uri({ relativeOnly: true }),
             Joi.object().keys({
-                path: Joi.string().uri({ relativeOnly: true }).required(),
                 note: Joi.string(),
+                path: Joi.string().uri({ relativeOnly: true }).required(),
             })
         )
         .min(1)
@@ -33,13 +38,4 @@ const schema = Joi.object({
             replace: Joi.string().required(),
         })
     ),
-    scripts: Joi.string(),
-    styles: Joi.string(),
-    userAgent: Joi.string().default('metadata-diff'),
-    logLevel: Joi.string().allow('error', 'warn', 'info', 'verbose', 'debug', 'silly').default('info'),
-    logToFile: Joi.boolean().default(false),
-    logFilename: Joi.string().default('metadata-diff.log'),
-    concurrency: Joi.number().min(1).default(1),
 });
-
-module.exports = { schema };
