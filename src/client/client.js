@@ -21,8 +21,11 @@ async function getBrowser(options) {
 async function preparePage(options = {}) {
     const browser = await getBrowser(options);
     const page = await browser.newPage();
-    if (options.userAgent) {
-        page.setUserAgent(options.userAgent);
+    if (options.headers['User-Agent']) {
+        page.setUserAgent(options.headers['User-Agent']);
+    }
+    if (options.headers.Authorization) {
+        page.setExtraHTTPHeaders({ Authorization: options.headers.Authorization });
     }
     if (options.blockRequests && options.blockRequests.length > 0) {
         await blockRequests(page, options.blockRequests);

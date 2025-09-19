@@ -6,6 +6,13 @@ const schema = Joi.object({
     candidateBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
     concurrency: Joi.number().min(1).default(1),
     currentBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
+    headers: Joi.object({
+        'User-Agent': Joi.string().default('metadata-diff'), // TODO can I add version?
+    })
+        .pattern(Joi.string(), Joi.string())
+        .default({
+            'User-Agent': Joi.string().default('metadata-diff'),
+        }),
     html: Joi.string(),
     logFilename: Joi.string().default('metadata-diff.log'),
     logLevel: Joi.string().allow('error', 'warn', 'info', 'verbose', 'debug', 'silly').default('silly'),
@@ -39,7 +46,6 @@ const schema = Joi.object({
     ),
     scripts: Joi.string(),
     styles: Joi.string(),
-    userAgent: Joi.string().default('metadata-diff'),
 });
 
 module.exports = { schema };

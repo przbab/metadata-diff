@@ -40,6 +40,7 @@ async function diffAll(config) {
 function getRequestOptions(config) {
     return {
         ...config.puppeteerOptions,
+        headers: config.headers,
         userAgent: config.userAgent,
     };
 }
