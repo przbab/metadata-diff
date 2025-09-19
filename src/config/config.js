@@ -1,5 +1,4 @@
 import path from 'path';
-import Joi from 'joi';
 import { schema } from './schema.js';
 import { getLogger } from '../logger.js';
 
@@ -22,7 +21,7 @@ export async function getConfig(cliConfig) {
 }
 
 function validateConfig(config) {
-    const { error, value } = Joi.validate(config, schema);
+    const { error, value } = schema.validate(config);
     if (error) {
         throw error;
     }

@@ -64,7 +64,8 @@ Usage: metadata-diff.js [options]
 - [ ] a better usage manual with examples
 - [ ] add option to customize list of parsed properties
 - [ ] improve UI and UX
-- [ ] release as npm package
+- [ ] fix diff percentage calculation
+- [ ] release as a npm package
 - [ ] add option to enable/disable redirects, metadata, microdata diff
 - [ ] add option to collapse redirects, metadata, microdata sections
 - [ ] add response code diff

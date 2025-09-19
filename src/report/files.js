@@ -12,8 +12,8 @@ export async function getScripts(config) {
     const scripts = await fsPromises.readFile(file, 'utf8');
 
     if (config.minify) {
-        const terser = (await import('terser')).default;
-        const result = terser.minify(scripts);
+        const { minify } = await import('terser');
+        const result = await minify(scripts);
 
         if (result.error) {
             logger.error('Scripts minification failed');
@@ -32,7 +32,7 @@ export async function getStyles(config) {
     const styles = await fsPromises.readFile(file, 'utf8');
     if (config.minify) {
         const cssnano = (await import('cssnano')).default;
-        return (await cssnano.process(styles, { from: undefined })).css;
+        return (await cssnano({ preset: 'default' }).process(styles, { from: undefined })).css;
     }
     return styles;
 }

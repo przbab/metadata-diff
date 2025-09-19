@@ -101,7 +101,7 @@ body {
     overflow-y: auto;
 }
 
-@media only screen and (max-width: 780px) {
+@media only screen and (width <= 780px) {
     body {
         overflow-y: auto;
     }

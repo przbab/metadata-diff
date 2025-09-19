@@ -1,11 +1,4 @@
 {
     "extends": "stylelint-config-standard",
-    "rules": {
-        "indentation": 4,
-        "selector-list-comma-newline-after": "always-multi-line",
-        "block-no-empty": null,
-        "at-rule-no-unknown": null,
-        "no-descending-specificity": null,
-        "property-no-unknown": null
-    }
+    "rules": {}
 }
