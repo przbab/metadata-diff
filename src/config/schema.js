@@ -1,5 +1,22 @@
 import Joi from 'joi';
 
+const pathnameObject = Joi.alternatives()
+    .try(
+        Joi.string().uri({ relativeOnly: true }),
+        Joi.object().keys({
+            description: Joi.string(),
+            note: Joi.string(),
+            path: Joi.string().uri({ relativeOnly: true }).required(),
+        }),
+        Joi.object().keys({
+            description: Joi.string(),
+            name: Joi.string().required(),
+            note: Joi.string(),
+            pathnames: Joi.array().items(Joi.link('#pathnameObject')).min(1).required(),
+        })
+    )
+    .id('pathnameObject');
+
 export const schema = Joi.object({
     candidateBaseUrl: Joi.string().uri().replace(/\/$/, '').required(),
     concurrency: Joi.number().min(1).default(1),
@@ -13,16 +30,7 @@ export const schema = Joi.object({
         }),
     minify: Joi.boolean().default(true),
     output: Joi.string().default('metadataDiffReport.html'),
-    pathnames: Joi.array()
-        .items(
-            Joi.string().uri({ relativeOnly: true }),
-            Joi.object().keys({
-                note: Joi.string(),
-                path: Joi.string().uri({ relativeOnly: true }).required(),
-            })
-        )
-        .min(1)
-        .required(),
+    pathnames: Joi.array().items(pathnameObject).min(1).required(),
     puppeteerOptions: Joi.object().keys({
         additionalWait: Joi.number(),
         blockRequests: Joi.array().items(Joi.string()),

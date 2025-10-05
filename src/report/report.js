@@ -1,20 +1,19 @@
 import { getHtml, getScripts, getStyles } from './files.js';
-import { processDiff, remapDiffs } from './processDiff.js';
+import * as esbuild from 'esbuild';
 
 export async function report(config, diffs) {
-    const remappedDiffs = remapDiffs(diffs);
     const data = {
         candidateBaseUrl: config.candidateBaseUrl,
         currentBaseUrl: config.currentBaseUrl,
         date: new Date(),
-        diffs: remappedDiffs.map((diff) => ({
-            candidate: processDiff(diff.candidate),
-            client: processDiff(diff.client),
-            note: diff.note,
-            pathname: diff.pathname,
-            server: processDiff(diff.server),
-        })),
+        diffs,
     };
+
+    await esbuild.build({
+        bundle: true,
+        entryPoints: ['./src/page/scripts.js', './src/page/styles.css'],
+        outdir: 'dist',
+    });
 
     const scripts = await getScripts(config);
     const styles = await getStyles(config);

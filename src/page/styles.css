@@ -1,104 +1,51 @@
+:root {
+    --header-bg-color: #25292e;
+    --header-text-color: #fff;
+    --primary-bg-color: #fff;
+    --primary-text-color: #1f2328;
+    --primary-text-active-color: #0969da;
+    --secondary-bg-color: #f6f8fa;
+    --secondary-hover-bg-color: #818b981a;
+    --secondary-text-color: #59636e;
+    --folder-icon-color: #54aeff;
+    --file-icon-color: #59636e;
+    --divider-color: #d1d9e0;
+    --active-color: #fd8c73;
+    --fonts: -apple-system, blinkmacsystemfont, "Segoe UI", "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+* {
+    box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
-}
-
-body {
-    overflow: hidden;
-}
-
-.root {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.top-bar {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    min-height: 80px;
-}
-
-.top-bar > div {
-    display: flex;
-    flex-direction: column;
-}
-
-.environments {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    list-style: none;
     margin: 0;
     padding: 0;
 }
 
-.environments li {
-    align-items: center;
-    border: 1px solid;
-    cursor: pointer;
-    display: flex;
-    flex-grow: 1;
-    justify-content: center;
-    text-align: center;
+.h1, h2, h3, h4, h5, h6, p, div, span, li, a {
+    color: var(--primary-text-color);
+    font-family: var(--fonts);
 }
 
 #data {
     align-items: stretch;
     display: flex;
     flex-grow: 1;
-    flex-wrap: wrap;
-    height: inherit;
+    background-color: var(--primary-bg-color);
 }
 
 .site-list-container {
-    flex-basis: 300px;
-    flex-grow: 1;
-    min-width: 300px;
-    overflow-y: auto;
+    width: 320px;
+    border-right: 1px solid var(--divider-color);
+    border-top: 1px solid var(--divider-color);
+    padding: 8px;
 }
 
-.site-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.site-list-item.active {
-    background-color: #dfdfdf;
-}
-
-.site-content {
-    display: none;
-}
-
-.site-content.active {
-    display: block;
-}
-
-.site-list-item {
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.site-list-item span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.environment.active {
-    background-color: #dfdfdf;
-}
-
-#diffs {
-    flex-basis: 450px;
-    flex-grow: 1000;
-    height: inherit;
-    margin-bottom: 10px;
-    overflow-y: auto;
+.data-diff-container {
+    border-top: 1px solid var(--divider-color);
+    padding: 8px;
 }
 
 @media only screen and (width <= 780px) {
@@ -109,4 +56,12 @@ body {
     #diffs {
         overflow-y: hidden;
     }
+}
+
+.icon  {
+    color: var(--icon-color);
+    display: inline-block;
+    overflow: visible !important;
+    vertical-align: text-bottom;
+    fill: currentcolor;
 }

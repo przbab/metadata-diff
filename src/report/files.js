@@ -8,7 +8,7 @@ const renderFile = promisify(ejs.renderFile);
 
 export async function getScripts(config) {
     const logger = getLogger();
-    const file = path.resolve(process.cwd(), './src/page/scripts.js');
+    const file = path.resolve(process.cwd(), './dist/scripts.js');
     const scripts = await fsPromises.readFile(file, 'utf8');
 
     if (config.minify) {
