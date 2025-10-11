@@ -11,13 +11,18 @@ export async function report(config, diffs) {
 
     await esbuild.build({
         bundle: true,
-        entryPoints: ['./src/page/scripts.js', './src/page/styles.css'],
-        outdir: 'dist',
+        entryPoints: [
+            './src/page/scripts.js',
+            './src/page/styles.css',
+            './src/page/worker.js',
+            { in: 'jsondiffpatch/formatters/styles/html.css', out: 'jsondiffpatch' },
+        ],
+        outdir: config.outputDir,
     });
 
-    const scripts = await getScripts(config);
+    const { script, worker } = await getScripts(config);
     const styles = await getStyles(config);
-    const html = await getHtml(data, scripts, styles, config);
+    const html = await getHtml({ config, data, script, styles, worker });
 
     return html;
 }

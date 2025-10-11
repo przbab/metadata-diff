@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta content="IE=edge">
-            <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style><%- styles %></style>
-        </head>
-        <body class="jsondiffpatch-unchanged-showing">
-            <app-header></app-header>
-            <app-tabs></app-tabs>
-            <div id="data">
-                <div class="site-list-container">
-                    <path-navigation type="current.server-candidate.server" path="root"></path-navigation>
-                </div>
-                <div class="data-diff-container">
-                    <data-diff id="data-diff" path="root.0" type="current.server-candidate.server"></data-diff>
-                </div>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta content="IE=edge">
+        <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./styles.css" type="text/css" />
+    </head>
+    <body class="jsondiffpatch-unchanged-showing">
+        <app-header></app-header>
+        <app-tabs></app-tabs>
+        <div id="data">
+            <div class="site-list-container">
+                <path-navigation type="current.server-candidate.server" path="root"></path-navigation>
             </div>
-            <script>window.DIFF_DATA=<%- JSON.stringify(data) %></script>
-            <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js"></script>
-            <script><%- scripts %></script>
-        </body>
-    </html>
+            <div class="data-diff-container">
+                <data-diff id="data-diff" path="root.0" type="current.server-candidate.server"></data-diff>
+            </div>
+        </div>
+        <script>window.DIFF_DATA=<%- JSON.stringify(data) %></script>
+        <script src="scripts.js"></script>
+    </body>
+</html>

@@ -14,11 +14,13 @@ export class AppTabs extends HTMLElement {
 <style>
     ul {
         list-style: none;
-        padding: 16px 16px 0;
+        padding: 0 8px;
         display: flex;
         gap: 16px;
         margin: 0;
         background-color: var(--secondary-bg-color);
+        max-width: 100vw;
+        overflow-x: auto;
     }
 </style>
 <ul>

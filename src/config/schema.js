@@ -29,7 +29,8 @@ export const schema = Joi.object({
             'User-Agent': Joi.string().default('metadata-diff'),
         }),
     minify: Joi.boolean().default(true),
-    output: Joi.string().default('metadataDiffReport.html'),
+    output: Joi.string().default('index.html'),
+    outputDir: Joi.string().default('dist'),
     pathnames: Joi.array().items(pathnameObject).min(1).required(),
     puppeteerOptions: Joi.object().keys({
         additionalWait: Joi.number(),

@@ -10,6 +10,7 @@
         "node": "22"
     },
     "scripts": {
+        "dev": "http-server ./dist",
         "knip": "knip",
         "lint": "eslint .",
         "prepare": "husky",
@@ -51,6 +52,7 @@
         "@commitlint/cli": "19.8.1",
         "@commitlint/config-conventional": "19.8.1",
         "@schibsted/niche-eslint-config": "0.2.1",
+        "http-server": "14.1.1",
         "husky": "9.1.7",
         "knip": "5.63.1",
         "lint-staged": "16.1.6",

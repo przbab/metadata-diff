@@ -38,6 +38,7 @@ export class SingleTab extends HTMLElement {
         cursor: pointer;
         padding: 16px;
         font-family: var(--fonts);
+        white-space: nowrap;
     }
     li:hover {
         background-color: var(--secondary-hover-bg-color);

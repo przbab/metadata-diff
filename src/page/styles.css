@@ -20,6 +20,7 @@
 
 html, body {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
 }
@@ -34,6 +35,14 @@ html, body {
     display: flex;
     flex-grow: 1;
     background-color: var(--primary-bg-color);
+
+    @media only screen and (width <= 780px) {
+        flex-wrap: wrap;
+
+        .site-list-container {
+            width: 100%;
+        }
+    }
 }
 
 .site-list-container {
@@ -46,16 +55,7 @@ html, body {
 .data-diff-container {
     border-top: 1px solid var(--divider-color);
     padding: 8px;
-}
-
-@media only screen and (width <= 780px) {
-    body {
-        overflow-y: auto;
-    }
-
-    #diffs {
-        overflow-y: hidden;
-    }
+    overflow: hidden;
 }
 
 .icon  {
