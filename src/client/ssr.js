@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import got from 'got';
 
 export async function fetchSSR(url, options = {}) {
