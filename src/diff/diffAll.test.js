@@ -3,7 +3,7 @@ import { describe, mock, test } from 'node:test';
 
 mock.module('./diffSingle.js', {
     namedExports: {
-        diffSingle: async (pathname) => ({ pathname }),
+        diffSingle: async (path) => ({ path }),
     },
 });
 
@@ -16,10 +16,7 @@ describe('diff', () => {
             };
             const diffs = await diffAll(config);
 
-            t.assert.deepEqual(diffs, [
-                { note: undefined, pathname: '/test1' },
-                { note: undefined, pathname: '/test2' },
-            ]);
+            t.assert.deepEqual(diffs, [{ path: '/test1' }, { path: '/test2' }]);
         });
 
         test(`should pass notes`, async (t) => {
@@ -29,7 +26,7 @@ describe('diff', () => {
             };
             const diffs = await diffAll(config);
 
-            t.assert.deepEqual(diffs, [{ note: 'test note', pathname: '/test' }]);
+            t.assert.deepEqual(diffs, [{ note: 'test note', path: '/test' }]);
         });
     });
 });

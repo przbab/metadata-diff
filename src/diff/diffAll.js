@@ -1,12 +1,17 @@
 import async from 'async';
 import { getLogger } from '../logger.js';
 
-function getPathname(pathname) {
-    if (typeof pathname === 'string') {
-        return pathname;
-    }
-
-    return pathname.path;
+function extractPathnames(pathnameObject) {
+    return pathnameObject.reduce((acc, item) => {
+        if (typeof item === 'string') {
+            acc.push(item);
+        } else if (item.path) {
+            acc.push(item.path);
+        } else if (item.pathnames && Array.isArray(item.pathnames)) {
+            acc.push(...extractPathnames(item.pathnames));
+        }
+        return acc;
+    }, []);
 }
 
 async function processPathnames(config) {
@@ -14,16 +19,36 @@ async function processPathnames(config) {
     const requestOptions = getRequestOptions(config);
     const { diffSingle } = await import('./diffSingle.js');
 
-    return async (pathnameObject) => {
-        const pathname = getPathname(pathnameObject);
-
+    return async (pathname) => {
         logger.info(`Processing ${pathname}`);
 
         return {
+            path: pathname,
             ...(await diffSingle(pathname, config, requestOptions)),
-            note: pathnameObject.note,
         };
     };
+}
+
+function enrichPathnameConfig(pathnameObject, diffedPathnames) {
+    return pathnameObject.map((item) => {
+        if (typeof item === 'string') {
+            return {
+                path: item,
+                ...diffedPathnames[item][0],
+            };
+        }
+        if (item.pathnames && Array.isArray(item.pathnames)) {
+            return {
+                ...item,
+                pathnames: enrichPathnameConfig(item.pathnames, diffedPathnames),
+            };
+        }
+
+        return {
+            ...item,
+            ...diffedPathnames[item.path][0],
+        };
+    });
 }
 
 async function diffAll(config) {
@@ -31,7 +56,15 @@ async function diffAll(config) {
 
     logger.verbose('Diffing all the files');
 
-    return async.mapLimit(config.pathnames, config.concurrency, await processPathnames(config));
+    const allPathnames = extractPathnames(config.pathnames);
+    logger.debug('All pathnames to process', allPathnames);
+
+    const diffedPathnames = Object.groupBy(
+        await async.mapLimit(allPathnames, config.concurrency, await processPathnames(config)),
+        (item) => item.path
+    );
+
+    return enrichPathnameConfig(config.pathnames, diffedPathnames);
 }
 
 function getRequestOptions(config) {

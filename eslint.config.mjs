@@ -5,7 +5,7 @@ export default [
     ...nicheBase,
     ...nichePrettier,
     {
-        ignores: ['node_modules'],
+        ignores: ['node_modules', 'dist'],
     },
     {
         rules: {
@@ -33,7 +33,6 @@ export default [
         languageOptions: {
             globals: {
                 ...globals.browser,
-                jsondiffpatch: true,
             },
         },
     },

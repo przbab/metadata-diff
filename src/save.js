@@ -1,16 +1,15 @@
-import fs from 'fs';
-import { promisify } from 'util';
+import fsPromises from 'fs/promises';
 import { getLogger } from './logger.js';
-
-const writeFile = promisify(fs.writeFile);
+import path from 'path';
 
 export default async function save(report, config) {
     const logger = getLogger();
 
     try {
         logger.debug('Saving file...');
-        await writeFile(config.output, report);
-        logger.info(`Saved report to ${config.output}`);
+        const filename = path.join(config.outputDir, config.output);
+        await fsPromises.writeFile(filename, report);
+        logger.info(`Saved report to ${filename}`);
     } catch (err) {
         logger.error('Saving failed', err);
         process.exit(1);

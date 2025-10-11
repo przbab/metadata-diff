@@ -1,91 +1,24 @@
 <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta content="IE=edge">
-            <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style><%- styles %></style>
-        </head>
-        <body>
-            <div class="root">
-                <div class="top-bar">
-                    <header>
-                        <h1>MetadataDiff</h1>
-                    </header>
-                    <div>
-                        <span>Generation date: <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()} ${data.date.getHours()}:${data.date.getMinutes()}` %></span>
-                        <span>Current: <a id="current-url" href="<%- data.currentBaseUrl %>"><%- data.currentBaseUrl %></a></span>
-                        <span>Candidate: <a id="candidate-url" href="<%- data.candidateBaseUrl %>"><%- data.candidateBaseUrl %></a></span>
-                    </div>
-                    <div>
-                        <span><input type="checkbox" id="show-unchanged" checked> Show unchanged</span>
-                    </div>
-                </div>
-                <div>
-                    <ul class="environments">
-                        <li id="server" class="environment" onclick="changeSource(event)">
-                            <span>Current server => Candidate server</span>
-                            <progress-ring id="server-percent" stroke="4" radius="25" progress="100"></progress-ring>
-                        </li>
-                        <li id="client" class="environment" onclick="changeSource(event)">
-                            <span>Current client => Candidate client</span>
-                            <progress-ring id="client-percent" stroke="4" radius="25" progress="100"></progress-ring>
-                        </li>
-                        <li id="candidate" class="environment" onclick="changeSource(event)">
-                            <span>Candidate server => Candidate client</span>
-                            <progress-ring id="candidate-percent" stroke="4" radius="25" progress="50"></progress-ring>
-                        </li>
-                    </ul>
-                </div>
-                <div id="data">
-                    <div class="site-list-container">
-                        <ul class="site-list">
-                            <%- 
-                                data.diffs.map((diff, i) => {
-                                    const { all, differences } = ['candidate', 'client', 'server'].reduce(
-                                        (acc, type) => {
-                                            const internalCount = ['metadata', 'microdata', 'redirects'].reduce(
-                                                (acc2, dataType) => ({
-                                                    all: acc2.all + diff[type][dataType].all,
-                                                    differences: acc2.differences + diff[type][dataType].differences,
-                                                }),
-                                                { all: 0, differences: 0 }
-                                            );
-                                            return {
-                                                all: acc.all + internalCount.all,
-                                                differences: acc.differences + internalCount.differences,
-                                            };
-                                        },
-                                        { all: 0, differences: 0 }
-                                    );
-
-                                    const percentage = Math.round(100 * (differences / all));
-
-                                    return { percentage, html: `
-                                        <li class="site-list-item" onclick="showSite(event)" name="${diff.pathname}">
-                                            <span>${diff.pathname}</span>
-                                            <progress-ring stroke="4" radius="25" progress="${percentage}"></progress-ring>
-                                        </li>`}
-                                })
-                                .sort((a, b) => b.percentage - a.percentage)
-                                .map(pathname => pathname.html)
-                                .join('');
-                            %>
-                        </ul>
-                    </div>
-                    <div id="diffs">
-                        <h2 id="pathname"></h2>
-                        <p id="note"></p>
-                        <data-diff title="Redirects" property="redirects" id="redirects"></data-diff>
-                        <data-diff title="Metadata" property="metadata" id="metadata-diff"></data-diff>
-                        <data-diff title="Microdata" property="microdata" id="microdata-diff"></data-diff>
-                        <data-diff title="JSON LD" property="jsonLd" id="json-ld-diff"></data-diff>
-                    </div>
-                </div>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta content="IE=edge">
+        <title>Metadata diff <%= `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}` %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./styles.css" type="text/css" />
+    </head>
+    <body class="jsondiffpatch-unchanged-showing">
+        <app-header></app-header>
+        <app-tabs></app-tabs>
+        <div id="data">
+            <div class="site-list-container">
+                <path-navigation type="current.server-candidate.server" path="root"></path-navigation>
             </div>
-            <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js"></script>
-            <script>window.DIFF_DATA=<%- JSON.stringify(data) %></script>
-            <script><%- scripts %></script>
-        </body>
-    </html>
+            <div class="data-diff-container">
+                <data-diff id="data-diff" path="root.0" type="current.server-candidate.server"></data-diff>
+            </div>
+        </div>
+        <script>window.DIFF_DATA=<%- JSON.stringify(data) %></script>
+        <script src="scripts.js"></script>
+    </body>
+</html>

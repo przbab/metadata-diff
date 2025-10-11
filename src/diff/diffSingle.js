@@ -1,6 +1,10 @@
 import { getLogger } from '../logger.js';
 
 export const processReplacements = (config) => (string) => {
+    if (!string) {
+        return string;
+    }
+
     let output = string;
 
     Object.entries(config.replacements ?? {}).forEach(([target, sources]) => {
@@ -36,15 +40,11 @@ export async function diffSingle(pathname, config, requestOptions) {
             client: transformData(candidateClient, candidateClientData, config),
             server: transformData(candidateServer, candidateServerData, config),
         },
-        client: {
-            candidate: transformData(candidateClient, candidateClientData, config),
-            current: transformData(currentClient, currentClientData, config),
+        current: {
+            client: transformData(currentClient, currentClientData, config),
+            server: transformData(currentServer, currentServerData, config),
         },
-        pathname,
-        server: {
-            candidate: transformData(candidateServer, candidateServerData, config),
-            current: transformData(currentServer, currentServerData, config),
-        },
+        path: pathname,
     };
 }
 

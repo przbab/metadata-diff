@@ -22,18 +22,8 @@ exports[`diff > diffSingle > should diff single pathname 1`] = `
       ]
     }
   },
-  "client": {
-    "candidate": {
-      "metadata": {},
-      "redirects": [
-        {
-          "status": 302,
-          "target": "http://example.com",
-          "url": "http://example.com/candidateClient"
-        }
-      ]
-    },
-    "current": {
+  "current": {
+    "client": {
       "metadata": {},
       "redirects": [
         {
@@ -42,21 +32,8 @@ exports[`diff > diffSingle > should diff single pathname 1`] = `
           "url": "http://example.com/currentClient"
         }
       ]
-    }
-  },
-  "pathname": "/",
-  "server": {
-    "candidate": {
-      "metadata": {},
-      "redirects": [
-        {
-          "status": 302,
-          "target": "http://example.com",
-          "url": "http://example.com/candidateServer"
-        }
-      ]
     },
-    "current": {
+    "server": {
       "metadata": {},
       "redirects": [
         {
@@ -66,7 +43,8 @@ exports[`diff > diffSingle > should diff single pathname 1`] = `
         }
       ]
     }
-  }
+  },
+  "path": "/"
 }
 `;
 

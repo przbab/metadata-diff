@@ -1,5 +1,5 @@
 const config = {
-    entry: ['eslint.config.mjs', 'src/page/*'],
+    entry: ['eslint.config.mjs', 'src/page/**'],
     ignore: [],
     ignoreBinaries: ['eslint', 'prettier'],
     ignoreDependencies: [],
