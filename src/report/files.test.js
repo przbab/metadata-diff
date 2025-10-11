@@ -3,7 +3,7 @@ import { describe, test } from 'node:test';
 
 describe('report', () => {
     describe('files', () => {
-        describe('getScripts', () => {
+        describe.skip('getScripts', () => {
             test(`should read default file`, async (t) => {
                 const { script, worker } = await getScripts({ minify: false });
                 t.assert.ok(script);

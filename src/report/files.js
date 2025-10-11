@@ -32,6 +32,7 @@ export async function getScripts(config) {
             worker = workerMinificationResult.code;
         }
     }
+
     return { script, worker };
 }
 
