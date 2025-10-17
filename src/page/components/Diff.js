@@ -111,16 +111,16 @@ export class Diff extends HTMLElement {
 <div class="diff-container ${this.showUnchanged ? '' : 'jsondiffpatch-unchanged-hidden'}">
     <h2>Path: ${this.state.path}</h2>
     ${this.state.notes ? `<p>${this.state.notes}</p>` : ''}
-    ${this.shouldShowSection(sourceData.redirects) ? `<h3>Redirects:</h3>${redirectsHtml}` : ''}
-    ${this.shouldShowSection(sourceData.metadata) ? `<h3>Metadata:</h3>${metadataHtml}` : ''}
-    ${this.shouldShowSection(sourceData.jsonLd) ? `<h3>JSON-LD:</h3>${jsonLdHtml}` : ''}
-    ${this.shouldShowSection(sourceData.microdata) ? `<h3>Microdata:</h3>${microdataHtml}` : ''}
+    ${this.shouldShowSection(sourceData.redirects, redirectsDelta) ? `<h3>Redirects:</h3>${redirectsHtml}` : ''}
+    ${this.shouldShowSection(sourceData.metadata, metadataDelta) ? `<h3>Metadata:</h3>${metadataHtml}` : ''}
+    ${this.shouldShowSection(sourceData.jsonLd, jsonLdDelta) ? `<h3>JSON-LD:</h3>${jsonLdHtml}` : ''}
+    ${this.shouldShowSection(sourceData.microdata, microdataDelta) ? `<h3>Microdata:</h3>${microdataHtml}` : ''}
 </div>
 `;
     }
 
-    shouldShowSection(data) {
-        return this.showMissingData || !this.hasData(data);
+    shouldShowSection(data, delta) {
+        return Boolean(delta) || this.showMissingData || !this.hasData(data);
     }
 }
 
