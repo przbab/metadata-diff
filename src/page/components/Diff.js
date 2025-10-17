@@ -66,17 +66,31 @@ export class Diff extends HTMLElement {
     }
 
     renderData() {
-        const [sourceString] = this.type.split('-');
-        const [sourceEnv, sourceType] = sourceString.split('.');
+        if (this.state.pathnames) {
+            this.root.innerHTML = `
+<style>
+    h2 {
+        margin-top: 0;
+    }
+</style>
+<div>
+    <h2>${this.state.name}</h2>
+    ${this.state.note ? `<p>${this.state.note}</p>` : ''}
+</div>
+`;
 
-        const sourceData = this.state[sourceEnv][sourceType];
-
+            return;
+        }
         if (!this.state.diffs) {
             this.root.innerHTML = `<span>Loading...</span>`;
 
             return;
         }
 
+        const [sourceString] = this.type.split('-');
+        const [sourceEnv, sourceType] = sourceString.split('.');
+
+        const sourceData = this.state[sourceEnv][sourceType];
         const { jsonLdDelta, metadataDelta, microdataDelta, redirectsDelta } = this.state.diffs[this.type];
 
         const redirectsHtml = this.getHtml(redirectsDelta, sourceData.redirects);
