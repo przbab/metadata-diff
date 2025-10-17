@@ -155,7 +155,7 @@ function parse(html) {
         jsonLd = jsonLd[0];
     }
 
-    return { jsonLd, metadata, microdata: microdata.toJson(html) };
+    return { jsonLd, metadata, microdata: microdata.toJson(html)?.items || [] };
 }
 
 export { parse };
