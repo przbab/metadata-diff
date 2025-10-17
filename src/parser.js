@@ -29,21 +29,18 @@ function parse(html, config) {
     let inHead = false;
 
     const parsedLinkTags = getParsedTags(defaultLinkTags, config.parsedMetadata?.linkTags);
-    console.log('🚀 ~ parse ~ parsedLinkTags:', parsedLinkTags);
 
     function shouldParseLinkTag(attribs) {
         return parsedLinkTags.includes(attribs.rel);
     }
 
     const parsedMetaNameTags = getParsedTags(defaultMetaNameTags, config.parsedMetadata?.metaNameTags);
-    console.log('🚀 ~ parse ~ parsedMetaNameTags:', parsedMetaNameTags);
 
     function shouldParseMetaNameTag(attribs) {
         return parsedMetaNameTags.includes(attribs.name);
     }
 
     const parsedMetaPropertyTags = getParsedTags(defaultMetaPropertyTags, config.parsedMetadata?.metaPropertyTags);
-    console.log('🚀 ~ parse ~ parsedMetaPropertyTags:', parsedMetaPropertyTags);
 
     function shouldParseMetaPropertyTag(attribs) {
         return parsedMetaPropertyTags.includes(attribs.property);
