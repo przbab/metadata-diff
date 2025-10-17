@@ -4,9 +4,9 @@ import './components/Diff.js';
 import './components/PathNavigation/PathNavigation.js';
 import './components/AppHeader.js';
 import './components/AppTabs/AppTabs.js';
-import { getDiffDataByPath } from './utils/getDiffDataByPath.js';
+import './components/Settings/Dialog.js';
 
-console.log('🚀 ~ window.DIFF_DATA:', window.DIFF_DATA);
+import { getDiffDataByPath } from './utils/getDiffDataByPath.js';
 
 const diffWorker = new Worker('worker.js');
 

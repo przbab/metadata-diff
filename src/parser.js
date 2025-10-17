@@ -1,91 +1,50 @@
 import * as microdata from 'microdata-node';
 import * as htmlparser from 'htmlparser2';
 import { decode } from 'html-entities';
+import { defaultLinkTags, defaultMetaNameTags, defaultMetaPropertyTags } from './constants.js';
 
 function isJsonLd(name, attribs) {
     return attribs.type === 'application/ld+json';
 }
 
-function isInterestingLink(name, attribs) {
-    return ['canonical', 'icon', 'manifest', 'shortcut'].includes(attribs.rel);
+function getParsedTags(defaultTags, overrides) {
+    const parsedTags = [...defaultTags];
+    if (overrides) {
+        Object.entries(overrides).forEach(([tag, include]) => {
+            if (include) {
+                parsedTags.push(tag);
+            } else if (parsedTags.includes(tag)) {
+                parsedTags.splice(parsedTags.indexOf(tag), 1);
+            }
+        });
+    }
+
+    return parsedTags;
 }
 
-function isInterestingMetaName(name, attribs) {
-    return ['description', 'keywords', 'robots'].includes(attribs.name);
-}
-
-function isInterestingMetaProperty(name, attribs) {
-    return [
-        'article:author',
-        'article:expiration_time',
-        'article:modified_time',
-        'article:published_time',
-        'article:section',
-        'article:tag',
-        'book:author',
-        'book:isbn',
-        'book:release_date',
-        'book:tag',
-        'fb:app_id',
-        'fb:pages',
-        'music:album',
-        'music:album:disc',
-        'music:album:track',
-        'music:creator',
-        'music:duration',
-        'music:musician',
-        'music:release_date',
-        'music:song',
-        'music:song:disc',
-        'music:song:track',
-        'og:audio',
-        'og:audio:secure_url',
-        'og:audio:type',
-        'og:description',
-        'og:determiner',
-        'og:image',
-        'og:image:alt',
-        'og:image:height',
-        'og:image:secure_url',
-        'og:image:type',
-        'og:image:url',
-        'og:image:width',
-        'og:locale',
-        'og:locale:alternate',
-        'og:site_name',
-        'og:title',
-        'og:type',
-        'og:url',
-        'og:video',
-        'og:video:height',
-        'og:video:secure_url',
-        'og:video:type',
-        'og:video:url',
-        'og:video:width',
-        'profile:first_name',
-        'profile:gender',
-        'profile:last_name',
-        'profile:username',
-        'twitter:card',
-        'twitter:description',
-        'twitter:image',
-        'twitter:title',
-        'video:actor',
-        'video:actor:role',
-        'video:director',
-        'video:duration',
-        'video:release_date',
-        'video:series',
-        'video:tag',
-        'video:writer',
-    ].includes(attribs.property);
-}
-
-function parse(html) {
+function parse(html, config) {
     const metadata = {};
     let jsonLd = [];
     let currentTag = '';
     let inHead = false;
+
+    const parsedLinkTags = getParsedTags(defaultLinkTags, config.parsedMetadata?.linkTags);
+
+    function shouldParseLinkTag(attribs) {
+        return parsedLinkTags.includes(attribs.rel);
+    }
+
+    const parsedMetaNameTags = getParsedTags(defaultMetaNameTags, config.parsedMetadata?.metaNameTags);
+
+    function shouldParseMetaNameTag(attribs) {
+        return parsedMetaNameTags.includes(attribs.name);
+    }
+
+    const parsedMetaPropertyTags = getParsedTags(defaultMetaPropertyTags, config.parsedMetadata?.metaPropertyTags);
+
+    function shouldParseMetaPropertyTag(attribs) {
+        return parsedMetaPropertyTags.includes(attribs.property);
+    }
 
     const parser = new htmlparser.Parser(
         {
@@ -103,15 +62,15 @@ function parse(html) {
                         inHead = true;
                         break;
                     case 'link':
-                        if (isInterestingLink(name, attribs)) {
+                        if (shouldParseLinkTag(attribs)) {
                             metadata[attribs.rel] = attribs.href;
                         }
                         break;
                     case 'meta':
-                        if (isInterestingMetaName(name, attribs)) {
+                        if (shouldParseMetaNameTag(attribs)) {
                             metadata[attribs.name] = attribs.content;
                         }
-                        if (isInterestingMetaProperty(name, attribs)) {
+                        if (shouldParseMetaPropertyTag(attribs)) {
                             metadata[attribs.property] = attribs.content;
                         }
                         break;
@@ -155,7 +114,7 @@ function parse(html) {
         jsonLd = jsonLd[0];
     }
 
-    return { jsonLd, metadata, microdata: microdata.toJson(html) };
+    return { jsonLd, metadata, microdata: microdata.toJson(html)?.items || [] };
 }
 
 export { parse };

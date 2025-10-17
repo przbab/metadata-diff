@@ -1,3 +1,5 @@
+import './Icons/SettingsIcon.js';
+
 export class AppHeader extends HTMLElement {
     constructor() {
         super();
@@ -49,6 +51,13 @@ export class AppHeader extends HTMLElement {
         color: var(--primary-text-active-color);
         font-family: var(--fonts);
     }
+    button {
+        background-color: transparent;
+        border: none;
+        width: 36px;
+        height: 36px;
+        color: var(--header-text-color);
+    }
     @media only screen and (width <= 780px) {
         header {
             padding: 8px;
@@ -68,12 +77,16 @@ export class AppHeader extends HTMLElement {
         <span><a href="${this.candidateUrl}${path}">Candidate<span>: ${this.candidateUrl}</span></a></span>
     </div>
     <div>
+    <button><settings-icon></settings-icon></button>
     <!--
         <span><input type="checkbox" id="show-unchanged" checked> Show unchanged</span>
         -->
     </div>
 </header>
 `;
+        this.root.querySelector('button').addEventListener('click', () => {
+            window.signals.dispatchEvent(new CustomEvent('open-settings-dialog'));
+        });
     }
 }
 

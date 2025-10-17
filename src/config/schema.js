@@ -31,6 +31,11 @@ export const schema = Joi.object({
     minify: Joi.boolean().default(true),
     output: Joi.string().default('index.html'),
     outputDir: Joi.string().default('dist'),
+    parsedMetadata: Joi.object({
+        linkTags: Joi.object().pattern(Joi.string(), Joi.boolean()),
+        metaNameTags: Joi.object().pattern(Joi.string(), Joi.boolean()),
+        metaPropertyTags: Joi.object().pattern(Joi.string(), Joi.boolean()),
+    }),
     pathnames: Joi.array().items(pathnameObject).min(1).required(),
     puppeteerOptions: Joi.object().keys({
         additionalWait: Joi.number(),

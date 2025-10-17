@@ -76,10 +76,10 @@ export async function parseData(
     const processReplacementsWithConfig = processReplacements(config);
     const { parse } = await import('../parser.js');
 
-    const currentServer = parse(processReplacementsWithConfig(currentServerData.html));
-    const currentClient = parse(processReplacementsWithConfig(currentClientData.html));
-    const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html));
-    const candidateClient = parse(processReplacementsWithConfig(candidateClientData.html));
+    const currentServer = parse(processReplacementsWithConfig(currentServerData.html), config);
+    const currentClient = parse(processReplacementsWithConfig(currentClientData.html), config);
+    const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html), config);
+    const candidateClient = parse(processReplacementsWithConfig(candidateClientData.html), config);
 
     return { candidateClient, candidateServer, currentClient, currentServer };
 }

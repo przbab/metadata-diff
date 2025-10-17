@@ -24,7 +24,7 @@ export class AppTabs extends HTMLElement {
     }
 </style>
 <ul>
-    <single-tab text="Current server => Candidate server" type="current.server-candidate.server"></single-tab class="active">
+    <single-tab text="Current server => Candidate server" type="current.server-candidate.server"></single-tab>
     <single-tab text="Current client => Candidate client" type="current.client-candidate.client"></single-tab>
     <single-tab text="Candidate server => Candidate client" type="candidate.server-candidate.client"></single-tab>
 </ul>

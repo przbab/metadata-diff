@@ -24,13 +24,13 @@ export class SinglePath extends HTMLElement {
             shadow.innerHTML = `
 ${styles}
 <li>
-    <path-entry name="${this.name}" depth="${this.depth}" icon="file" description="${this.description}"></path-entry>
+    <path-entry name="${this.name}" depth="${this.depth}" icon="file" description="${this.description}" path="${this.path}"></path-entry>
 </li>`;
         } else if (this.icon === 'folder') {
             shadow.innerHTML = `
 ${styles}
 <li>
-    <path-entry name="${this.name}" depth="${this.depth}"icon="folder" description="${this.description}"></path-entry>
+    <path-entry name="${this.name}" depth="${this.depth}"icon="folder" description="${this.description}" path="${this.path}"></path-entry>
     <path-navigation depth="${this.depth}" depth="${this.depth}" type="${this.type}" path="${this.path}"></path-navigation>
 </li>`;
         }
