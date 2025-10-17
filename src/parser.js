@@ -1,29 +1,53 @@
 import * as microdata from 'microdata-node';
 import * as htmlparser from 'htmlparser2';
 import { decode } from 'html-entities';
-import { defaultLinks, defaultMetaNames, defaultMetaProperties } from './constants.js';
+import { defaultLinkTags, defaultMetaNameTags, defaultMetaPropertyTags } from './constants.js';
 
 function isJsonLd(name, attribs) {
     return attribs.type === 'application/ld+json';
 }
 
-function isInterestingLink(name, attribs) {
-    return defaultLinks.includes(attribs.rel);
+function getParsedTags(defaultTags, overrides) {
+    const parsedTags = [...defaultTags];
+    if (overrides) {
+        Object.entries(overrides).forEach(([tag, include]) => {
+            if (include) {
+                parsedTags.push(tag);
+            } else if (parsedTags.includes(tag)) {
+                parsedTags.splice(parsedTags.indexOf(tag), 1);
+            }
+        });
+    }
+
+    return parsedTags;
 }
 
-function isInterestingMetaName(name, attribs) {
-    return defaultMetaNames.includes(attribs.name);
-}
-
-function isInterestingMetaProperty(name, attribs) {
-    return defaultMetaProperties.includes(attribs.property);
-}
-
-function parse(html) {
+function parse(html, config) {
     const metadata = {};
     let jsonLd = [];
     let currentTag = '';
     let inHead = false;
+
+    const parsedLinkTags = getParsedTags(defaultLinkTags, config.parsedMetadata?.linkTags);
+    console.log('🚀 ~ parse ~ parsedLinkTags:', parsedLinkTags);
+
+    function shouldParseLinkTag(attribs) {
+        return parsedLinkTags.includes(attribs.rel);
+    }
+
+    const parsedMetaNameTags = getParsedTags(defaultMetaNameTags, config.parsedMetadata?.metaNameTags);
+    console.log('🚀 ~ parse ~ parsedMetaNameTags:', parsedMetaNameTags);
+
+    function shouldParseMetaNameTag(attribs) {
+        return parsedMetaNameTags.includes(attribs.name);
+    }
+
+    const parsedMetaPropertyTags = getParsedTags(defaultMetaPropertyTags, config.parsedMetadata?.metaPropertyTags);
+    console.log('🚀 ~ parse ~ parsedMetaPropertyTags:', parsedMetaPropertyTags);
+
+    function shouldParseMetaPropertyTag(attribs) {
+        return parsedMetaPropertyTags.includes(attribs.property);
+    }
 
     const parser = new htmlparser.Parser(
         {
@@ -41,15 +65,15 @@ function parse(html) {
                         inHead = true;
                         break;
                     case 'link':
-                        if (isInterestingLink(name, attribs)) {
+                        if (shouldParseLinkTag(attribs)) {
                             metadata[attribs.rel] = attribs.href;
                         }
                         break;
                     case 'meta':
-                        if (isInterestingMetaName(name, attribs)) {
+                        if (shouldParseMetaNameTag(attribs)) {
                             metadata[attribs.name] = attribs.content;
                         }
-                        if (isInterestingMetaProperty(name, attribs)) {
+                        if (shouldParseMetaPropertyTag(attribs)) {
                             metadata[attribs.property] = attribs.content;
                         }
                         break;
