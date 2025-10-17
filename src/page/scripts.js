@@ -8,8 +8,6 @@ import './components/Settings/Dialog.js';
 
 import { getDiffDataByPath } from './utils/getDiffDataByPath.js';
 
-console.log('🚀 ~ window.DIFF_DATA:', window.DIFF_DATA);
-
 const diffWorker = new Worker('worker.js');
 
 diffWorker.onmessage = (event) => {
