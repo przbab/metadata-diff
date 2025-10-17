@@ -120,7 +120,7 @@ export class Diff extends HTMLElement {
     }
 
     shouldShowSection(data) {
-        return !this.showMissingData && !this.hasData(data);
+        return this.showMissingData || !this.hasData(data);
     }
 }
 
