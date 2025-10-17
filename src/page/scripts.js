@@ -4,6 +4,8 @@ import './components/Diff.js';
 import './components/PathNavigation/PathNavigation.js';
 import './components/AppHeader.js';
 import './components/AppTabs/AppTabs.js';
+import './components/Settings/Dialog.js';
+
 import { getDiffDataByPath } from './utils/getDiffDataByPath.js';
 
 console.log('🚀 ~ window.DIFF_DATA:', window.DIFF_DATA);

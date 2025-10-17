@@ -9,6 +9,8 @@ export class Diff extends HTMLElement {
         this.type = 'current.server-candidate.server';
         this.state = getDiffDataByPath(this.path);
         this.root = this.attachShadow({ mode: 'open' });
+        this.showUnchanged = true;
+        this.showMissingData = false;
     }
 
     connectedCallback() {
@@ -29,6 +31,38 @@ export class Diff extends HTMLElement {
                 this.renderData();
             }
         });
+        window.signals.addEventListener('set-show-unchanged', (e) => {
+            this.showUnchanged = e.detail.showUnchanged;
+            this.renderData();
+        });
+        window.signals.addEventListener('set-show-missing-data', (e) => {
+            this.showMissingData = e.detail.showMissingData;
+            this.renderData();
+        });
+    }
+
+    getHtml(delta, source) {
+        if (delta) {
+            return format(delta, source);
+        }
+
+        if (this.hasData(source)) {
+            return `<span>No data</span>`;
+        }
+
+        if (this.showUnchanged) {
+            return `<pre>${JSON.stringify(source, null, 4)}</pre>`;
+        }
+
+        return `<span>No changes</span>`;
+    }
+
+    hasData(data) {
+        return (
+            !data ||
+            (Array.isArray(data) && data.length === 0) ||
+            (typeof data === 'object' && Object.keys(data).length === 0)
+        );
     }
 
     renderData() {
@@ -45,18 +79,10 @@ export class Diff extends HTMLElement {
 
         const { jsonLdDelta, metadataDelta, microdataDelta, redirectsDelta } = this.state.diffs[this.type];
 
-        const redirectsHtml = redirectsDelta
-            ? format(redirectsDelta, sourceData.redirects)
-            : `<pre>${JSON.stringify(sourceData.redirects, null, 4)}</pre>`;
-        const jsonLdHtml = jsonLdDelta
-            ? format(jsonLdDelta, sourceData.jsonLd)
-            : `<pre>${JSON.stringify(sourceData.jsonLd, null, 4)}</pre>`;
-        const metadataHtml = metadataDelta
-            ? format(metadataDelta, sourceData.metadata)
-            : `<pre>${JSON.stringify(sourceData.metadata, null, 4)}</pre>`;
-        const microdataHtml = microdataDelta
-            ? format(microdataDelta, sourceData.microdata)
-            : `<pre>${JSON.stringify(sourceData.microdata, null, 4)}</pre>`;
+        const redirectsHtml = this.getHtml(redirectsDelta, sourceData.redirects);
+        const jsonLdHtml = this.getHtml(jsonLdDelta, sourceData.jsonLd);
+        const metadataHtml = this.getHtml(metadataDelta, sourceData.metadata);
+        const microdataHtml = this.getHtml(microdataDelta, sourceData.microdata);
 
         this.root.innerHTML = `
 <style>
@@ -68,28 +94,20 @@ export class Diff extends HTMLElement {
     }
 </style>
 <link rel="stylesheet" href="jsondiffpatch.css" type="text/css" />
-<div class="diff-container">
+<div class="diff-container ${this.showUnchanged ? '' : 'jsondiffpatch-unchanged-hidden'}">
     <h2>Path: ${this.state.path}</h2>
     ${this.state.notes ? `<p>${this.state.notes}</p>` : ''}
-    <h3>Redirects:</h3>
-    ${redirectsHtml}
-    <h3>Metadata:</h3>
-    ${metadataHtml}
-    <h3>JSON-LD:</h3>
-    ${jsonLdHtml}
-    <h3>Microdata</h3>
-    ${microdataHtml}
+    ${this.shouldShowSection(sourceData.redirects) ? `<h3>Redirects:</h3>${redirectsHtml}` : ''}
+    ${this.shouldShowSection(sourceData.metadata) ? `<h3>Metadata:</h3>${metadataHtml}` : ''}
+    ${this.shouldShowSection(sourceData.jsonLd) ? `<h3>JSON-LD:</h3>${jsonLdHtml}` : ''}
+    ${this.shouldShowSection(sourceData.microdata) ? `<h3>Microdata:</h3>${microdataHtml}` : ''}
 </div>
 `;
+    }
+
+    shouldShowSection(data) {
+        return !this.showMissingData && !this.hasData(data);
     }
 }
 
 window.customElements.define('data-diff', Diff);
-
-// TODO function handleUnchangedSwitch(event) {
-//     if (event.target.checked) {
-//         jsondiffpatch.formatters.html.showUnchanged();
-//     } else {
-//         jsondiffpatch.formatters.html.hideUnchanged();
-//     }
-// }
