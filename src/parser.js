@@ -1,84 +1,22 @@
 import * as microdata from 'microdata-node';
 import * as htmlparser from 'htmlparser2';
 import { decode } from 'html-entities';
+import { defaultLinks, defaultMetaNames, defaultMetaProperties } from './constants.js';
 
 function isJsonLd(name, attribs) {
     return attribs.type === 'application/ld+json';
 }
 
 function isInterestingLink(name, attribs) {
-    return ['canonical', 'icon', 'manifest', 'shortcut'].includes(attribs.rel);
+    return defaultLinks.includes(attribs.rel);
 }
 
 function isInterestingMetaName(name, attribs) {
-    return ['description', 'keywords', 'robots'].includes(attribs.name);
+    return defaultMetaNames.includes(attribs.name);
 }
 
 function isInterestingMetaProperty(name, attribs) {
-    return [
-        'article:author',
-        'article:expiration_time',
-        'article:modified_time',
-        'article:published_time',
-        'article:section',
-        'article:tag',
-        'book:author',
-        'book:isbn',
-        'book:release_date',
-        'book:tag',
-        'fb:app_id',
-        'fb:pages',
-        'music:album',
-        'music:album:disc',
-        'music:album:track',
-        'music:creator',
-        'music:duration',
-        'music:musician',
-        'music:release_date',
-        'music:song',
-        'music:song:disc',
-        'music:song:track',
-        'og:audio',
-        'og:audio:secure_url',
-        'og:audio:type',
-        'og:description',
-        'og:determiner',
-        'og:image',
-        'og:image:alt',
-        'og:image:height',
-        'og:image:secure_url',
-        'og:image:type',
-        'og:image:url',
-        'og:image:width',
-        'og:locale',
-        'og:locale:alternate',
-        'og:site_name',
-        'og:title',
-        'og:type',
-        'og:url',
-        'og:video',
-        'og:video:height',
-        'og:video:secure_url',
-        'og:video:type',
-        'og:video:url',
-        'og:video:width',
-        'profile:first_name',
-        'profile:gender',
-        'profile:last_name',
-        'profile:username',
-        'twitter:card',
-        'twitter:description',
-        'twitter:image',
-        'twitter:title',
-        'video:actor',
-        'video:actor:role',
-        'video:director',
-        'video:duration',
-        'video:release_date',
-        'video:series',
-        'video:tag',
-        'video:writer',
-    ].includes(attribs.property);
+    return defaultMetaProperties.includes(attribs.property);
 }
 
 function parse(html) {

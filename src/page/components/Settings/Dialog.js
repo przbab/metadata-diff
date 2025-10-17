@@ -45,6 +45,11 @@ button {
     display: flex;
     flex-direction: column;
 }
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
 </style>
 <dialog closedby="any">
     <div class="header">
@@ -56,11 +61,11 @@ button {
         </form>
     </div>
     <div class="content">
-        <div>
+        <div class="checkbox-container">
             <input type="checkbox" id="show-unchanged-checkbox" checked/>
             <label for="show-unchanged-checkbox">Show Unchanged</label>
         </div>
-        <div>
+        <div class="checkbox-container">
             <input type="checkbox" id="show-missing-data-checkbox"/>
             <label for="show-missing-data-checkbox">Show Missing Data</label>
         </div>
