@@ -1,6 +1,6 @@
-import './FileIcon.js';
-import './FolderClosedIcon.js';
-import './FolderOpenIcon.js';
+import '../Icons/FileIcon.js';
+import '../Icons/FolderClosedIcon.js';
+import '../Icons/FolderOpenIcon.js';
 
 export class PathEntry extends HTMLElement {
     constructor() {
