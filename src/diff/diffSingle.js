@@ -35,6 +35,20 @@ export async function diffSingle(pathname, config, requestOptions) {
 
     logger.debug(`Pathname ${pathname} parsed`);
 
+    if (config.ssrOnly) {
+        return {
+            candidate: {
+                client: null,
+                server: transformData(candidateServer, candidateServerData, config),
+            },
+            current: {
+                client: null,
+                server: transformData(currentServer, currentServerData, config),
+            },
+            path: pathname,
+        };
+    }
+
     return {
         candidate: {
             client: transformData(candidateClient, candidateClientData, config),
@@ -75,6 +89,13 @@ export async function parseData(
 ) {
     const processReplacementsWithConfig = processReplacements(config);
     const { parse } = await import('../parser.js');
+
+    if (config.ssrOnly) {
+        const currentServer = parse(processReplacementsWithConfig(currentServerData.html), config);
+        const candidateServer = parse(processReplacementsWithConfig(candidateServerData.html), config);
+
+        return { candidateClient: null, candidateServer, currentClient: null, currentServer };
+    }
 
     const currentServer = parse(processReplacementsWithConfig(currentServerData.html), config);
     const currentClient = parse(processReplacementsWithConfig(currentClientData.html), config);

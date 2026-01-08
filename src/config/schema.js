@@ -45,4 +45,5 @@ export const schema = Joi.object({
         slowMo: Joi.number().min(0).default(0),
     }),
     replacements: Joi.object().pattern(Joi.string(), Joi.array().items(Joi.string())).default({}),
+    ssrOnly: Joi.boolean().default(false),
 });
