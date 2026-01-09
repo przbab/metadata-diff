@@ -110,7 +110,7 @@ export class Diff extends HTMLElement {
 <link rel="stylesheet" href="jsondiffpatch.css" type="text/css" />
 <div class="diff-container ${this.showUnchanged ? '' : 'jsondiffpatch-unchanged-hidden'}">
     <h2>Path: ${this.state.path}</h2>
-    ${this.state.notes ? `<p>${this.state.notes}</p>` : ''}
+    ${this.state.note ? `<p>${this.state.note}</p>` : ''}
     ${this.shouldShowSection(sourceData.redirects, redirectsDelta) ? `<h3>Redirects:</h3>${redirectsHtml}` : ''}
     ${this.shouldShowSection(sourceData.metadata, metadataDelta) ? `<h3>Metadata:</h3>${metadataHtml}` : ''}
     ${this.shouldShowSection(sourceData.jsonLd, jsonLdDelta) ? `<h3>JSON-LD:</h3>${jsonLdHtml}` : ''}
