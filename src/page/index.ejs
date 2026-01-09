@@ -9,7 +9,9 @@
     <body class="jsondiffpatch-unchanged-showing">
         <app-header></app-header>
         <settings-dialog></settings-dialog>
-        <app-tabs></app-tabs>
+        <% if (!config.ssrOnly) { %>
+            <app-tabs></app-tabs>
+        <% } %>
         <div id="data">
             <div class="site-list-container">
                 <path-navigation type="current.server-candidate.server" path="root"></path-navigation>

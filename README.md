@@ -43,6 +43,7 @@ Configuration is read using js `import` statement, so it may be a `.js` or `.jso
 | puppeteerOption.headless        | no       | boolean                        | Disable headless                                                                                                                                          |
 | puppeteerOption.slowMo          | no       | number                         | Slow the puppeteer                                                                                                                                        |
 | replacements                    | no       | array(object)                  | Allows for replacing some properties in html before parsing. Intended for random parts like urls, tokens, etc. check below for more info                  |
+| ssrOnly                         | no       | boolean                        | If set to true, only server-side rendering data will be processed and compared                                                                            |
 | concurrency                     | no       | number                         | Option to make diffs concurrently (default: 1)                                                                                                            |
 
 ### Configuration example
