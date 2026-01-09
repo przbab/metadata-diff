@@ -37,11 +37,10 @@ Configuration is read using js `import` statement, so it may be a `.js` or `.jso
 | pathnames.path                  | yes      | string                         | Pathname to be tested                                                                                                                                     |
 | pathnames.note                  | no       | string                         | Optional note for the pathname                                                                                                                            |
 | puppeteerOption                 | no       | object                         | Puppeteer options                                                                                                                                         |
-| puppeteerOption.additionalWait  | no       | number                         | By setting this property you may give puppeteer some timeout to increase the chance of completing js tasks. (Default: `0`)                                |
 | puppeteerOption.blockRequests   | no       | array(string)                  | Array of regular expressions that will be matched against outgoing requests and cancelling matched. Intended for ads, tracking, etc.                      |
 | puppeteerOption.goto            | no       | object                         | This property will be passed to puppeteer's `page.goto` as options. https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options |
 | puppeteerOption.headless        | no       | boolean                        | Disable headless                                                                                                                                          |
-| puppeteerOption.slowMo          | no       | number                         | Slow the puppeteer                                                                                                                                        |
+| puppeteerOption.args            | no       | array(string)                  | Arguments to pass to puppeteer                                                                                                                            |
 | replacements                    | no       | array(object)                  | Allows for replacing some properties in html before parsing. Intended for random parts like urls, tokens, etc. check below for more info                  |
 | ssrOnly                         | no       | boolean                        | If set to true, only server-side rendering data will be processed and compared                                                                            |
 | concurrency                     | no       | number                         | Option to make diffs concurrently (default: 1)                                                                                                            |
@@ -101,7 +100,6 @@ export default {
     },
   ],
   puppeteerOptions: {
-    additionalWait: 2000,
     headless: true,
   },
   replacements: {

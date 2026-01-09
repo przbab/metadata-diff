@@ -8,8 +8,8 @@ async function getBrowser(options) {
         return browserInstance;
     }
     browserInstance = await puppeteer.launch({
+        args: options.args,
         headless: options.headless,
-        slowMo: options.slowMo,
     });
     attachCleanupHandlers();
 
@@ -50,6 +50,7 @@ async function blockRequests(page, urls) {
 export async function fetchClient(url, options) {
     const page = await preparePage(options);
     const response = await page.goto(url, options.goto);
+
     const redirects = response
         .request()
         .redirectChain()
@@ -61,9 +62,7 @@ export async function fetchClient(url, options) {
                 url: request.url(),
             };
         });
-    if (options.additionalWait) {
-        await page.waitFor(options.additionalWait);
-    }
+
     const html = await page.content();
     await page.close();
 
