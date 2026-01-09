@@ -1,5 +1,5 @@
-import { getHtml, getScripts, getStyles } from './files.js';
 import { describe, test } from 'node:test';
+import { getHtml, getScripts, getStyles } from './files.js';
 
 describe('report', () => {
     describe('files', () => {

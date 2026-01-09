@@ -51,7 +51,7 @@
     "devDependencies": {
         "@commitlint/cli": "19.8.1",
         "@commitlint/config-conventional": "19.8.1",
-        "@schibsted/niche-eslint-config": "0.2.1",
+        "@schibsted/niche-eslint-config": "0.2.3",
         "http-server": "14.1.1",
         "husky": "9.1.7",
         "knip": "5.63.1",

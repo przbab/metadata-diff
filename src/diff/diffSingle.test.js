@@ -1,5 +1,5 @@
-import { diffSingle, parseData, processReplacements, transformData } from './diffSingle.js';
 import { describe, mock, test } from 'node:test';
+import { diffSingle, parseData, processReplacements, transformData } from './diffSingle.js';
 
 mock.module('../client/index.js', {
     namedExports: {
