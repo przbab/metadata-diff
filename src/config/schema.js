@@ -38,11 +38,10 @@ export const schema = Joi.object({
     }),
     pathnames: Joi.array().items(pathnameObject).min(1).required(),
     puppeteerOptions: Joi.object().keys({
-        additionalWait: Joi.number(),
+        args: Joi.array().items(Joi.string()),
         blockRequests: Joi.array().items(Joi.string()),
         goto: Joi.any(),
         headless: Joi.boolean().default(true),
-        slowMo: Joi.number().min(0).default(0),
     }),
     replacements: Joi.object().pattern(Joi.string(), Joi.array().items(Joi.string())).default({}),
     ssrOnly: Joi.boolean().default(false),

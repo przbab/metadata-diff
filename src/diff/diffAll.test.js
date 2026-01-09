@@ -1,5 +1,5 @@
-import { diffAll } from './diffAll.js';
 import { describe, mock, test } from 'node:test';
+import { diffAll } from './diffAll.js';
 
 mock.module('./diffSingle.js', {
     namedExports: {

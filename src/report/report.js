@@ -1,5 +1,5 @@
-import { getHtml, getScripts, getStyles } from './files.js';
 import * as esbuild from 'esbuild';
+import { getHtml, getScripts, getStyles } from './files.js';
 
 export async function report(config, diffs) {
     const data = {

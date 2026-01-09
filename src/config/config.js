@@ -1,6 +1,6 @@
 import path from 'path';
-import { schema } from './schema.js';
 import { getLogger } from '../logger.js';
+import { schema } from './schema.js';
 
 export async function getConfig(cliConfig) {
     const logger = getLogger();

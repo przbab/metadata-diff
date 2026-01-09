@@ -1,10 +1,10 @@
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { getLogger, initializeLogger } from './logger.js';
 import { getConfig } from './config/index.js';
 import save from './save.js';
 import { diffAll } from './diff/index.js';
 import { report } from './report/index.js';
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
 
 const argv = yargs(hideBin(process.argv))
     .usage('Usage: $0 [options]')

@@ -1,6 +1,6 @@
 import fsPromises from 'fs/promises';
-import { getLogger } from './logger.js';
 import path from 'path';
+import { getLogger } from './logger.js';
 
 export default async function save(report, config) {
     const logger = getLogger();

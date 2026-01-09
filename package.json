@@ -10,7 +10,7 @@
         "node": "22"
     },
     "scripts": {
-        "dev": "http-server ./dist",
+        "dev": "http-server ./dist -c-1",
         "knip": "knip",
         "lint": "eslint .",
         "prepare": "husky",
@@ -36,27 +36,27 @@
         "cssnano": "7.1.1",
         "ejs": "3.1.10",
         "esbuild": "0.25.10",
-        "got": "14.4.9",
+        "got": "14.6.6",
         "html-entities": "2.6.0",
         "html-minifier": "4.0.0",
         "htmlparser2": "10.0.0",
         "joi": "18.0.1",
         "jsondiffpatch": "0.7.3",
         "microdata-node": "2.0.0",
-        "puppeteer": "3.3.0",
+        "puppeteer": "24.34.0",
         "terser": "5.44.0",
         "winston": "3.17.0",
         "yargs": "18.0.0"
     },
     "devDependencies": {
-        "@commitlint/cli": "19.8.1",
-        "@commitlint/config-conventional": "19.8.1",
-        "@schibsted/niche-eslint-config": "0.2.1",
+        "@commitlint/cli": "20.3.1",
+        "@commitlint/config-conventional": "20.3.1",
+        "@schibsted/niche-eslint-config": "0.2.3",
         "http-server": "14.1.1",
         "husky": "9.1.7",
-        "knip": "5.63.1",
-        "lint-staged": "16.1.6",
-        "stylelint": "16.24.0",
-        "stylelint-config-standard": "39.0.0"
+        "knip": "5.80.2",
+        "lint-staged": "16.2.7",
+        "stylelint": "16.26.1",
+        "stylelint-config-standard": "39.0.1"
     }
 }

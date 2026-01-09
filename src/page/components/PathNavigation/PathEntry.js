@@ -51,30 +51,6 @@ export class PathEntry extends HTMLElement {
               Object.keys(diffs.microdataDelta ?? {}).filter((key) => key !== '_t').length +
               Object.keys(diffs.redirectsDelta ?? {}).filter((key) => key !== '_t').length
             : null;
-        console.log('🚀 ~ PathEntry ~ render ~ diffCount:', {
-            diffCount,
-            diffs,
-            "Object.keys(diffs?.?jsonLdDelta ?? {}).filter((key) => key !== '_t').length": Object.keys(
-                diffs?.jsonLdDelta ?? {}
-            ).filter((key) => key !== '_t').length,
-            'Object.keys(diffs?.jsonLdDelta ?? {}).length': Object.keys(diffs?.jsonLdDelta ?? {}).length,
-            "Object.keys(diffs?.metadataDelta ?? {}).filter((key) => key !== '_t').length": Object.keys(
-                diffs?.metadataDelta ?? {}
-            ).filter((key) => key !== '_t').length,
-
-            'Object.keys(diffs?.metadataDelta ?? {}).length': Object.keys(diffs?.metadataDelta ?? {}).length,
-            "Object.keys(diffs?.microdataDelta ?? {}).filter((key) => key !== '_t').length": Object.keys(
-                diffs?.microdataDelta ?? {}
-            ).filter((key) => key !== '_t').length,
-            'Object.keys(diffs?.microdataDelta ?? {}).length': Object.keys(diffs?.microdataDelta ?? {}).length,
-            "Object.keys(diffs?.redirectsDelta ?? {}).filter((key) => key !== '_t').length": Object.keys(
-                diffs?.redirectsDelta ?? {}
-            ).filter((key) => key !== '_t').length,
-            'Object.keys(diffs?.redirectsDelta ?? {}).length': Object.keys(diffs?.redirectsDelta ?? {}).length,
-            path: this.path,
-            state: this.state,
-            type: this.type,
-        });
 
         this.root.innerHTML = `
 <style>
