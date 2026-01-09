@@ -49,14 +49,14 @@
         "yargs": "18.0.0"
     },
     "devDependencies": {
-        "@commitlint/cli": "19.8.1",
-        "@commitlint/config-conventional": "19.8.1",
+        "@commitlint/cli": "20.3.1",
+        "@commitlint/config-conventional": "20.3.1",
         "@schibsted/niche-eslint-config": "0.2.3",
         "http-server": "14.1.1",
         "husky": "9.1.7",
-        "knip": "5.63.1",
-        "lint-staged": "16.1.6",
-        "stylelint": "16.24.0",
-        "stylelint-config-standard": "39.0.0"
+        "knip": "5.80.2",
+        "lint-staged": "16.2.7",
+        "stylelint": "16.26.1",
+        "stylelint-config-standard": "39.0.1"
     }
 }
