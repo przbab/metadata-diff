@@ -6,12 +6,18 @@ export async function fetchSSR(url, options = {}) {
     try {
         const response = await got(url, {
             headers: options.headers,
-        }).on('redirect', (chainedResponse) => {
-            redirects.push({
-                status: chainedResponse.statusCode,
-                target: chainedResponse.headers.location,
-                url: chainedResponse.requestUrl,
-            });
+            hooks: {
+                beforeRedirect: [
+                    (_, res) => {
+                        redirects.push({
+                            status: res.statusCode,
+                            target: res.headers.location,
+                            url: res.url,
+                        });
+                    },
+                ],
+            },
+            https: { rejectUnauthorized: false },
         });
 
         return { html: response.body, redirects, statusCode: response.statusCode };
